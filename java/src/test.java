@@ -15,7 +15,7 @@ import com.restfb.types.FacebookType;
 public class test {
 
 	/**a
-	 * @param args
+	 * @param argsa
 	 */
 	
 	private final FacebookClient facebookClient;
