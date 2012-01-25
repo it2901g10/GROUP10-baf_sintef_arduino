@@ -83,7 +83,7 @@ void text(byte size, byte flag, byte content[]) {
 	int counter = 8;
 	for(int i = 0;i<size-3;i++) {
 		lcd.print((char)content[i]);
-		lcd.setCursor(counter++,0);
+		lcd.setCursor(++counter,0);
 	}
 	
 }
@@ -117,6 +117,8 @@ void serialEvent(){
 	static byte content[60];
 	static byte content_counter = 0;
 	
+	static int bytes = 0;
+	
 	while(Serial.available()){
 		switch (state){
 			case STATE_SIZE:
@@ -132,7 +134,8 @@ void serialEvent(){
 				state = STATE_CONTENT;
 				break;
 			case STATE_CONTENT:
-				content[content_counter++] = Serial.read();
+				content[content_counter] = Serial.read();
+				content_counter++;
 				if (content_counter+3 == size) {
 					commandHandler(size, opcode, flag, content);
 					content_counter = 0;
@@ -142,7 +145,11 @@ void serialEvent(){
 			default:
 				break;
 		}
+		bytes++;
 	}
+	
+	lcd.setCursor(7, 1);
+	lcd.print(bytes);
 }
 
 int get_key(int value){
