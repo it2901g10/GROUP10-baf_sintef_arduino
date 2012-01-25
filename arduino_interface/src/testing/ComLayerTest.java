@@ -4,6 +4,7 @@
  */
 package testing;
 
+import java.util.Scanner;
 import source.ComLayer;
 
 /**
@@ -13,5 +14,13 @@ import source.ComLayer;
 public class ComLayerTest {
     public static void main(String[] args) {
         ComLayer com = new ComLayer();
+        
+        Scanner in = new Scanner(System.in);
+        
+        while (true){
+            while (in.hasNextLine()){
+                com.sendMsg(in.nextLine());
+            }
+        }
     }
 }

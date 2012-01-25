@@ -1,12 +1,11 @@
 package source;
 
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import gnu.io.UnsupportedCommOperationException;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -15,14 +14,6 @@ import java.util.logging.Logger;
 public class ComLayer implements SerialPortEventListener {
 
     SerialPort serialPort;
-    /**
-     * The port we're normally going to use.
-     */
-    private static final String PORT_NAMES[] = {
-        "/dev/tty.usbserial-A9007UX1", // Mac OS X
-        "/dev/ttyUSB0", // Linux
-        "COM3", // Windows
-    };
     /**
      * Buffered input stream from the port
      */
@@ -44,11 +35,21 @@ public class ComLayer implements SerialPortEventListener {
      *  0 = scanning
      *  1 = active
      */
-    private int state = 0;
+    private enum ConnectionState {
+        SCANNING,
+        ACTIVE
+    }
+    
+    private ConnectionState state = ConnectionState.SCANNING;
     
     private final byte[] ack = {(byte)0x00, (byte)0xFF};
 
     public ComLayer() {
+        while (!findArduino());
+    }
+    
+    private boolean findArduino(){
+        
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -98,7 +99,8 @@ public class ComLayer implements SerialPortEventListener {
             } catch (InterruptedException ex) {
             }
             
-            if (state == 0){
+            if (state == ConnectionState.SCANNING){
+                close();
                 System.out.println(" No response.");
                 continue;
             }
@@ -106,12 +108,13 @@ public class ComLayer implements SerialPortEventListener {
             break;
         }
         
-        if (state == 0){
+        if (state == ConnectionState.SCANNING){
             System.out.println("ERROR: No arduinos found");
-            throw new IllegalArgumentException();
+            return false;
         }
         System.out.println(" Arduino found");
         System.out.println("Com port found: " + portId.getName());
+        return true;
     }
 
     /**
@@ -129,7 +132,7 @@ public class ComLayer implements SerialPortEventListener {
      * Handle an event on the serial port. Read the data and print it.
      */
     public synchronized void serialEvent(SerialPortEvent oEvent) {
-        if (state == 1) {
+        if (state == ConnectionState.ACTIVE) {
             if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
                 try {
                     int available = input.available();
@@ -150,7 +153,7 @@ public class ComLayer implements SerialPortEventListener {
                     input.read(response, 0, 2);
                     
                     if (response[0] == ack[0] && response[1] == ack[0]){
-                        state = 1;
+                        state = ConnectionState.ACTIVE;
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());
