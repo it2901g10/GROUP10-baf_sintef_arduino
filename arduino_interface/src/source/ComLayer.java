@@ -43,6 +43,7 @@ public class ComLayer implements SerialPortEventListener {
     private ConnectionState state = ConnectionState.SCANNING;
     
     private final byte[] ack = {(byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
+    //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
 
     public ComLayer() {
         while (!findArduino());
@@ -93,6 +94,7 @@ public class ComLayer implements SerialPortEventListener {
             
             // Check for arduino
             sendMsg(ack);
+            
             
             try {
                 Thread.sleep(500);

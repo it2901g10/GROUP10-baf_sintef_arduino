@@ -56,6 +56,7 @@ void commandHandler(byte size, byte opcode, byte flag, byte content[]) {
 			ping();
 			break;
 		case OPCODE_TEXT:
+			text(size, flag, content);
 			break;
 		case OPCODE_SENSOR:
 			break;
@@ -77,7 +78,13 @@ void ping() {
 	Serial.write((byte)0xFF);
 }
 
-void text(byte flag, byte content[]) {
+void text(byte size, byte flag, byte content[]) {
+	lcd.setCursor(8,0);
+	int counter = 8;
+	for(int i = 0;i<size-3;i++) {
+		lcd.print((char)content[i]);
+		lcd.setCursor(counter++,0);
+	}
 	
 }
 

@@ -14,7 +14,7 @@ import source.ComLayer;
 public class ComLayerTest {
     public static void main(String[] args) {
         ComLayer com = new ComLayer();
-        
+        //com.sendMsg(com.text);
         Scanner in = new Scanner(System.in);
         
         while (true){
