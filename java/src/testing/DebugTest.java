@@ -4,7 +4,8 @@
  */
 package testing;
 
-import debug.Debug;
+import debug.Log;
+import java.util.logging.Level;
 
 /**
  *
@@ -12,9 +13,11 @@ import debug.Debug;
  */
 public class DebugTest {
     public static void main(String[] args) {
-        Debug.setDebugLevel(5);
-        Debug.println("test1", 4);
-        Debug.println("test2", 5);
-        Debug.println("test3", 6);
+        //Log.setStdOut(true);
+        Log.setLevel(Level.ALL);
+        Log.addMessage(Level.SEVERE, "test1");
+        Log.addMessage(Level.WARNING, "test2");
+        Log.addMessage(Level.CONFIG, "test3");
+        Log.printLog();
     }
 }

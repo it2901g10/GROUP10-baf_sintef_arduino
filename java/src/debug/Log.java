@@ -25,20 +25,20 @@ public class Log {
     }
     
     public static void addMessage(Level level, String message) {
-        String messageString = System.currentTimeMillis() + " ["+getLevel()+"] " + message;
+        String messageString = System.currentTimeMillis() + " ["+level+"] " + message;
         getInstance().logger.log(level, messageString);
         getInstance().list.add(messageString);
-        if(getStdOut()) {
+        if(getStdOut() && level.intValue() >= getInstance().getLevel().intValue()) {
             System.out.println(messageString);
         }
     }
     
     public static Level getLevel() {
-        return getInstance().currentLevel;
+        return getInstance().logger.getLevel();
     }
     
     public static void setLevel(Level level) {
-        getInstance().currentLevel = level;
+        getInstance().logger.setLevel(level);
     }
     
     public static boolean getStdOut() {
