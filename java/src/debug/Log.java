@@ -65,11 +65,4 @@ public class Log {
         System.out.println("### Log end ###");
     }
     
-    public static void main(String[] args) {
-        Log.setStdOut(true);
-        Log.setLevel(Level.ALL);
-        Log.addMessage(Level.ALL, "test");
-        Log.printLog();
-    }
-    
 }
