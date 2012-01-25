@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.src.debug;
+package debug;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +19,7 @@ public class Log {
     private Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private Level currentLevel = Level.OFF;  //Default is OFF
     private boolean stdout = false;
+    private List<String> list = new ArrayList<String>();
     
     //There should be only one instance of the logger...
     private Log() { }
@@ -26,9 +29,11 @@ public class Log {
     }
     
     public static void addMessage(Level level, String message) {
-        getInstance().logger.log(level, message);
+        String messageString = System.currentTimeMillis() + " ["+getLevel()+"] " + message;
+        getInstance().logger.log(level, messageString);
+        getInstance().list.add(messageString);
         if(getStdOut()) {
-            System.out.println("["+getLevel()+"] " + message);
+            System.out.println(messageString);
         }
     }
     
@@ -50,6 +55,25 @@ public class Log {
     
     public static void toggleStdOut() {
         getInstance().stdout = !getInstance().stdout;
+    }
+    
+    public static List<String> getLog() {
+        return getInstance().list;
+    }
+    
+    public static void printLog() {
+        System.out.println("### Log start ###");
+        for(String s : getInstance().getLog()) {
+            System.out.println(s);
+        }
+        System.out.println("### Log end ###");
+    }
+    
+    public static void main(String[] args) {
+        Log.setStdOut(true);
+        Log.setLevel(Level.ALL);
+        Log.addMessage(Level.ALL, "test");
+        Log.printLog();
     }
     
 }
