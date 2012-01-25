@@ -42,7 +42,7 @@ public class ComLayer implements SerialPortEventListener {
     
     private ConnectionState state = ConnectionState.SCANNING;
     
-    private final byte[] ack = {(byte)0x00, (byte)0xFF};
+    private final byte[] ack = {(byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
 
     public ComLayer() {
         while (!findArduino());
@@ -152,7 +152,7 @@ public class ComLayer implements SerialPortEventListener {
                     byte[] response = new byte[2];
                     input.read(response, 0, 2);
                     
-                    if (response[0] == ack[0] && response[1] == ack[0]){
+                    if (response[0] == (byte)0x00 && response[1] == (byte)0xFF){
                         state = ConnectionState.ACTIVE;
                     }
                 } catch (Exception e) {

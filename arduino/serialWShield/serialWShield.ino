@@ -32,27 +32,110 @@ void loop(){
   digitalWrite(13, LOW); 
 }
 
+// SerialEvent state enum
+typedef enum {
+	STATE_SIZE,
+	STATE_OPCODE,
+	STATE_FLAG,
+	STATE_CONTENT
+};
+
+typedef enum {
+	OPCODE_PING,
+	OPCODE_TEXT,
+	OPCODE_SENSOR,
+	OPCODE_PIN_T,
+	OPCODE_PIN_R,
+	OPCODE_PIN_W,
+	OPCODE_RESET = 0xFF
+};
+
+void commandHandler(byte size, byte opcode, byte flag, byte content[]) {
+	switch (opcode) {
+		case OPCODE_PING:
+			ping();
+			break;
+		case OPCODE_TEXT:
+			break;
+		case OPCODE_SENSOR:
+			break;
+		case OPCODE_PIN_T:
+			break;
+		case OPCODE_PIN_R:
+			break;
+		case OPCODE_PIN_W:
+			break;
+		case OPCODE_RESET:
+			break;
+		default:
+			Serial.println("commandHandler herp derp");
+	}
+}
+
+void ping() {
+	Serial.write((byte)0x00);
+	Serial.write((byte)0xFF);
+}
+
+void text(byte flag, byte content[]) {
+	
+}
+
+void sensor(byte number) {
+	
+}
+
+void pinToggle(byte pin) {
+	
+}
+
+void pinRead(byte pin) {
+	
+}
+
+void pinWrite(byte pin, byte value) {
+	
+}
+
+void reset() {
+	
+}
+
 void serialEvent(){
-  static byte prevByte = 0x01;
-  static int bytes = 0;
-  static boolean toggle = false;
-  //digitalWrite(13, toggle);
-  while(Serial.available()){
-    byte currByte = Serial.read();
-    
-    if (currByte == 0xFF && prevByte == 0x00){
-      Serial.write((byte)0x00);
-      Serial.write((byte)0xFF);
-    }
-    else {
-      Serial.write(currByte);
-    }
-    bytes++;
-    prevByte = currByte;
-  }
-  toggle = !toggle;
-  lcd.setCursor(7, 1);
-  lcd.print(bytes);
+	static int state = STATE_SIZE;
+	
+	static byte size = 0;
+	static byte opcode = 0;
+	static byte flag = 0;
+	static byte content[60];
+	static byte content_counter = 0;
+	
+	while(Serial.available()){
+		switch (state){
+			case STATE_SIZE:
+				size = Serial.read();
+				state = STATE_OPCODE;
+				break;
+			case STATE_OPCODE:
+				opcode = Serial.read();
+				state = STATE_FLAG;
+				break;
+			case STATE_FLAG:
+				flag = Serial.read();
+				state = STATE_CONTENT;
+				break;
+			case STATE_CONTENT:
+				content[content_counter++] = Serial.read();
+				if (content_counter+3 == size) {
+					commandHandler(size, opcode, flag, content);
+					content_counter = 0;
+					state = STATE_SIZE;
+				} 
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 int get_key(int value){
