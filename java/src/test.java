@@ -3,13 +3,13 @@ import java.util.Iterator;
 import java.util.List;
 
 //import com.restfb.Connection;
-import com.restfb.DefaultFacebookClient;
-import com.restfb.Facebook;
-import com.restfb.FacebookClient;
 //import com.restfb.Parameter;
-import com.restfb.types.FacebookType;
 //import com.restfb.json.*;
 
+import com.restfb.Facebook;
+import com.restfb.FacebookClient;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.types.FacebookType;
 
 
 public class test {
