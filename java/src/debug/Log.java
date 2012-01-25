@@ -27,6 +27,9 @@ public class Log {
     
     public static void addMessage(Level level, String message) {
         getInstance().logger.log(level, message);
+        if(getStdOut()) {
+            System.out.println("["+getLevel()+"] " + message);
+        }
     }
     
     public static Level getLevel() {
