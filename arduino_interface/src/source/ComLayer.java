@@ -42,7 +42,7 @@ public class ComLayer implements SerialPortEventListener {
     
     private ConnectionState state = ConnectionState.SCANNING;
     
-    private final byte[] ack = {(byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
+    private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
 
     public ComLayer() {
@@ -57,6 +57,9 @@ public class ComLayer implements SerialPortEventListener {
         // iterate through, looking for the port
         while (portEnum.hasMoreElements()) {
             portId = (CommPortIdentifier) portEnum.nextElement();
+            
+            if (portId.getPortType() != CommPortIdentifier.PORT_SERIAL || !portId.getName().contains("Bee"))
+                continue;
             // Test com port
             
             if (portId == null) {
@@ -88,7 +91,7 @@ public class ComLayer implements SerialPortEventListener {
             
             System.out.print("COM port(" + portId.getName() + ") found, pinging for Arduino...");
             try {
-                Thread.sleep(1500);
+                Thread.sleep(3000);
             } catch (InterruptedException ex) {
             }
             
@@ -97,7 +100,7 @@ public class ComLayer implements SerialPortEventListener {
             
             
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
             } catch (InterruptedException ex) {
             }
             
@@ -112,6 +115,11 @@ public class ComLayer implements SerialPortEventListener {
         
         if (state == ConnectionState.SCANNING){
             System.out.println("ERROR: No arduinos found");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ComLayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return false;
         }
         System.out.println(" Arduino found");
@@ -130,6 +138,7 @@ public class ComLayer implements SerialPortEventListener {
         }
     }
 
+    private byte lastByte = (byte)0xFE;
     /**
      * Handle an event on the serial port. Read the data and print it.
      */
@@ -151,11 +160,14 @@ public class ComLayer implements SerialPortEventListener {
         else {
             if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
                 try {
-                    byte[] response = new byte[2];
-                    input.read(response, 0, 2);
-                    
-                    if (response[0] == (byte)0x00 && response[1] == (byte)0xFF){
-                        state = ConnectionState.ACTIVE;
+                    while (input.available() > 0) {
+                        byte[] response = new byte[1];
+                        input.read(response, 0, 1);
+                        if (lastByte == (byte)0x00 && response[0] == (byte)0xFF){
+                            state = ConnectionState.ACTIVE;
+                        }
+                        
+                        lastByte = response[0];
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());

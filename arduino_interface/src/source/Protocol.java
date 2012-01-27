@@ -29,12 +29,13 @@ public class Protocol {
         
         byte output[] = new byte[size];
         
-        output[0] = (byte)size;
-        output[1] = OPCODE_TEXT;
-        output[2] = 0;
+        output[0] = (byte)0xFF;
+        output[1] = (byte)size;
+        output[2] = OPCODE_TEXT;
+        output[3] = 0;
         
-        for (int i = 3; i < size; ++i){
-            output[i] = text.getBytes()[i-3];
+        for (int i = 4; i < size; ++i){
+            output[i] = text.getBytes()[i-4];
         }
         
         board.sendMsg(output);

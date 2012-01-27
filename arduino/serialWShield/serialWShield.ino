@@ -1,3 +1,5 @@
+#define LCD 0
+
 #include <LiquidCrystal.h>
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
@@ -6,13 +8,16 @@ void setup(){
   Serial.begin(9600);
   pinMode(13, OUTPUT);
   
+  if (LCD){
   lcd.begin(16, 2);
   lcd.print("button: -");
   lcd.setCursor(0,1);
   lcd.print("Bytes: 0");
+  }
 }
 
 void loop(){
+  if (LCD){
   static int oldkey = -1;
   int adc_key_in = analogRead(0); // read the value from the
   digitalWrite(13, HIGH); 
@@ -30,15 +35,8 @@ void loop(){
     }
   }
   digitalWrite(13, LOW); 
+  }
 }
-
-// SerialEvent state enum
-typedef enum {
-	STATE_SIZE,
-	STATE_OPCODE,
-	STATE_FLAG,
-	STATE_CONTENT
-};
 
 typedef enum {
 	OPCODE_PING,
@@ -74,18 +72,23 @@ void commandHandler(byte size, byte opcode, byte flag, byte content[]) {
 }
 
 void ping() {
+	digitalWrite(13, HIGH);
+	delay(500);
+	digitalWrite(13, LOW);
+	delay(500);
 	Serial.write((byte)0x00);
 	Serial.write((byte)0xFF);
 }
 
 void text(byte size, byte flag, byte content[]) {
+	if (LCD){
 	lcd.setCursor(8,0);
 	int counter = 8;
 	for(int i = 0;i<size-3;i++) {
 		lcd.print((char)content[i]);
 		lcd.setCursor(++counter,0);
 	}
-	
+	}
 }
 
 void sensor(byte number) {
@@ -108,8 +111,17 @@ void reset() {
 	
 }
 
+// SerialEvent state enum
+typedef enum {
+	STATE_START,
+	STATE_SIZE,
+	STATE_OPCODE,
+	STATE_FLAG,
+	STATE_CONTENT
+};
+
 void serialEvent(){
-	static int state = STATE_SIZE;
+	static int state = STATE_START;
 	
 	static byte size = 0;
 	static byte opcode = 0;
@@ -120,7 +132,16 @@ void serialEvent(){
 	static int bytes = 0;
 	
 	while(Serial.available()){
+		
 		switch (state){
+			case STATE_START:
+				if (Serial.read() == (byte)0xFF){
+					state = STATE_SIZE;
+				}
+				else{
+					//digitalWrite(13, HIGH);
+				}
+				break;
 			case STATE_SIZE:
 				size = Serial.read();
 				state = STATE_OPCODE;
@@ -139,7 +160,7 @@ void serialEvent(){
 				if (content_counter+3 == size) {
 					commandHandler(size, opcode, flag, content);
 					content_counter = 0;
-					state = STATE_SIZE;
+					state = STATE_START;
 				} 
 				break;
 			default:
@@ -148,8 +169,10 @@ void serialEvent(){
 		bytes++;
 	}
 	
+	if (LCD){
 	lcd.setCursor(7, 1);
 	lcd.print(bytes);
+	}
 }
 
 int get_key(int value){
