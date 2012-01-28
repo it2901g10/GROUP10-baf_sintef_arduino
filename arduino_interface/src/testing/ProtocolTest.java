@@ -14,6 +14,7 @@ public class ProtocolTest {
     public static void main(String[] args) {
         Protocol arduino = new Protocol();
         arduino.print("ZooPark");
+        //arduino.print("D");
     }
     
 }

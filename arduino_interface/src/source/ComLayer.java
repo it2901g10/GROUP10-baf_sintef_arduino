@@ -58,7 +58,7 @@ public class ComLayer implements SerialPortEventListener {
         while (portEnum.hasMoreElements()) {
             portId = (CommPortIdentifier) portEnum.nextElement();
             
-            if (portId.getPortType() != CommPortIdentifier.PORT_SERIAL || !portId.getName().contains("Bee"))
+            if (portId.getPortType() != CommPortIdentifier.PORT_SERIAL)
                 continue;
             // Test com port
             

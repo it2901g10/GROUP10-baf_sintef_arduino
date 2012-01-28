@@ -1,15 +1,23 @@
-#define LCD 0
+#define LCD 1
+#define KEYS 0
 
-#include <LiquidCrystal.h>
+//#include <LiquidCrystal.h>
+#include <DogLcd.h>
 
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+//LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+DogLcd lcd(12, 11, 6, 7);
 
 void setup(){
   Serial.begin(9600);
   pinMode(13, OUTPUT);
   
   if (LCD){
-  lcd.begin(16, 2);
+	digitalWrite(13, HIGH);
+	delay(500);
+	digitalWrite(13, LOW);
+	delay(500);
+  lcd.begin(DOG_LCD_M163);
+  lcd.cursor();
   lcd.print("button: -");
   lcd.setCursor(0,1);
   lcd.print("Bytes: 0");
@@ -17,10 +25,10 @@ void setup(){
 }
 
 void loop(){
-  if (LCD){
+  if (LCD && KEYS){
   static int oldkey = -1;
   int adc_key_in = analogRead(0); // read the value from the
-  digitalWrite(13, HIGH); 
+  //digitalWrite(13, HIGH); 
   int key = get_key(adc_key_in); // convert into key press 
   if (key != oldkey){ // if keypress is detected
     delay(50); // wait for debounce time 
@@ -34,7 +42,7 @@ void loop(){
       }
     }
   }
-  digitalWrite(13, LOW); 
+  //digitalWrite(13, LOW); 
   }
 }
 
@@ -72,10 +80,6 @@ void commandHandler(byte size, byte opcode, byte flag, byte content[]) {
 }
 
 void ping() {
-	digitalWrite(13, HIGH);
-	delay(500);
-	digitalWrite(13, LOW);
-	delay(500);
 	Serial.write((byte)0x00);
 	Serial.write((byte)0xFF);
 }
@@ -84,7 +88,7 @@ void text(byte size, byte flag, byte content[]) {
 	if (LCD){
 	lcd.setCursor(8,0);
 	int counter = 8;
-	for(int i = 0;i<size-3;i++) {
+	for(int i = 0; i < size-3 ; i++) {
 		lcd.print((char)content[i]);
 		lcd.setCursor(++counter,0);
 	}

@@ -25,12 +25,12 @@ public class Protocol {
     }
     
     public void print(String text){
-        int size = text.length() + 3;
+        int size = text.length() + 4;
         
         byte output[] = new byte[size];
         
         output[0] = (byte)0xFF;
-        output[1] = (byte)size;
+        output[1] = (byte)(size-1);
         output[2] = OPCODE_TEXT;
         output[3] = 0;
         
