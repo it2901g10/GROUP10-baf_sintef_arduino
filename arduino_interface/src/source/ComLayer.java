@@ -91,7 +91,7 @@ public class ComLayer implements SerialPortEventListener {
             
             System.out.print("COM port(" + portId.getName() + ") found, pinging for Arduino...");
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1500);
             } catch (InterruptedException ex) {
             }
             
@@ -100,7 +100,7 @@ public class ComLayer implements SerialPortEventListener {
             
             
             try {
-                Thread.sleep(3000);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
             }
             
