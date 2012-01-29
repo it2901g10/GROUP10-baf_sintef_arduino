@@ -11,6 +11,8 @@ DogLcd lcd(12, 11, 9, 10);
 
 ComputerSerial comp;
 
+
+static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	
@@ -25,18 +27,28 @@ void setup(){
 }
 
 void loop(){
-  	lcd.setCursor(7, 2);
-	lcd.print(millis()/1000);
-	lcd.print("s");
-	delay(100);
+	static unsigned long time = millis();
+	static unsigned long lastBytes = bytes;
+	if (millis() > time + 1000){
+		lcd.setCursor(7, 0);
+		lcd.print("         ");
+		lcd.setCursor(7, 0);
+		lcd.print(bytes-lastBytes);
+		lcd.print("b/s");
+		lastBytes = bytes;
+		time = millis();
+		
+  		lcd.setCursor(7, 2);
+		lcd.print(millis()/1000);
+		lcd.print("s");
+
+		lcd.setCursor(7, 1);
+		lcd.print(bytes);
+	}
 }
 
 void serialEvent(){
-	static unsigned long bytes = 0;
 	bytes += Serial.available();
 	
 	comp.serialEvent();
-	
-	lcd.setCursor(7, 1);
-	lcd.print(bytes);
 }

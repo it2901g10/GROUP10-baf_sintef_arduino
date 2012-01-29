@@ -20,11 +20,11 @@ public class ProtocolTest {
         for (int i = 0; i < 100000000; ++i){
             arduino.print(new SimpleDateFormat("HH:mm:ss").format(new Date()));
             //arduino.print(i + "s");
-            try {
+            /*try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 
-            }
+            }*/
         }
         
         //arduino.print("ZooPark");
