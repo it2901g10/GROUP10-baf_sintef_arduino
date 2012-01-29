@@ -3,7 +3,11 @@
 #include "ComputerSerial.h"
 
 ComputerSerial::ComputerSerial(){
-	Serial.begin(9600);
+	
+}
+
+void ComputerSerial::begin(int baud){
+	Serial.begin(baud);
 }
 
 void ComputerSerial::commandHandler(byte size, byte opcode, byte flag, byte content[]) {

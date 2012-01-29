@@ -41,6 +41,7 @@ public:
 	ComputerSerial();
 	
 	void serialEvent();
+	void begin(int baud);
 	
 	unsigned int getBytesReceived();
 };
