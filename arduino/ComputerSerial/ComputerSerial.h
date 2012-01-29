@@ -1,6 +1,9 @@
 #ifndef COMPUTER_SERIAL_H
 #define COMPUTER_SERIAL_H
 
+#define START_BYTE 0xFF
+
+#include <Arduino.h>
 
 class ComputerSerial{
 	// SerialEvent state enum
@@ -31,8 +34,6 @@ class ComputerSerial{
 	void pinRead(byte pin);
 	void pinWrite(byte pin, byte value);
 	void reset();
-	
-	const byte START_BYTE = (byte)0xFF;
 	
 	unsigned int bytesReceived;
 	
