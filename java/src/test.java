@@ -2,14 +2,13 @@
 import java.util.Iterator;
 import java.util.List;
 
-//import com.restfb.Connection;
-import com.restfb.DefaultFacebookClient;
+import com.restfb.Connection;
+import com.restfb.Parameter;
+
 import com.restfb.Facebook;
 import com.restfb.FacebookClient;
-//import com.restfb.Parameter;
-import com.restfb.types.FacebookType;
-//import com.restfb.json.*;
-
+import com.restfb.DefaultFacebookClient;
+import com.restfb.types.*;
 
 
 public class test {
@@ -19,7 +18,7 @@ public class test {
 	 */
 	
 	private final FacebookClient facebookClient;
-	private final String ac = "AAACEdEose0cBAH6ZCoKRtptYHJT9HJjCNtzTHaKzx7nFYoU1LcbTIkWMhg8unOCHgJyEEfedGkW10TRqrjRwZC7oK1jMPzUKRZA6mK2mZAECpcODtIJu";
+	private final String ac = "AAACEdEose0cBAGm8ZBASeZA0cpKUXdZCiZCuSGBEEGVOJHyWrwUtrZAqJmr4i5sJ7D9cF3pXDNrsZA05j9aqHtWKrd44eCesj8YZBiLeYIk0mSVeZBOJE1ts";
 	
 	public static void main(String[] args) {
 
@@ -45,6 +44,7 @@ public class test {
 		String query;
 		int count = 0;
 		Notification n = null;
+		Connection<StatusMessage> feed = null;
 		List<Notification> nlist = null;
 		
 		facebookClient = new DefaultFacebookClient(ac);
@@ -56,8 +56,11 @@ public class test {
 		
 		System.out.println("Published message ID: " + publishMessageResponse.getId());*/
 		
+		feed = facebookClient.fetchConnection("me/tagged", StatusMessage.class);
+		System.out.println( feed.getData().get(0).getMessage() );
 		
-		query = "SELECT title_text, body_text FROM notification " +
+		
+		/*query = "SELECT title_text, body_text FROM notification " +
 				"WHERE recipient_id = me() AND is_unread = 1 AND is_hidden = 0";
 		
 		try{
@@ -81,7 +84,7 @@ public class test {
 				System.out.println("\nnotification data: " + n.getTitle());
 				System.out.println(n.getBody());
 			} 
-		}
+		}*/
 	}
 
 }
