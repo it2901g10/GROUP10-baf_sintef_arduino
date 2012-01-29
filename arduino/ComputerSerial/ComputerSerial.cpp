@@ -33,6 +33,14 @@ void ComputerSerial::commandHandler(byte size, byte opcode, byte flag, byte cont
 	}
 }
 
+void ComputerSerial::ack(byte opcode){
+	Serial.write(START_BYTE);
+	Serial.write(4);
+	Serial.write(OPCODE_RESPONSE);
+	Serial.write(opcode);
+	Serial.write(NULL_BYTE);
+}
+
 void ComputerSerial::ping() {
 	// Send ping response
 	Serial.write((byte)0x00);
@@ -41,6 +49,7 @@ void ComputerSerial::ping() {
 
 void ComputerSerial::text(byte size, byte flag, byte content[]) {
 	// Print content on display(flag)
+	ack(OPCODE_TEXT);
 }
 
 void ComputerSerial::sensor(byte number) {

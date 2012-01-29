@@ -5,8 +5,8 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,9 +44,22 @@ public class ComLayer implements SerialPortEventListener {
     
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
+    
+    private ArrayList<ComLayerListener> listeners;
 
     public ComLayer() {
+        listeners = new ArrayList<ComLayerListener>();
         while (!findArduino());
+    }
+    
+    public ComLayer(ComLayerListener listener) {
+        listeners = new ArrayList<ComLayerListener>();
+        listeners.add(listener);
+        while (!findArduino());
+    }
+    
+    public void addListener(ComLayerListener listener){
+        listeners.add(listener);
     }
     
     private boolean findArduino(){
@@ -142,16 +155,22 @@ public class ComLayer implements SerialPortEventListener {
     /**
      * Handle an event on the serial port. Read the data and print it.
      */
+    @Override
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (state == ConnectionState.ACTIVE) {
             if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
                 try {
-                    int available = input.available();
-                    byte chunk[] = new byte[available];
-                    input.read(chunk, 0, available);
+                    while (input.available() > 0) {
+                        byte chunk[] = new byte[1];
+                        input.read(chunk, 0, 1);
+                        
+                        for (ComLayerListener listener : listeners) {
+                            listener.byteReceived(chunk[0]);
+                        }
 
-                    // Displayed results are codepage dependent
-                    System.out.print(new String(chunk));
+                        // Displayed results are codepage dependent
+                        System.out.print(new String(chunk));
+                    }
                 } catch (Exception e) {
                     System.err.println(e.toString());
                 }
