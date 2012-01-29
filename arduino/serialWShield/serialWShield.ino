@@ -5,22 +5,19 @@
 #include <DogLcd.h>
 
 //LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-DogLcd lcd(12, 11, 6, 7);
+DogLcd lcd(12, 11, 9, 10);
 
 void setup(){
   Serial.begin(9600);
   pinMode(13, OUTPUT);
   
   if (LCD){
-	digitalWrite(13, HIGH);
-	delay(500);
-	digitalWrite(13, LOW);
-	delay(500);
   lcd.begin(DOG_LCD_M163);
-  lcd.cursor();
-  lcd.print("button: -");
+  lcd.print("Recvd: -");
   lcd.setCursor(0,1);
   lcd.print("Bytes: 0");
+  lcd.setCursor(0, 2);
+  lcd.print("Alive: ");
   }
 }
 
@@ -44,6 +41,10 @@ void loop(){
   }
   //digitalWrite(13, LOW); 
   }
+  lcd.setCursor(7, 2);
+  lcd.print(millis()/1000);
+  lcd.print("s");
+  delay(100);
 }
 
 typedef enum {
@@ -86,8 +87,8 @@ void ping() {
 
 void text(byte size, byte flag, byte content[]) {
 	if (LCD){
-	lcd.setCursor(8,0);
-	int counter = 8;
+	int counter = 7;
+	lcd.setCursor(counter,0);
 	for(int i = 0; i < size-3 ; i++) {
 		lcd.print((char)content[i]);
 		lcd.setCursor(++counter,0);

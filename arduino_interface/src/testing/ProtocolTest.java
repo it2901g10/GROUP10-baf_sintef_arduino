@@ -4,8 +4,9 @@
  */
 package testing;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.text.DateFormatter;
 import source.Protocol;
 
 /**
@@ -16,8 +17,9 @@ public class ProtocolTest {
     public static void main(String[] args) {
         Protocol arduino = new Protocol();
         
-        for (int i = 0; i < 100; ++i){
-            arduino.print("T: " + i + "s");
+        for (int i = 0; i < 100000000; ++i){
+            arduino.print(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            //arduino.print(i + "s");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
