@@ -59,6 +59,79 @@ public class Protocol implements ComLayerListener {
         release();
     }
     
+    public void sensor(int sensor){
+        lock();
+        int size = 5;
+        
+        byte output[] = new byte[size];
+        
+        output[0] = (byte)0xFF;
+        output[1] = (byte)(size-1);
+        output[2] = OPCODE_SENSOR;
+        output[3] = (byte)sensor; // Will eventually specify display
+        output[4] = 0;
+        
+        waitingForAck = OPCODE_SENSOR;
+        
+        board.sendMsg(output);
+        release();
+    }
+    public void toggle(int pin){
+        lock();
+        int size = 5;
+        
+        byte output[] = new byte[size];
+        
+        output[0] = (byte)0xFF;
+        output[1] = (byte)(size-1);
+        output[2] = OPCODE_PIN_T;
+        output[3] = (byte)pin;
+        output[4] = 0;
+        
+        waitingForAck = OPCODE_PIN_T;
+        
+        board.sendMsg(output);
+        release();
+    }
+    
+    public void read(int pin){
+        lock();
+        int size = 5;
+        
+        byte output[] = new byte[size];
+        
+        output[0] = (byte)0xFF;
+        output[1] = (byte)(size-1);
+        output[2] = OPCODE_PIN_R;
+        output[3] = (byte)pin;
+        output[4] = 0;
+        
+        waitingForAck = OPCODE_PIN_R;
+        
+        board.sendMsg(output);
+        release();
+    }
+    
+    
+    public void write(int pin, boolean value){
+        lock();
+        int size = 5;
+        
+        byte output[] = new byte[size];
+        
+        output[0] = (byte)0xFF;
+        output[1] = (byte)(size-1);
+        output[2] = OPCODE_PIN_W;
+        output[3] = (byte)pin;
+        output[4] = value? 1 : 0;
+        
+        waitingForAck = OPCODE_PIN_W;
+        
+        board.sendMsg(output);
+        release();
+    }
+    
+    
     private boolean locked = false;
     private void lock(){
         while (locked){
