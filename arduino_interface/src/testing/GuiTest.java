@@ -230,23 +230,23 @@ public class GuiTest extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonPingActionPerformed
 
     private void buttonSndMsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSndMsgActionPerformed
-        addToTextArea(evt.getActionCommand() + textfieldSndMsg.getText());
+        addToTextArea(evt.getActionCommand() + ": " + textfieldSndMsg.getText());
     }//GEN-LAST:event_buttonSndMsgActionPerformed
 
     private void buttonReadSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReadSensorActionPerformed
-        addToTextArea(evt.getActionCommand() + textfieldReadSensor.getText());
+        addToTextArea(evt.getActionCommand() + ": " + textfieldReadSensor.getText());
     }//GEN-LAST:event_buttonReadSensorActionPerformed
 
     private void buttonPinToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPinToggleActionPerformed
-        addToTextArea(evt.getActionCommand() + textfieldPinToggle.getText());
+        addToTextArea(evt.getActionCommand() + ": " + textfieldPinToggle.getText());
     }//GEN-LAST:event_buttonPinToggleActionPerformed
 
     private void buttonPinReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPinReadActionPerformed
-        addToTextArea(evt.getActionCommand() + textfieldPinRead.getText());
+        addToTextArea(evt.getActionCommand() + ": " + textfieldPinRead.getText());
     }//GEN-LAST:event_buttonPinReadActionPerformed
 
     private void buttonPinWriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPinWriteActionPerformed
-        addToTextArea(evt.getActionCommand() + textfieldPinWrite.getText());
+        addToTextArea(evt.getActionCommand() + ": " + textfieldPinWrite.getText());
     }//GEN-LAST:event_buttonPinWriteActionPerformed
 
     private void buttonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetActionPerformed
