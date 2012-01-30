@@ -44,7 +44,7 @@ public class Protocol implements ComLayerListener {
         output[0] = (byte)0xFF;
         output[1] = (byte)(size-1);
         output[2] = OPCODE_TEXT;
-        output[3] = (byte)0; // Will eventually specify display
+        output[3] = 0; // Will eventually specify display
         
         for (int i = 4; i < size; ++i){
             output[i] = text.getBytes()[i-4];
@@ -69,15 +69,11 @@ public class Protocol implements ComLayerListener {
         output[1] = (byte)(size-1);
         output[2] = OPCODE_SENSOR;
         output[3] = (byte)sensor; // Will eventually specify display
-        output[4] = (byte)0;
+        output[4] = 0;
         
         waitingForAck = OPCODE_SENSOR;
         
-        try {
-            board.sendMsg(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
+        board.sendMsg(output);
         release();
     }
     public void toggle(int pin){
@@ -90,15 +86,11 @@ public class Protocol implements ComLayerListener {
         output[1] = (byte)(size-1);
         output[2] = OPCODE_PIN_T;
         output[3] = (byte)pin;
-        output[4] = (byte)0;
+        output[4] = 0;
         
         waitingForAck = OPCODE_PIN_T;
         
-        try {
-            board.sendMsg(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
+        board.sendMsg(output);
         release();
     }
     
@@ -112,15 +104,11 @@ public class Protocol implements ComLayerListener {
         output[1] = (byte)(size-1);
         output[2] = OPCODE_PIN_R;
         output[3] = (byte)pin;
-        output[4] = (byte)0;
+        output[4] = 0;
         
         waitingForAck = OPCODE_PIN_R;
         
-        try {
-            board.sendMsg(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
+        board.sendMsg(output);
         release();
     }
     
@@ -135,14 +123,11 @@ public class Protocol implements ComLayerListener {
         output[1] = (byte)(size-1);
         output[2] = OPCODE_PIN_W;
         output[3] = (byte)pin;
-        output[4] = value? (byte)1 : (byte)0;
+        output[4] = value? 1 : 0;
         
         waitingForAck = OPCODE_PIN_W;
-        try {
-            board.sendMsg(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
+        
+        board.sendMsg(output);
         release();
     }
     
