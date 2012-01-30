@@ -4,7 +4,10 @@
  */
 package testing;
 
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import source.ComLayer;
 
 /**
@@ -19,7 +22,11 @@ public class ComLayerTest {
         
         while (true){
             while (in.hasNextLine()){
-                com.sendMsg(in.nextLine());
+                try {
+                    com.sendMsg(in.nextLine().getBytes());
+                } catch (IOException ex) {
+                    System.out.println("Send error");
+                }
             }
         }
     }

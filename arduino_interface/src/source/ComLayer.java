@@ -107,9 +107,13 @@ public class ComLayer implements SerialPortEventListener {
                 Thread.sleep(1500);
             } catch (InterruptedException ex) {
             }
-            
-            // Check for arduino
-            sendMsg(ack);
+            try {
+                // Check for arduino
+                sendMsg(ack);
+            } catch (IOException ex) {
+                System.out.println("DERP");
+                continue;
+            }
             
             
             try {
@@ -192,20 +196,8 @@ public class ComLayer implements SerialPortEventListener {
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
-
-    public synchronized void sendMsg(String msg) {
-        try {
-            output.write(msg.getBytes());
-        } catch (IOException e) {
-            System.err.println("send error");
-        }
-    }
     
-    public synchronized void sendMsg(byte[] bytes) {
-        try {
-            output.write(bytes);
-        } catch (IOException e) {
-            System.err.println("send error");
-        }
+    public synchronized void sendMsg(byte[] bytes) throws IOException {
+        output.write(bytes);
     }
 }

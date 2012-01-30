@@ -18,20 +18,9 @@ class ComputerSerial{
 		STATE_CONTENT
 	};
 	
-	// Enum for protocol OPCodes
-	typedef enum {
-		OPCODE_PING,
-		OPCODE_TEXT,
-		OPCODE_SENSOR,
-		OPCODE_PIN_T,
-		OPCODE_PIN_R,
-		OPCODE_PIN_W,
-		OPCODE_RESPONSE = 0xFE,
-		OPCODE_RESET = 0xFF
-	};
-	
 	void commandHandler(byte size, byte opcode, byte flag, byte content[]);
 	void ack(byte opcode);
+	void ack(byte opcode, byte content[], byte contentSize);
 	void ping();
 	void text(byte size, byte flag, byte content[]);
 	void sensor(byte number);
@@ -47,8 +36,26 @@ public:
 	
 	void serialEvent();
 	void begin(int baud);
+	void attachFunction(byte opcode, 
+		void (*handler)(byte flag, byte content[], byte contentSize));
 	
 	unsigned int getBytesReceived();
+	
+	// Enum for protocol OPCodes
+	typedef enum {
+		OPCODE_PING,
+		OPCODE_TEXT,
+		OPCODE_SENSOR,
+		OPCODE_PIN_T,
+		OPCODE_PIN_R,
+		OPCODE_PIN_W,
+		OPCODE_RESPONSE = 0xFE,
+		OPCODE_RESET = 0xFF
+	};
+
+private: 
+	static const byte NUM_OPCODES = 6;
+	int (*functions[NUM_OPCODES]) (byte flag, byte content[], byte contentSize);
 };
 
 #endif

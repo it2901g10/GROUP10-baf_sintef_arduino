@@ -1,5 +1,6 @@
 package source;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +51,11 @@ public class Protocol implements ComLayerListener {
         }
         
         waitingForAck = OPCODE_TEXT;
-        
-        board.sendMsg(output);
+        try {
+            board.sendMsg(output);
+        } catch (IOException ex) {
+            System.out.println("Send fail");
+        }
         release();
     }
     

@@ -41,6 +41,16 @@ void ComputerSerial::ack(byte opcode){
 	Serial.write(NULL_BYTE);
 }
 
+void ComputerSerial::ack(byte opcode, byte content[], byte contentSize){
+	Serial.write(START_BYTE);
+	Serial.write(contentSize + 3);
+	Serial.write(OPCODE_RESPONSE);
+	Serial.write(opcode);
+	for (int i = 0; i < contentSize; ++i){
+		Serial.write(content[i]);
+	}
+}
+
 void ComputerSerial::ping() {
 	// Send ping response
 	Serial.write((byte)0x00);
@@ -49,6 +59,7 @@ void ComputerSerial::ping() {
 
 void ComputerSerial::text(byte size, byte flag, byte content[]) {
 	// Print content on display(flag)
+	(*functions[OPCODE_TEXT])(flag, content, size-3);
 	ack(OPCODE_TEXT);
 }
 
@@ -72,6 +83,10 @@ void ComputerSerial::reset() {
 	// Reset arduino
 }
 
+void ComputerSerial::attachFunction(byte opcode, 
+	void (*handler)(byte flag, byte content[], byte contentSize)){
+	
+}
 
 void ComputerSerial::serialEvent(){
 	static int state = STATE_START;
