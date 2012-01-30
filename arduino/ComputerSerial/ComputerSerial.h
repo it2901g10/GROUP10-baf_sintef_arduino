@@ -18,26 +18,28 @@ class ComputerSerial{
 		STATE_CONTENT
 	};
 	
-	void commandHandler(byte size, byte opcode, byte flag, byte content[]);
-	void ack(byte opcode);
-	void ack(byte opcode, byte content[], byte contentSize);
+	void commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, uint8_t content[]);
+	void ack(uint8_t opcode);
+	void ack(uint8_t opcode, uint8_t content[], uint8_t contentSize);
 	void ping();
-	void text(byte size, byte flag, byte content[]);
-	void sensor(byte number);
-	void pinToggle(byte pin);
-	void pinRead(byte pin);
-	void pinWrite(byte pin, byte value);
+	void text(uint8_t size, uint8_t flag, uint8_t content[]);
+	void sensor(uint8_t number);
+	void pinToggle(uint8_t pin);
+	void pinRead(uint8_t pin);
+	void pinWrite(uint8_t pin, uint8_t value);
 	void reset();
+	
+	
 	
 	unsigned int bytesReceived;
 	
 public:
 	ComputerSerial();
-	
+	static void placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
 	void serialEvent();
 	void begin(int baud);
-	void attachFunction(byte opcode, 
-		void (*handler)(byte flag, byte content[], byte contentSize));
+	void attachFunction(uint8_t opcode, 
+		void (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
 	
 	unsigned int getBytesReceived();
 	
@@ -54,8 +56,8 @@ public:
 	};
 
 private: 
-	static const byte NUM_OPCODES = 6;
-	int (*functions[NUM_OPCODES]) (byte flag, byte content[], byte contentSize);
+	static const uint8_t NUM_OPCODES = 6;
+	void (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
 };
 
 #endif

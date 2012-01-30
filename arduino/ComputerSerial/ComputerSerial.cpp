@@ -2,15 +2,23 @@
 
 #include "ComputerSerial.h"
 
+void ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize) {
+	return;
+}
+
 ComputerSerial::ComputerSerial(){
 	
 }
 
 void ComputerSerial::begin(int baud){
 	Serial.begin(baud);
+	
+	for (int i = 0; i < NUM_OPCODES; ++i){
+		attachFunction(i, &ComputerSerial::placeHolder);
+	}
 }
 
-void ComputerSerial::commandHandler(byte size, byte opcode, byte flag, byte content[]) {
+void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, uint8_t content[]) {
 	switch (opcode) {
 		case OPCODE_PING:
 			ping();
@@ -33,7 +41,7 @@ void ComputerSerial::commandHandler(byte size, byte opcode, byte flag, byte cont
 	}
 }
 
-void ComputerSerial::ack(byte opcode){
+void ComputerSerial::ack(uint8_t opcode){
 	Serial.write(START_BYTE);
 	Serial.write(4);
 	Serial.write(OPCODE_RESPONSE);
@@ -41,7 +49,7 @@ void ComputerSerial::ack(byte opcode){
 	Serial.write(NULL_BYTE);
 }
 
-void ComputerSerial::ack(byte opcode, byte content[], byte contentSize){
+void ComputerSerial::ack(uint8_t opcode, uint8_t content[], uint8_t contentSize){
 	Serial.write(START_BYTE);
 	Serial.write(contentSize + 3);
 	Serial.write(OPCODE_RESPONSE);
@@ -57,25 +65,25 @@ void ComputerSerial::ping() {
 	Serial.write((byte)0xFF);
 }
 
-void ComputerSerial::text(byte size, byte flag, byte content[]) {
+void ComputerSerial::text(uint8_t size, uint8_t flag, uint8_t content[]) {
 	// Print content on display(flag)
-	(*functions[OPCODE_TEXT])(flag, content, size-3);
+	functions[OPCODE_TEXT](flag, content, size-3);
 	ack(OPCODE_TEXT);
 }
 
-void ComputerSerial::sensor(byte number) {
+void ComputerSerial::sensor(uint8_t number) {
 	// Send value of sensor(number)
 }
 
-void ComputerSerial::pinToggle(byte pin) {
+void ComputerSerial::pinToggle(uint8_t pin) {
 	// Toggle pin(pin)
 }
 
-void ComputerSerial::pinRead(byte pin) {
+void ComputerSerial::pinRead(uint8_t pin) {
 	// Send pin(pin) value
 }
 
-void ComputerSerial::pinWrite(byte pin, byte value) {
+void ComputerSerial::pinWrite(uint8_t pin, uint8_t value) {
 	// Set value of pin(pin)
 }
 
@@ -83,19 +91,19 @@ void ComputerSerial::reset() {
 	// Reset arduino
 }
 
-void ComputerSerial::attachFunction(byte opcode, 
-	void (*handler)(byte flag, byte content[], byte contentSize)){
-	
+void ComputerSerial::attachFunction(uint8_t opcode, 
+	void (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize)){
+		functions[opcode] = handler;
 }
 
 void ComputerSerial::serialEvent(){
 	static int state = STATE_START;
 	
-	static byte size = 0;
-	static byte opcode = 0;
-	static byte flag = 0;
-	static byte content[CONTENT_SIZE];
-	static byte content_counter = 0;
+	static uint8_t size = 0;
+	static uint8_t opcode = 0;
+	static uint8_t flag = 0;
+	static uint8_t content[CONTENT_SIZE];
+	static uint8_t content_counter = 0;
 	
 	while(Serial.available()){
 		
