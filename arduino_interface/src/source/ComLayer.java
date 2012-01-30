@@ -167,9 +167,6 @@ public class ComLayer implements SerialPortEventListener {
                         for (ComLayerListener listener : listeners) {
                             listener.byteReceived(chunk[0]);
                         }
-
-                        // Displayed results are codepage dependent
-                        System.out.print(new String(chunk));
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());

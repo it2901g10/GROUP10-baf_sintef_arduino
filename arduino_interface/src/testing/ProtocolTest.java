@@ -18,7 +18,8 @@ public class ProtocolTest {
         Protocol arduino = new Protocol();
         
         for (int i = 0; i < 100000000; ++i){
-            arduino.print(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            arduino.print(new String(new char[250]));
+            //arduino.print(new SimpleDateFormat("HH:mm:ss                                                              ").format(new Date()));
             //arduino.print(i + "s");
             /*try {
                 Thread.sleep(1000);

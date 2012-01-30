@@ -79,7 +79,7 @@ void ComputerSerial::serialEvent(){
 	static byte size = 0;
 	static byte opcode = 0;
 	static byte flag = 0;
-	static byte content[60];
+	static byte content[CONTENT_SIZE];
 	static byte content_counter = 0;
 	
 	while(Serial.available()){

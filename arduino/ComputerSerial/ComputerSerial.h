@@ -6,6 +6,8 @@
 #define START_BYTE (byte)0xFF
 #define NULL_BYTE (byte)0x00
 
+#define CONTENT_SIZE 250
+
 class ComputerSerial{
 	// SerialEvent state enum
 	typedef enum {
