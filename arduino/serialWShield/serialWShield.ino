@@ -6,20 +6,24 @@
 
 #include <ComputerSerial.h>
 
+#include <Display.h>
+
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 //DogLcd lcd(12, 11, 9, 10);
 
 ComputerSerial comp;
+Display display(1);
 
 void text(byte flag, byte content[], byte contentSize){
-	lcd.setCursor(0, 0);
-	lcd.print("YAY");
+	lcd.setCursor(7, 0);
+	display.print(flag, content, contentSize);
 }
 
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
-	//comp.attachFunction(comp.OPCODE_TEXT, &text);
+	comp.attachFunction(comp.OPCODE_TEXT, &text);
+	display.attachDisplay(&lcd);
 	
   	pinMode(13, OUTPUT);
 	
@@ -28,9 +32,9 @@ void setup(){
 	lcd.setCursor(0, 0);
 	lcd.print("Recvd: -");
 	lcd.setCursor(0,1);
-	lcd.print("Bytes: 0");
+	//lcd.print("Bytes: 0");
 	//lcd.setCursor(0, 2);
-	//lcd.print("Alive: ");
+	lcd.print("Alive: ");
 }
 
 void loop(){
@@ -39,18 +43,18 @@ void loop(){
 	if (millis() > time + 1000){
 		lcd.setCursor(7, 0);
 		lcd.print("         ");
-		lcd.setCursor(7, 0);
-		lcd.print(bytes-lastBytes);
-		lcd.print("b/s");
+		//lcd.setCursor(7, 0);
+		//lcd.print(bytes-lastBytes);
+		//lcd.print("b/s");
 		lastBytes = bytes;
 		time = millis();
 		
-  		//lcd.setCursor(7, 2);
-		//lcd.print(millis()/1000);
-		//lcd.print("s");
+  		lcd.setCursor(7, 1);
+		lcd.print(millis()/1000);
+		lcd.print("s");
 
-		lcd.setCursor(7, 1);
-		lcd.print(bytes);
+		//lcd.setCursor(7, 1);
+		//lcd.print(bytes);
 	}
 }
 
