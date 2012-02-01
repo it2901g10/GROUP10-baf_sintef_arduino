@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
 import android.bluetooth.BluetoothDevice;
@@ -17,34 +16,7 @@ public class ArduinoBluetoothConnection {
 	private BufferedOutputStream output;
 	
 	static final byte[] PING_COMMAND = new byte[] {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};   
-	
-	public class ConnectorThread extends Thread {
-		BluetoothSocket socket;
-		volatile boolean success;
-		volatile IOException errorReason;
-				
-		public ConnectorThread(BluetoothSocket socket) {
-			this.socket = socket;
-		}
 		
-		@Override
-		public void run() {
-			
-			//Establish connection
-		    try {
-				socket.connect();
-				success = true;
-			} catch (IOException e) {
-				success = false;
-				errorReason = e;
-			}
-		}
-		
-	}
-	
-	
-	private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-	
 	/**
 	 * Creates and establishes a new connection to an Arduino device.
 	 * @param device Which device we will try to establish an connection to
@@ -54,10 +26,7 @@ public class ArduinoBluetoothConnection {
 	 * @throws IllegalArgumentException is thrown if the specified BluetoothDevice is not an Arduino device
 	 */
 	ArduinoBluetoothConnection(BluetoothDevice device) throws IOException, IllegalArgumentException, TimeoutException {		
-		ConnectorThread connectionThread;
-		
-//		socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-						
+								
 		//Create a socket
 		try {
 			Method m  = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
@@ -68,26 +37,7 @@ public class ArduinoBluetoothConnection {
 		}
 	
 		Log.e("BluetoothTest", "STARTING CONNECT");
-
-		//Open connection in another thread
-/*		connectionThread = new ConnectorThread(socket);
-		connectionThread.start();
-		
-		//check for timeout
-		long timeout = System.currentTimeMillis() + 5000;
-		while(connectionThread.isAlive()){
-			if( System.currentTimeMillis() > timeout ) {
-				socket.close();
-				throw new TimeoutException("Remote device used too long time to establish connection");
-			}
-		}
-		
-		//something went wrong
-		if( connectionThread.errorReason != null ) 
-			throw new IOException( connectionThread.errorReason.getMessage() );			
-*/
 		socket.connect();
-		
 		Log.e("BluetoothTest", "CONNECT SUCCESS");
 		
 		//Get input and output streams
@@ -151,9 +101,6 @@ public class ArduinoBluetoothConnection {
 			
 			//Timeout?
 			if( System.currentTimeMillis() > timeStart ) throw new TimeoutException("Communication timeout.");
-			
-			//Only read if there is anything to read
-			//if( input.available() > 0 ) continue;
 			
 			//Read one byte
 			byteRead = input.read();
