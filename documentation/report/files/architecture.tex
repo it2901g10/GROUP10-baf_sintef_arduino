@@ -117,7 +117,7 @@ The constantStream threshold value is a signal to the ArduinoBoard to indicate h
 Threshold = 0.0f; means all data will be streamed
 Threshold = 1.0f; means no data will be send from shield to the program. You can only retrieve data by specifically asking for it.
 
-A mid value is dependent on the Shields connected, if the accelerometer has upper values in x,y,z directions from <-1000, 1000>, a threshold of 0.8f indicates we need extreme sudden change of Δ(0.8*2000) in one of the x,y,z axis to send a notification from the Arduino board.
+A mid value is dependent on the Shields connected, if the accelerometer has upper values in x,y,z directions from <-1000, 1000>, a threshold of 0.8f indicates we need extreme sudden change of $\Delta(0.8*2000)$ in one of the x,y,z axis to send a notification from the Arduino board.
 
 Example, extremely sudden change (In one cycle?) from -700 to +800 in x direction.  
 
