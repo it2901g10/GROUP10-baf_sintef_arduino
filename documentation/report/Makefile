@@ -6,15 +6,6 @@ texs = $(wildcard files/*.tex) $(wildcard files/appendix/*.tex) title.tex
 schems = $(wildcard img/schematics/*pdf)
 imgs = $(wildcard img/*.pdf)
 
-dot_pdfs = $(patsubst dot/%.dot, img/%.pdf, $(dots))
-dia_pngs = $(patsubst dia/%.dia, img/%.png, $(dias))
-
-img/%.pdf : dot/%.dot
-	dot -Tpdf $< -o $@
-
-img/%.png : dia/%.dia
-	dia -e $@ $<
-
 all : $(report)
 
 $(report) : $(tex) $(dot_pdfs) $(dia_pngs) $(texs) $(schems) $(imgs)
