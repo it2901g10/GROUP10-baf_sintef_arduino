@@ -83,6 +83,7 @@ display.printText("HelloWorld");
 
 Developer adds his listener.
 ====
+\begin{code}
 LEDKeyPadShield display = board.getShield(LEDKeyPadShield.class);
 display.addStateChangeListener(new ArduinoStateChangeListener(){
   @Override
@@ -92,6 +93,7 @@ display.addStateChangeListener(new ArduinoStateChangeListener(){
     }
    }
 });
+\end{code}
 ====
 
 In ArduinoConnection we have listenForData(); method, that has its own thread listening on it.
