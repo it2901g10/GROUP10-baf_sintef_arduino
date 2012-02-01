@@ -1,0 +1,102 @@
+% FILE:   lumalayout.sty
+% DATE:   2011-01-29
+% AUTHOR: Jamie Stevens,
+%         Einar Uvsløkk, <einaru@stud.ntnu.no>
+%
+% DESCRIPTION: 
+%   LaTeX layout style used for the project report in course IT2901 Informatics
+%   project II, Norwegian Univeristy of Science and Technology, spring 2011.
+%   It mainly contains stylings for chapters, headings and footers.
+%
+% LICENSE:
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
+% 
+%   This program is distributed in the hope that it will be useful,
+%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%   GNU General Public License for more details.
+% 
+%   You should have received a copy of the GNU General Public License
+%   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+\ProvidesPackage{lumalayout}
+\RequirePackage{fancybox}             % Used for the pagenumber boxes
+\RequirePackage{psboxit}              % Used for the pagenumber boxes
+\RequirePackage{fancyhdr}             % Used for the header and footer styling
+\RequirePackage[avantgarde]{quotchap} % Used for chapter styling
+\RequirePackage[calcwidth]{titlesec}  % Used for section styling
+
+\PScommands
+\fancyhead{}
+%\fancyfoot{}
+
+% ---------------------------------------------------------------------------- %
+% Header styling
+
+% Odd pagenumbers:
+% Section name located at the top right
+\fancyhead[RO]{\sffamily\bfseries\rightmark}
+
+% Even pages:
+% Section name located at top left
+\fancyhead[LE]{\sffamily\bfseries\leftmark}
+
+% ---------------------------------------------------------------------------- %
+% Footer styling
+
+%% Style for even side pages
+%\fancyfoot[LE]
+%{\psboxit{box 0.8 setgray fill}
+%	{\framebox[10mm][c]
+%		{\rule{0cm}{4mm}\color{black}
+%			{\bfseries\thepage}}}}
+
+%% Style for odd side pages
+%\fancyfoot[RO]
+%{\psboxit{box 1 setgray fill}
+%	{\hspace{\textwidth}\psboxit{box 0.8 setgray fill}
+%		{\framebox[10mm][c]
+%			{\rule{0cm}{4mm}
+%				\color{black}{\bfseries\thepage}}}}}
+%				
+%% Create a horizontal line above the pagenumber boxes
+%\renewcommand{\footrulewidth}{0.4pt}
+%\renewcommand{\footruleskip}{0mm}
+
+% Lunch the pagestyle
+\pagestyle{fancy}
+
+%% Make sure the chapter and contents pages have the same pagenumber stuff on 
+%% the bottom
+%\fancypagestyle{plain}
+%{\fancyhf{}\fancyfoot[RO]
+%	{\psboxit{box 1 setgray fill}
+%		{\hspace{\textwidth}\psboxit{box 0.8 setgray fill}
+%			{\framebox[10mm][c]
+%				{\rule{0cm}{4mm}\color{black}
+%					{\bfseries \thepage}}}}}
+%	\renewcommand{\headrulewidth}{0pt}
+%	\renewcommand{\footrulewidth}{0.5pt}}
+
+% Make sure that blank pages actually _is_blank_.
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside\ifodd\c@page\else
+	\hbox{}
+	\vspace*{\fill}
+	\thispagestyle{empty}
+	\newpage
+	\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+% ---------------------------------------------------------------------------- %
+% Chapter and section styling
+
+% Put chapter titles closer to the top
+\renewcommand\chapterheadstartvskip{\vspace*{-5\baselineskip}}
+
+% Create a line under every section title
+\titleformat{\section}[hang]{\sffamily\bfseries}
+{\Large\thesection}{10pt}{\Large}[{\titlerule[0.5pt]}]
