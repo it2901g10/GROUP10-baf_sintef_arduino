@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.snaa;
+package sna.fb;
 
-import org.snaa.BaseRequestListener;
-import org.snaa.SessionEvents.AuthListener;
-import org.snaa.SessionEvents.LogoutListener;
+import sna.fb.BaseRequestListener;
+import sna.fb.SessionEvents.AuthListener;
+import sna.fb.SessionEvents.LogoutListener;
 
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
@@ -35,6 +35,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+
 
 public class LoginButton extends ImageButton {
     

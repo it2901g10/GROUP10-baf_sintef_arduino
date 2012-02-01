@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.snaa;
+package sna.fb;
 
 import com.facebook.android.Facebook;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import com.facebook.android.Facebook;
 
 public class SessionStore {
     

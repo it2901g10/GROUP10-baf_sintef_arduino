@@ -1,4 +1,4 @@
-package org.snaa;
+package sna.fb;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.FacebookError;
-
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 
 /**

@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 // Lemrey
-package org.snaa;
+package sna.fb;
+
+import sna.fb.SessionEvents.AuthListener;
+import sna.fb.SessionEvents.LogoutListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,11 +34,9 @@ import android.widget.TextView;
 
 import com.facebook.android.*;
 
-import org.snaa.SessionEvents.AuthListener;
-import org.snaa.SessionEvents.LogoutListener;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 public class MainActivity extends Activity {
 
@@ -124,14 +126,14 @@ public class MainActivity extends Activity {
 		public void onComplete(final String response, final Object state) {
 			
 			JSONObject json = null;
-			final String name;
+			final String story;
 			
 			try {
 				// process the response here: executed in background thread
 				//Log.d("Facebook-Example", "Response: " + response.toString());
 				
 				json = Util.parseJson(response);
-				name = json.getJSONArray("data").getJSONObject(0).getString("story");
+				story = json.getJSONArray("data").getJSONObject(0).getString("story");
 				
 				// then post the processed result back to the UI thread
 				// if we do not do this, an runtime exception will be generated
@@ -140,7 +142,7 @@ public class MainActivity extends Activity {
 					new Runnable()
 					{
 						public void run() {
-							mText.setText("Hello there, " + name + "!");
+							mText.setText("Hello there, " + story);
 						}
 					}
 				);

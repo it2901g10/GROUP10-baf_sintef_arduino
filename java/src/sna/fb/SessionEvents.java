@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.snaa;
+package sna.fb;
 
 import java.util.LinkedList;
 

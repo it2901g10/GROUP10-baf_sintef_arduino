@@ -1,4 +1,4 @@
-package org.snaa;
+package sna.fb;
 
 import com.facebook.android.DialogError;
 import com.facebook.android.FacebookError;
