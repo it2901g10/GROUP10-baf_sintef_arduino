@@ -25,6 +25,7 @@
 \usepackage{appendix}
 \usepackage{fixltx2e}
 \usepackage{fancyvrb}
+\usepackage{color}
 
 \usepackage{hyperref}         % Lenker !! Må være til slutt !!
 \usepackage[xindy]{glossaries}
@@ -59,6 +60,43 @@
 %\newcommand{\ylwcell}[1]{\cellcolor{yellow}#1}
 
 % Custom settings ------------------------------------------------------------ %
+% listings defitions
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\newcommand{\javacode}{\lstset{language=Java,
+basicstyle=\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=2,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}}
+
+\newcommand{\ccode}{\lstset{language=C++,
+basicstyle=\ttfamily,
+keywordstyle=\color{Blue},
+stringstyle=\color{BurntOrange},
+commentstyle=\color{Gray},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=2,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false}}
+
+
+
+
+
 \DeclareGraphicsExtensions{.pdf, .png, .jpg, .gif}
 \graphicspath{{./img/}}
 
