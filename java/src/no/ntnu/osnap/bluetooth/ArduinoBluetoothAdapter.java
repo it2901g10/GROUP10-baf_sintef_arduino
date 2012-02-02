@@ -1,4 +1,4 @@
-package ntnu.bluetooth.main;
+package no.ntnu.osnap.bluetooth;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,17 +1,22 @@
-package ntnu.bluetooth.main;
+package no.ntnu.osnap.test;
 
 import java.util.ArrayList;
 
-import ntnu.bluetooth.main.ArduinoBluetoothAdapter.UnsupportedHardwareException;
+import no.ntnu.osnap.arduinointerface.Protocol;
+import no.ntnu.osnap.bluetooth.ArduinoBluetoothAdapter;
+import no.ntnu.osnap.bluetooth.ArduinoBluetoothAdapter.UnsupportedHardwareException;
+import no.ntnu.osnap.bluetooth.ArduinoBluetoothAdapterListener;
+import no.ntnu.osnap.bluetooth.ArduinoBluetoothConnection;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-public class Bluetooth extends Activity implements ArduinoBluetoothAdapterListener {
+public class AndroidBluetoothTest extends Activity implements ArduinoBluetoothAdapterListener {
     private TextView GUI;
     private ArduinoBluetoothAdapter adapter;
+    private Protocol protocol;
     	    
     private void print(String line) {
 		GUI.append(line);
@@ -66,7 +71,13 @@ public class Bluetooth extends Activity implements ArduinoBluetoothAdapterListen
 	}
 
 	public void arduinoDeviceFound(ArduinoBluetoothConnection arduinoDevice) {
-		printLine("Found one arduino device");
+		printLine("Connected to an Arduino!");
+		
+		protocol = new Protocol(arduinoDevice);
+		
+		for( int i = 0; i < 10000; i++)
+			protocol.print(new String(new char[256]));
+		
 		arduinoDevice.close();
 	}
     
