@@ -72,7 +72,7 @@ display.printText("HelloWorld");
 
 \begin{figure}
 	\centering
-	\includegraphics{./img/architecture-arduinojava.png}
+	\includegraphics[scale=0.5]{./img/architecture-arduinojava.png}
 	\caption{Conceptual Arduino to Java Connection}
 	\label{fig:architecture-arduinojava}
 \end{figure}
@@ -127,6 +127,7 @@ It's not yet clear if we can implement this function into the firmware.
 
 \section{Example run framework part 2}
 
+\begin{code}
 //In this case, we register our service with a premade simple Facebook app we have created on
 //Facebook.com
 SocialService service = new FacebookService(FacebookSevice.getAppAuth("appName"));
@@ -145,3 +146,4 @@ service.addSocialListener(new SocialListener(){
 
 //New post
 service.postNewPost(new Post("Hello Profile"));
+\end{code}
