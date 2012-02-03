@@ -3,17 +3,20 @@ The client asks for a java framework that works on either Android or desktop, to
 
 If a programmer wants to use the framework to connect a social service to the Arduino board, he would like to work with data in either end and forward it.
 
-Example 1:
-He would like to retrieve data from the social service, do something with it, and push data to the Arduino.
+\begin{itemize}
+  \item\textbf{Example 1:} 
 
-Example 2:
-He would like to grab data from the Arduino, do something with it, and upload it to a social service.
+  He would like to retrieve data from the social service, do something with it, and push data to the Arduino.
+
+  \item\textbf{Example 2:}
+
+  He would like to grab data from the Arduino, do something with it, and upload it to a social service.
+\end{itemize}
 
 This illustrates a split in the middle where the developer wants to treat the data himself. Since there is no direct connection between a social service and the Arduino board from our framework, it makes sense to split the framework into two parts.
 
-Framework part one: Retrieving and uploading data between social service and java.
-
-Framework part two: Grab and push data between the Arduino board and java.
+\raggedright\subsubsection{Framework part one:} Retrieving and uploading data between social service and java.
+\subsubsection{Framework part two:} Grab and push data between the Arduino board and java.
 
 Both frameworks would need to support Android and development. This is an advantage for us who is going to create the framework, and for those who are going to use it.
 
@@ -84,7 +87,6 @@ display.printText("HelloWorld");
 
 
 Developer adds his listener.
-====
 \javacode
 \begin{lstlisting}
 LEDKeyPadShield display = board.getShield(LEDKeyPadShield.class);
@@ -97,7 +99,6 @@ display.addStateChangeListener(new ArduinoStateChangeListener(){
    }
 });
 \end{lstlisting}
-====
 
 In ArduinoConnection we have listenForData(); method, that has its own thread listening on it.
 
@@ -110,8 +111,6 @@ It dumps the package into the shield.newArrivalPackage(dataPackage);
 
 It is then up to the shield class to extract the data from package, and fire off an ArduinoEvent to the listeners.
 
-====
-
 
 \section{Constant data stream solutions}
 
@@ -122,7 +121,7 @@ The constantStream threshold value is a signal to the ArduinoBoard to indicate h
 Threshold = 0.0f; means all data will be streamed
 Threshold = 1.0f; means no data will be send from shield to the program. You can only retrieve data by specifically asking for it.
 
-A mid value is dependent on the Shields connected, if the accelerometer has upper values in x,y,z directions from <-1000, 1000>, a threshold of 0.8f indicates we need extreme sudden change of $\Delta(0.8*2000)$ in one of the x,y,z axis to send a notification from the Arduino board.
+A mid value is dependent on the Shields connected, if the accelerometer has upper values in x,y,z directions from $<-1000, 1000>$, a threshold of $0.8f$ indicates we need extreme sudden change of $\Delta(0.8*2000)$ in one of the x,y,z axis to send a notification from the Arduino board.
 
 Example, extremely sudden change (In one cycle?) from -700 to +800 in x direction.  
 
