@@ -15,17 +15,15 @@ If a programmer wants to use the framework to connect a social service to the Ar
 
 This illustrates a split in the middle where the developer wants to treat the data himself. Since there is no direct connection between a social service and the Arduino board from our framework, it makes sense to split the framework into two parts.
 
-\raggedright\subsubsection{Framework part one:} Retrieving and uploading data between social service and java.
-\subsubsection{Framework part two:} Grab and push data between the Arduino board and java.
+\begin{itemize}
+  \item\textbf{Framework part one:} Retrieving and uploading data between social service and java.
+  \item\textbf{Framework part two:} Grab and push data between the Arduino board and java.
+\end{itemize}
 
 Both frameworks would need to support Android and development. This is an advantage for us who is going to create the framework, and for those who are going to use it.
 
-It's easier for us to create the framework since
-
 The disadvantage is that it will be no direct connection from the Arduino board to a social service.
 I.e, the board can not connect directly through the Internet to Facebook. It needs a middleman, either a Android phone or a laptop.
-
-
 
 After some tests, we have figured out that it makes no difference if the Arduino board is connected through a Bluetooth device or trough an USB cable. If it's an USB cable, the board shows up as a COM port. If the board is paired with the computer/mobile using the operating system/Android, it also shows up as a COM port. So the program searches the COM ports and connects to the board anyhow. (It's may not work on all bluetooth chipsets)
 
