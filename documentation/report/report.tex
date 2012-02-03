@@ -24,13 +24,10 @@
 \usepackage{caption}
 \usepackage{appendix}
 \usepackage{fixltx2e}
-\usepackage{fancyvrb}
 \usepackage{color}
 
 \usepackage{hyperref}         % Lenker !! Må være til slutt !!
 \usepackage[xindy]{glossaries}
-
-\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
 
 % Custom commands ------------------------------------------------------------ %
 % Her kan vi legge inn kommandoer for ord og uttrykk, som forekommer ofte i
@@ -67,31 +64,33 @@
 \definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
 
 \newcommand{\javacode}{\lstset{language=Java,
-basicstyle=\ttfamily,
+basicstyle=\scriptsize\ttfamily,
 keywordstyle=\color{javapurple}\bfseries,
 stringstyle=\color{javared},
 commentstyle=\color{javagreen},
 morecomment=[s][\color{javadocblue}]{/**}{*/},
 numbers=left,
 numberstyle=\tiny\color{black},
-stepnumber=2,
-numbersep=10pt,
+stepnumber=1,
+numbersep=4pt,
 tabsize=4,
 showspaces=false,
-showstringspaces=false}}
+showstringspaces=false,
+breaklines=true}}
 
 \newcommand{\ccode}{\lstset{language=C++,
-basicstyle=\ttfamily,
+basicstyle=\scriptsize\ttfamily,
 keywordstyle=\color{Blue},
 stringstyle=\color{BurntOrange},
 commentstyle=\color{Gray},
 numbers=left,
 numberstyle=\tiny\color{black},
-stepnumber=2,
+stepnumber=1,
 numbersep=10pt,
 tabsize=4,
 showspaces=false,
-showstringspaces=false}}
+showstringspaces=false,
+breaklines=true}}
 
 
 
@@ -187,6 +186,10 @@ showstringspaces=false}}
 \cleardoublepage
 \chapter{Test}\label{app:tests}
 \input{./files/appendix/testappendix}
+
+\cleardoublepage
+\chapter{Meeting minutes}\label{app:meetings}
+\input{./files/appendix/meetings}
 
 \cleardoublepage
 \bibliographystyle{plain}
