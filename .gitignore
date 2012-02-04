@@ -1,3 +1,4 @@
+*.lyx
 
 documentation/report/report.aux
 
@@ -20,3 +21,5 @@ documentation/report/report.pdf
 documentation/report/report.toc
 
 documentation/report/report.xdy
+
+documentation/report/report.brf
