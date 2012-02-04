@@ -1,43 +1,32 @@
-%% LyX 2.0.2 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
-\documentclass[11pt,twoside]{report}
-\usepackage[utf8]{inputenc}
-\usepackage{listings}
-\usepackage{geometry}
-\geometry{verbose}
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
-\usepackage{color}
-\usepackage{graphicx}
-\usepackage[unicode=true,pdfusetitle,
- bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
- breaklinks=false,pdfborder={0 0 1},backref=section,colorlinks=true]
- {hyperref}
-\hypersetup{
- linkcolor=black,filecolor=black,citecolor=black,urlcolor=black}
-
-\makeatletter
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
-\@ifundefined{definecolor}
- {\usepackage{color}}{}
 % ----------------------------------------------
 % IT2901 - Informatikk Prosjektarbeid II
 % Norwegian University of Science and Technology
 % ----------------------------------------------
 
-
+\documentclass[11pt,a4paper,twoside]{report}
 %\setlength{\oddsidemargin}{5mm}
 %\setlength{\evensidemargin}{25mm}
+\usepackage{geometry}
 %[top=4.cm, bottom=4.5cm, left=3.cm, right=3.cm]
-\usepackage{lumalayout}% Custom fancy layout fra hÃ¦lvette
-% Unicode for norske tegn
-% Støtte for bilder inkl. pdf
-\usepackage{nameref}% Støtte for labels på kapittel og seksjoner
-\usepackage[table]{xcolor}\usepackage{colortbl}% Kolonne farge i tabeller
-\usepackage{multirow}\usepackage{parskip}\usepackage{tabularx}\usepackage{umoline}\usepackage{pifont}\usepackage{listings}\usepackage{float}\usepackage{caption}\usepackage{appendix}\usepackage{fixltx2e}\@ifundefined{definecolor}{\usepackage{color}}{}
+\usepackage{lumalayout}       % Custom fancy layout fra hælvette
+\usepackage[utf8]{inputenc}	  % Unicode for norske tegn
+\usepackage[pdftex]{graphicx} % Støtte for bilder inkl. pdf
+\usepackage{nameref}          % Støtte for labels på kapittel og seksjoner
+\usepackage[table]{xcolor}
+\usepackage{colortbl}         % Kolonne farge i tabeller
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{tabularx}
+\usepackage{umoline}
+\usepackage{pifont}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{appendix}
+\usepackage{fixltx2e}
+\usepackage{color}
 
-
-% Lenker !! Må være til slutt !!
+\usepackage{hyperref}         % Lenker !! Må være til slutt !!
 \usepackage[xindy]{glossaries}
 
 % Custom commands ------------------------------------------------------------ %
@@ -111,32 +100,30 @@ breaklines=true}}
 \graphicspath{{./img/}}
 
 \setlength{\headheight}{15pt}
-
-
+\setcounter{tocdepth}{3}
+\hypersetup{colorlinks=true, 
+			linkcolor=black, 
+			filecolor=black,
+			citecolor=black,
+			urlcolor=black}
 
 \input{./files/glossary}
 \makeglossaries
 
-
-
-
-
-
-
-
-\makeatother
-
+\geometry{bindingoffset=2cm}
 \begin{document}
+
 % ---------------------------------------------------------------------------- %
 % Title page, table of contents, list of tables and figures goes here
 
+\input{./title}
 
-\input{title.tex}
-
-\cleardoublepage{}\tableofcontents{}\cleardoublepage{}
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
 
 \listoffigures
-\cleardoublepage{}
+\cleardoublepage
 
 \listoftables
 
@@ -144,124 +131,77 @@ breaklines=true}}
 %\printglossaries
 %\newpage
 
-
 % ---------------------------------------------------------------------------- %
 % Main report body goes here
-\cleardoublepage{}
+\cleardoublepage
+\chapter{Introduction}\label{ch:introduction}
+\input{./files/intro}
 
+\cleardoublepage
+\chapter{Team Management}\label{ch:team}
+\input{./files/team}
 
-\chapter{Introduction}
+\cleardoublepage
+\chapter{Requirements}\label{ch:requirements}
+\input{./files/requirements}
 
-\label{ch:introduction} \input{files/intro.tex}
+\cleardoublepage
+\chapter{Process Management}\label{ch:management}
+\input{./files/management}
 
-\cleardoublepage{}
+\cleardoublepage
+\chapter{Architecture Design}\label{ch:architecture}
+\input{./files/architecture}
 
+\cleardoublepage
+\chapter{Alternative Solutions}\label{ch:solutions}
+\input{./files/solutions}
 
-\chapter{Team Management}
+\cleardoublepage
+\chapter{Implementation}\label{ch:implementation}
+\input{./files/implementation}
 
-\label{ch:team} \input{files/team.tex}
+\cleardoublepage
+\chapter{System Testing}\label{ch:systest}
+\input{./files/systest}
 
-\cleardoublepage{}
+\cleardoublepage
+\chapter{Results}\label{ch:results}
+\input{./files/results}
 
+\cleardoublepage
+\chapter{Discussion}\label{ch:discussion}
+\input{./files/discussion}
 
-\chapter{Requirements}
-
-\label{ch:requirements} \input{files/requirements.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Process Management}
-
-\label{ch:management} \input{files/management.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Architecture Design}
-
-\label{ch:architecture} \input{files/architecture.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Alternative Solutions}
-
-\label{ch:solutions} \input{files/solutions.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Implementation}
-
-\label{ch:implementation} \input{files/implementation.tex}
-
-\cleardoublepage{}
-
-
-\chapter{System Testing}
-
-\label{ch:systest} \input{files/systest.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Results}
-
-\label{ch:results} \input{files/results.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Discussion}
-
-\label{ch:discussion} \input{files/discussion.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Conclusion and Further Work}
-
-\label{ch:conclusion} \input{files/conclusion.tex}
+\cleardoublepage
+\chapter{Conclusion and Further Work}\label{ch:conclusion}
+\input{./files/conclusion}
 
 % ---------------------------------------------------------------------------- %
 % Report appendixes goes here
-
-
 \appendix
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
-%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
-\appendixpage \addappheadtotoc
+\appendixpage
+\addappheadtotoc
 
-\cleardoublepage{}
+\cleardoublepage
+\chapter{Status Reports}\label{app:statusreports}
+\input{./files/appendix/statusreports}
 
+\cleardoublepage
+\chapter{First draft of the architecture}\label{app:firstdraftarchi}
+\input{./files/appendix/firstdraftarchi}
 
-\chapter{Status Reports}
+\cleardoublepage
+\chapter{Test}\label{app:tests}
+\input{./files/appendix/testappendix}
 
-\label{app:statusreports} \input{files/appendix/statusreports.tex}
+\cleardoublepage
+\chapter{Meeting minutes}\label{app:meetings}
+\input{./files/appendix/meetings}
 
-\cleardoublepage{}
-
-
-\chapter{First draft of the architecture}
-
-\label{app:firstdraftarchi} \input{files/appendix/firstdraftarchi.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Test}
-
-\label{app:tests} \input{files/appendix/testappendix.tex}
-
-\cleardoublepage{}
-
-
-\chapter{Meeting minutes}
-
-\label{app:meetings} \input{files/appendix/meetings.tex}
-
-\cleardoublepage{}  \bibliographystyle{plain}
+\cleardoublepage
+\bibliographystyle{plain}
 \bibliography{it2901}
 
 \end{document}
+
