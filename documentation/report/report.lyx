@@ -1,0 +1,984 @@
+#LyX file created by tex2lyx 2.0.2
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass report
+\begin_preamble
+\@ifundefined{definecolor}
+ {\usepackage{color}}{}
+\@ifundefined{definecolor}{\usepackage{color}}{}
+% ----------------------------------------------
+% IT2901 - Informatikk Prosjektarbeid II
+% Norwegian University of Science and Technology
+% ----------------------------------------------
+
+
+%\setlength{\oddsidemargin}{5mm}
+%\setlength{\evensidemargin}{25mm}
+%[top=4.cm, bottom=4.5cm, left=3.cm, right=3.cm]
+\usepackage{lumalayout}% Custom fancy layout fra hÃ¦lvette
+% Unicode for norske tegn
+% Støtte for bilder inkl. pdf
+\usepackage{nameref}% Støtte for labels på kapittel og seksjoner
+\usepackage[table]{xcolor}\usepackage{colortbl}% Kolonne farge i tabeller
+\usepackage{multirow}\usepackage{parskip}\usepackage{tabularx}\usepackage{umoline}\usepackage{pifont}\usepackage{listings}\usepackage{float}\usepackage{caption}\usepackage{appendix}\usepackage{fixltx2e}\@ifundefined{definecolor}{\usepackage{color}}{}
+
+
+% Lenker !! Må være til slutt !!
+\usepackage[xindy]{glossaries}
+
+% Custom commands ------------------------------------------------------------ %
+% Her kan vi legge inn kommandoer for ord og uttrykk, som forekommer ofte i
+% rapporten. På den måten får vi uttrykt oss mer konsistent gjennom rapporten, 
+% pluss at det blir enklere for oss å forandre på formatteringen av viktige ord
+% underveis (f.eks at vi plutselig bestemmer oss for at ntnu skal skrives i
+% kursiv eller med fet skrift).
+%
+% Vi kan prøve å følge en konvensjon her også. Et forslag:
+%
+%     Kommandoer med små bokstaver -> Full beskrivelse av ordet/uttrykket
+%     Kommandoer med store bokstaver -> Forkortelser
+%
+% Eksempel: 
+%
+%    \ntnu -> Norwegian University of Science and Technology
+%    \NTNU -> NTNU
+
+\newcommand{\project}{oSNAP}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand{\todo}[1]{\textbf{[TODO: {\color{red}#1}]}}
+
+%\newcommand{\redcell}[1]{\cellcolor{red!80!yellow}#1}
+%\newcommand{\grncell}[1]{\cellcolor{green!40!yellow}#1}
+%\newcommand{\ylwcell}[1]{\cellcolor{yellow}#1}
+
+% Custom settings ------------------------------------------------------------ %
+% listings defitions
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\newcommand{\javacode}{\lstset{language=Java,
+basicstyle=\scriptsize\ttfamily,
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javared},
+commentstyle=\color{javagreen},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=4pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false,
+breaklines=true}}
+
+\newcommand{\ccode}{\lstset{language=C++,
+basicstyle=\scriptsize\ttfamily,
+keywordstyle=\color{Blue},
+stringstyle=\color{BurntOrange},
+commentstyle=\color{Gray},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=10pt,
+tabsize=4,
+showspaces=false,
+showstringspaces=false,
+breaklines=true}}
+
+
+
+
+
+\DeclareGraphicsExtensions{.pdf, .png, .jpg, .gif}
+\graphicspath{{./img/}}
+
+\setlength{\headheight}{15pt}
+
+
+
+\input{./files/glossary}
+\makeglossaries
+
+
+
+
+
+
+
+
+
+
+
+\end_preamble
+\use_default_options false
+\language english
+\language_package none
+\inputencoding utf8
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize 11
+\spacing single
+\use_hyperref 1
+\pdf_bookmarks 1
+\pdf_bookmarksnumbered 0
+\pdf_bookmarksopen 0
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks 0
+\pdf_pdfborder 0
+\pdf_colorlinks 1
+\pdf_backref section
+\pdf_pdfusetitle 1
+\pdf_quoted_options "linkcolor=black,filecolor=black,citecolor=black,urlcolor=black"
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 0
+\use_mathdots 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% ---------------------------------------------------------------------------- %
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% Title page, table of contents, list of tables and figures goes here
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "title.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset FloatList table
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%
+\backslash
+printglossaries
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%
+\backslash
+newpage
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% ---------------------------------------------------------------------------- %
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% Main report body goes here
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Introduction
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:introduction"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/intro.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Team Management
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:team"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/team.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Requirements
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:requirements"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/requirements.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Process Management
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:management"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/management.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Architecture Design
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:architecture"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/architecture.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Alternative Solutions
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:solutions"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/solutions.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Implementation
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:implementation"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/implementation.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+System Testing
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:systest"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/systest.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Results
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:results"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/results.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Discussion
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:discussion"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/discussion.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Conclusion and Further Work
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "ch:conclusion"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/conclusion.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% ---------------------------------------------------------------------------- %
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+% Report appendixes goes here
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\start_of_appendix
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+%dummy comment inserted by tex2lyx to ensure that this paragraph is not empty
+\end_layout
+
+\begin_layout Standard
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+appendixpage
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+addappheadtotoc
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Status Reports
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "app:statusreports"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/appendix/statusreports.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+First draft of the architecture
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "app:firstdraftarchi"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/appendix/firstdraftarchi.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Test
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "app:tests"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/appendix/testappendix.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+
+Meeting minutes
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "app:meetings"
+
+\end_inset
+
+ 
+\begin_inset CommandInset include
+LatexCommand input
+preview false
+filename "files/appendix/meetings.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+  
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "it2901"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
