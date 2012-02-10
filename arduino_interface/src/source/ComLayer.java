@@ -11,7 +11,7 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ComLayer implements SerialPortEventListener {
+public class ComLayer implements SerialPortEventListener, ComLayerInterface {
 
     SerialPort serialPort;
     /**
@@ -45,21 +45,21 @@ public class ComLayer implements SerialPortEventListener {
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
     
-    private ArrayList<ComLayerListener> listeners;
+    private ComLayerListener listener;
 
     public ComLayer() {
-        listeners = new ArrayList<ComLayerListener>();
+        setListener(null);
         while (!findArduino());
     }
     
     public ComLayer(ComLayerListener listener) {
-        listeners = new ArrayList<ComLayerListener>();
-        listeners.add(listener);
+        setListener(listener);
         while (!findArduino());
     }
     
-    public void addListener(ComLayerListener listener){
-        listeners.add(listener);
+    @Override
+    public void setListener(ComLayerListener listener){
+        this.listener = listener;
     }
     
     private boolean findArduino(){
@@ -109,7 +109,7 @@ public class ComLayer implements SerialPortEventListener {
             }
             try {
                 // Check for arduino
-                sendMsg(ack);
+                sendBytes(ack);
             } catch (IOException ex) {
                 System.out.println("DERP");
                 continue;
@@ -168,9 +168,7 @@ public class ComLayer implements SerialPortEventListener {
                         byte chunk[] = new byte[1];
                         input.read(chunk, 0, 1);
                         
-                        for (ComLayerListener listener : listeners) {
-                            listener.byteReceived(chunk[0]);
-                        }
+                        listener.byteReceived(chunk[0]);
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());
@@ -197,7 +195,8 @@ public class ComLayer implements SerialPortEventListener {
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
     
-    public synchronized void sendMsg(byte[] bytes) throws IOException {
+    @Override
+    public synchronized void sendBytes(byte[] bytes) throws IOException {
         output.write(bytes);
     }
 }
