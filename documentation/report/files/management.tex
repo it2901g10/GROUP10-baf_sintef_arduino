@@ -31,19 +31,80 @@ Basic. Worked with AVR microcontrollers in other projects and courses.
 \subsection{Henrik Goldsack}
 ???
 
-\section{Development Process}
+\newpage
+\section{Selecting Development Process}
 Choosing a development process is crucial for every project as many varying factors such as
 project size, members and time affect which process is suitable. The following section describes
-which development processes we have considered to use. The choice of the development method
+which development processes we have considered using. The choice of the development method
 will affect how the group communicates, collaborates and write the code.
 
-Write a little about each of these:
-Scrum
-Extreme Programming (XP)
-Spiral
-Waterfall
-AUP?
+\subsection{Waterfall}
+The Waterfall model is a strict top-down design process. It features detailed planning, design and
+documentation before design. The strict model is useful where going back and changing requirements is 
+costly or impossible. This does however require that all needed features and requirements are known
+early on. The model was originally used for hardware design and when the first software projects 
+appeared it was simply adapted. Many argue that the Waterfall model is bad for software design, seeing
+as the developers cannot predict all problems or additional requirements before reviewing a working
+prototype of the final product. Customers also often have changing requirements under development.
+The Waterfall model works best for expensive projects where problem prediction and initial correct design
+is vital before implementation is started.
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.30]{img/designmodel-waterwall} \caption{The Waterfall model}
+\label{fig:desigmodel-waterfall}
+\end{figure}
 
+\subsection{Scrum}
+Scrum is a for of agile project managment. The scrum approach uses  repetitive iterations (called 
+a Sprint in the Scrum etymology) to design, implement and refine a product. Each iteration improves,
+fixes and adds new features to the previous iteration. A key feature of Scrum is that the customer
+can change their mind on what they want or need. Scrum focuses on frequent group meetings and
+splitting big tasks into lesser, managble tasks for smaller groups of programmers. Because of the
+frequent meetings it promotes verbal communication in the group.
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.4]{img/designmodel-scrum} \caption{The Scrum process}
+\label{fig:desigmodel-scrum}
+\end{figure}
+
+\subsection{Extreme Programming (XP)}
+Extreme Programming is a development methodology that is designed for best software quality and
+quick responsivness to changing customer requirements. It is also an Agile Development method like
+Scrum and therefore shares certain similarities to that development method. It promotes rapid
+development and allows the customer to change his/her mind or request new features throughout
+the development of the software. Typical elements for XP are pair programming, unit testing,
+lazy programming, simplicity and expecting changes in customer requirements as time passes
+and the problem is better understood. Several pitfalls include buggy and unstable code or lack of
+overall design specification. Extreme programming is best suited for small projects for prototyping
+where the customer is not entierly sure what he or she wants.
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.75]{img/designmodel-xp} \caption{Extreme Programming}
+\label{fig:desigmodel-xp}
+\end{figure}
+
+\subsection{Agile Unified Process}
+The AUP (short for Agile Unified Process) offers a simple and easy to understand approach for software
+development. It is a simplified version of the Rational Unified Process. Key features are simplicity, 
+customization and focus on the task on hand instead of everything that may or will happen. It features 
+several internal development iterations before producing a customer release. AUP focuses on quality
+insurance and works best for projects that is going to be used by a large public and a working, bugfree
+product is important.
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.65]{img/designmodel-aup} \caption{AUP development iterations}
+\label{fig:desigmodel-aupl}
+\end{figure}
+
+\subsection{Spiral Model}
+The Spiral development methodology combines the advantages of both the top-down approach from 
+Waterfall and the bottom-up concept of prototyping. It does this by using iterative development and
+controlling it through the systematic Waterfall model. A strong advantage of the Spiral lifecycle is that it
+allows new features and requests to be integrated as soon as they come avalible or known. Other key 
+features of the model is risk analysis, strict sysem design specifications and prototyping. The Spiral model
+ is best suited for large, expensive and complicated projects.
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.85]{img/designmodel-spiral} \caption{The Spiral model}
+\label{fig:desigmodel-spiral}
+\end{figure}
+
+\subsection{Conclusion}
 Given the iterative nature of our work schedule and of the meeting
 with our customer, as well as his request for intermediate prototypes
 to be presented during these meetings, the choice of Scrum as a development

@@ -1,0 +1,5 @@
+designmodel-xp.png			www.exremeprogramming.org
+designmodel-waterfall.png	wikipedia
+designmodel-spiral			http://www.designingprojectmanagement.com
+designmodel-scrum			wikipedia
+designmodel-aup				wikipedia
