@@ -25,6 +25,12 @@ The biggest difference in the new design is that API will still provide abstract
 for concepts common to the social network, but it will now focus on the estabilishing an interface,
 using Android's Intent mechanism, between Social applications and the Bluetooth library.
 
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/architecture-toplevel.png}
+\caption{Revised architecture}
+\label{fig:architecture}
+\end{figure}
+
 \newpage
 \section{Architecture diagram}
 The API layer is the social service layer. It uses androids build in broadcast intents to send and recive data to social services. Included in the social service we have classes that extends Intent class to indicate if its a social Post, social Group, social Image, social User etc. Multiple apps can use the API layer to send and retrive this data. 
