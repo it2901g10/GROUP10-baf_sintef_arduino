@@ -1,4 +1,4 @@
-package source;
+package no.ntnu.osnap.com;
 
 import java.io.IOException;
 
