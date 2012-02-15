@@ -24,15 +24,16 @@ public class Protocol implements ComLayerListener {
     public static final byte OPCODE_RESPONSE  = (byte) 0xFE;
     public static final byte OPCODE_RESET     = (byte) 0xFF;
     
-    private ComLayer board;
+    private ComLayerInterface board;
     private Command currentCommand;
     
     private Byte waitingForAck;
 
-    public Protocol() {
+    public Protocol(ComLayerInterface board) {
         currentCommand = new Command();
         waitingForAck = null;
-        board = new ComLayer(this);
+        this.board = board;
+        board.setListener(this);
     }
     
     public void print(String text){
@@ -52,7 +53,7 @@ public class Protocol implements ComLayerListener {
         
         waitingForAck = OPCODE_TEXT;
         try {
-            board.sendMsg(output);
+            board.sendBytes(output);
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -74,7 +75,7 @@ public class Protocol implements ComLayerListener {
         waitingForAck = OPCODE_SENSOR;
         
         try {
-            board.sendMsg(output);
+            board.sendBytes(output);
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -95,7 +96,7 @@ public class Protocol implements ComLayerListener {
         waitingForAck = OPCODE_PIN_T;
         
         try {
-            board.sendMsg(output);
+            board.sendBytes(output);
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -117,7 +118,7 @@ public class Protocol implements ComLayerListener {
         waitingForAck = OPCODE_PIN_R;
         
         try {
-            board.sendMsg(output);
+            board.sendBytes(output);
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -139,7 +140,7 @@ public class Protocol implements ComLayerListener {
         
         waitingForAck = OPCODE_PIN_W;
         try {
-            board.sendMsg(output);
+            board.sendBytes(output);
         } catch (IOException ex) {
             System.out.println("Send fail");
         }

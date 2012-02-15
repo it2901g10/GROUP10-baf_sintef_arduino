@@ -23,7 +23,7 @@ public class ComLayerTest {
         while (true){
             while (in.hasNextLine()){
                 try {
-                    com.sendMsg(in.nextLine().getBytes());
+                    com.sendBytes(in.nextLine().getBytes());
                 } catch (IOException ex) {
                     System.out.println("Send error");
                 }

@@ -7,6 +7,7 @@ package testing;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.text.DateFormatter;
+import source.ComLayer;
 import source.Protocol;
 
 /**
@@ -15,7 +16,7 @@ import source.Protocol;
  */
 public class ProtocolTest {
     public static void main(String[] args) {
-        Protocol arduino = new Protocol();
+        Protocol arduino = new Protocol(new ComLayer());
         
         for (int i = 0; i < 100000000; ++i){
             //arduino.print(new String(new char[250]));
