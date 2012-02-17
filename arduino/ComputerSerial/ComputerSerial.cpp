@@ -2,8 +2,8 @@
 
 #include "ComputerSerial.h"
 
-void ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize) {
-	return;
+void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize) {
+	return NULL;
 }
 
 ComputerSerial::ComputerSerial(){
@@ -27,17 +27,19 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 			text(size, flag, content);
 			break;
 		case OPCODE_SENSOR:
+			sensor(flag);
 			break;
 		case OPCODE_PIN_T:
 			break;
 		case OPCODE_PIN_R:
 			break;
 		case OPCODE_PIN_W:
+			//ack(OPCODE_PIN_W);
 			break;
 		case OPCODE_RESET:
 			break;
 		default:
-			Serial.println("commandHandler herp derp");
+			break;
 	}
 }
 
@@ -73,6 +75,15 @@ void ComputerSerial::text(uint8_t size, uint8_t flag, uint8_t content[]) {
 
 void ComputerSerial::sensor(uint8_t number) {
 	// Send value of sensor(number)
+	uint8_t content[] = {};
+	int *status = (int*)functions[OPCODE_SENSOR](number, content, 0);
+
+	uint16_t value = *status;
+	uint8_t replyContent[] = {value >> 8, value};
+
+	ack(OPCODE_SENSOR, replyContent, 2);
+
+	free(status);
 }
 
 void ComputerSerial::pinToggle(uint8_t pin) {
@@ -92,7 +103,7 @@ void ComputerSerial::reset() {
 }
 
 void ComputerSerial::attachFunction(uint8_t opcode, 
-	void (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize)){
+	void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize)){
 		functions[opcode] = handler;
 }
 
@@ -112,12 +123,12 @@ void ComputerSerial::serialEvent(){
 				if (Serial.read() == START_BYTE){
 					state = STATE_SIZE;
 				}
-				else{
-					// DERP
-				}
 				break;
 			case STATE_SIZE:
 				size = Serial.read();
+				if (size > CONTENT_SIZE + 3){
+					state = STATE_START;
+				}
 				state = STATE_OPCODE;
 				break;
 			case STATE_OPCODE:

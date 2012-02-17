@@ -35,29 +35,29 @@ class ComputerSerial{
 	
 public:
 	ComputerSerial();
-	static void placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
+	static void* placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
 	void serialEvent();
 	void begin(int baud);
 	void attachFunction(uint8_t opcode, 
-		void (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
+		void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
 	
 	unsigned int getBytesReceived();
 	
 	// Enum for protocol OPCodes
 	typedef enum {
-		OPCODE_PING,
-		OPCODE_TEXT,
-		OPCODE_SENSOR,
-		OPCODE_PIN_T,
-		OPCODE_PIN_R,
-		OPCODE_PIN_W,
+		OPCODE_PING, 	// 0
+		OPCODE_TEXT, 	// 1
+		OPCODE_SENSOR, 	// 2
+		OPCODE_PIN_T, 	// 3
+		OPCODE_PIN_R, 	// 4
+		OPCODE_PIN_W, 	// 5
 		OPCODE_RESPONSE = 0xFE,
 		OPCODE_RESET = 0xFF
 	};
 
 private: 
 	static const uint8_t NUM_OPCODES = 6;
-	void (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
+	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
 };
 
 #endif

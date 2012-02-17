@@ -1,4 +1,4 @@
-package source;
+package no.ntnu.osnap.com;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class Protocol implements ComLayerListener {
         release();
     }
     
-    public void sensor(int sensor){
+    public int sensor(int sensor){
         lock();
         int size = 5;
         
@@ -69,7 +69,7 @@ public class Protocol implements ComLayerListener {
         output[0] = (byte)0xFF;
         output[1] = (byte)(size-1);
         output[2] = OPCODE_SENSOR;
-        output[3] = (byte)sensor; // Will eventually specify display
+        output[3] = (byte)sensor; 
         output[4] = (byte)0;
         
         waitingForAck = OPCODE_SENSOR;
@@ -79,8 +79,33 @@ public class Protocol implements ComLayerListener {
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
+        
         release();
+        
+        while (waitingForAck != null){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                
+            }
+        }
+        
+        byte content[] = currentCommand.getContent();
+        
+        ackProcessingComplete();
+        
+        int sensorValue = (content[0] << 8) + toUnsigned(content[1]);
+        
+        return sensorValue;
     }
+    
+    public short toUnsigned(byte value){
+        if (value < 0){
+            return (short)((short)value & (short)0xFF);
+        }
+        return (short)value;
+    }
+    
     public void toggle(int pin){
         lock();
         int size = 5;
@@ -178,19 +203,31 @@ public class Protocol implements ComLayerListener {
         locked = false;
     }
     
+    private boolean processingAck = false;
+    private void ackProcessing(){
+        processingAck = true;
+        
+        while (processingAck);
+    }
+    
+    private void ackProcessingComplete(){
+        processingAck = false;
+    }
+    
     @Override
     public synchronized void byteReceived(byte data){
         if (currentCommand.byteReceived(data)){
             // Process command
+            
+            
             if (currentCommand.isAckFor(waitingForAck)){
                 waitingForAck = null;
+                ackProcessing();
                 currentCommand = new Command();
             }
             else {
                 throw new IllegalArgumentException("Received something unexpected");
             }
-            
-            notify();
         }
     }
 
@@ -261,6 +298,14 @@ class Command {
         }
         
         return false;
+    }
+    
+    public byte getOpcode(){
+        return opcode;
+    }
+    
+    public byte[] getContent(){
+        return content;
     }
     
     public boolean isAckFor(byte command){

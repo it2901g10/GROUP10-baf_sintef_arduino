@@ -2,13 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package testing;
+package no.ntnu.osnap.com.testing;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.text.DateFormatter;
-import source.ComLayer;
-import source.Protocol;
+import no.ntnu.osnap.com.deprecated.ComLayer;
+import no.ntnu.osnap.com.Protocol;
 
 /**
  *
@@ -20,7 +19,8 @@ public class ProtocolTest {
         
         for (int i = 0; i < 100000000; ++i){
             //arduino.print(new String(new char[250]));
-            arduino.print(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            //arduino.print(new SimpleDateFormat("HH:mm:ss").format(new Date()) + "Ø");
+            System.out.println("value: " + arduino.sensor(0));
             //arduino.print(i + "s");
             /*try {
                 Thread.sleep(1000);
