@@ -46,7 +46,6 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
     
-    private ComLayerListener listener;
 
     public ComLayer() {
         while (!findArduino());
@@ -114,6 +113,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
             if (state == ConnectionState.SCANNING){
                 close();
                 System.out.println(" No response.");
+                close();
                 continue;
             }
             
@@ -158,7 +158,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
                         byte chunk[] = new byte[1];
                         input.read(chunk, 0, 1);
                         
-                        listener.byteReceived(chunk[0]);
+                        byteReceived(chunk[0]);
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());

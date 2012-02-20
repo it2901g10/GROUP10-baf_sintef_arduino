@@ -1,6 +1,8 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates and open the template in
@@ -11,7 +13,7 @@ import java.io.IOException;
  * @author anders
  */
 public abstract class Protocol {
-
+    
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
     public static final byte OPCODE_SENSOR = 2;
@@ -22,10 +24,29 @@ public abstract class Protocol {
     public static final byte OPCODE_RESET = (byte) 0xFF;
     private Command currentCommand;
     private Byte waitingForAck;
+    
+    private static final byte[] ackProcessors = {
+        OPCODE_SENSOR
+    };
 
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
+    }
+    
+    private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
+    public final void ping(){
+        lock();
+        
+        try {
+            sendBytes(ack);
+        } catch (IOException ex) {
+            System.out.println("Derp send");
+        }
+        
+        waitingForAck = OPCODE_PING;
+        
+        release();
     }
 
     public final void print(String text) {
@@ -166,7 +187,7 @@ public abstract class Protocol {
     private void lock() {
         while (locked) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException ex) {
             }
         }
@@ -175,7 +196,7 @@ public abstract class Protocol {
 
         while (waitingForAck != null) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException ex) {
             }
         }
@@ -192,7 +213,13 @@ public abstract class Protocol {
     private void ackProcessing() {
         processingAck = true;
 
-        while (processingAck);
+        while (processingAck){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                
+            }
+        }
     }
 
     private void ackProcessingComplete() {
@@ -205,8 +232,16 @@ public abstract class Protocol {
 
 
             if (currentCommand.isAckFor(waitingForAck)) {
+                byte tempAck = waitingForAck;
+                
                 waitingForAck = null;
-                ackProcessing();
+                
+                for (byte ack : ackProcessors){
+                    if (tempAck == ack){
+                        ackProcessing();
+                        break;
+                    }
+                }
                 currentCommand = new Command();
             } else {
                 throw new IllegalArgumentException("Received something unexpected");
