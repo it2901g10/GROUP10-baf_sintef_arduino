@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package testing;
+package no.ntnu.osnap.com.testing;
 
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import source.ComLayer;
+import no.ntnu.osnap.com.deprecated.ComLayer;
 
 /**
  *
