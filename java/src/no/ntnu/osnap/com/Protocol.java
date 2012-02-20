@@ -1,8 +1,6 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates and open the template in
@@ -13,7 +11,7 @@ import java.util.logging.Logger;
  * @author anders
  */
 public abstract class Protocol {
-    
+
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
     public static final byte OPCODE_SENSOR = 2;
