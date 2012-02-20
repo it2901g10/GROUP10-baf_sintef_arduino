@@ -9,10 +9,10 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import no.ntnu.osnap.com.ComLayerInterface;
 import no.ntnu.osnap.com.ComLayerListener;
+import no.ntnu.osnap.com.Protocol;
 
-public class ComLayer implements SerialPortEventListener, ComLayerInterface {
+public class ComLayer extends Protocol implements SerialPortEventListener {
 
     SerialPort serialPort;
     /**
@@ -49,18 +49,7 @@ public class ComLayer implements SerialPortEventListener, ComLayerInterface {
     private ComLayerListener listener;
 
     public ComLayer() {
-        setListener(null);
         while (!findArduino());
-    }
-    
-    public ComLayer(ComLayerListener listener) {
-        setListener(listener);
-        while (!findArduino());
-    }
-    
-    @Override
-    public void setListener(ComLayerListener listener){
-        this.listener = listener;
     }
     
     private boolean findArduino(){
