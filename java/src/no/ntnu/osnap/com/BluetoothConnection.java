@@ -1,48 +1,43 @@
-/*
-* Copyright 2012 NTNU
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
-
 package no.ntnu.osnap.com;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
-public class BluetoothConnection implements ComLayerInterface {
-	private ComLayerListener listener;
+public class BluetoothConnection {
+	private Context context;
 	
 	protected BufferedInputStream input;
 	protected BufferedOutputStream output;
 	
-	private BluetoothDevice device;
-	private BluetoothSocket socket;
-	private BluetoothAdapter bluetooth;	
-	private InputListenerThread inputThread;
-	private boolean isConnected = false;
+	protected BluetoothDevice device;
+	protected BluetoothSocket socket;
+	protected BluetoothAdapter bluetooth;	
 	
-	public BluetoothConnection(BluetoothDevice device) throws UnsupportedHardwareException, IllegalArgumentException, IOException{
-		this(device.getAddress());
+	private ConnectionState connectionState;
+	
+	public enum ConnectionState {
+		STATE_DISCONNECTED,
+		STATE_CONNECTING,
+		STATE_CONNECTED
+	}
+
+	
+	public BluetoothConnection(BluetoothDevice device, Context context) throws UnsupportedHardwareException, IllegalArgumentException, IOException{
+		this(device.getAddress(), context);
 	}
 	
-	public BluetoothConnection(String address) throws UnsupportedHardwareException, IllegalArgumentException, IOException {
+	
+	public BluetoothConnection(String address, Context context) throws UnsupportedHardwareException, IllegalArgumentException, IOException {
 		
 		//Validate the address
 		if( !BluetoothAdapter.checkBluetoothAddress(address) ){
@@ -53,45 +48,55 @@ public class BluetoothConnection implements ComLayerInterface {
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if( bluetooth == null ){
 			throw new UnsupportedHardwareException("No bluetooth hardware found");
-		}
+		}		
 		
-		//Make sure it is enabled
-		if( !bluetooth.isEnabled() ){
-			bluetooth.enable();
-		}
-		
-		//Stop scanning when connecting
-		if( bluetooth.isDiscovering() ) {
-			bluetooth.cancelDiscovery();
-		}
-		
-		//Get the remote device
+		this.context = context;
+		connectionState = ConnectionState.STATE_DISCONNECTED;
 		device = bluetooth.getRemoteDevice(address);
 		
-		//Create a socket through a hidden method (normal method does not work on all devices like Samsung Galaxy SII)
-		try {
-			Method m  = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-			socket = (BluetoothSocket) m.invoke(device, Integer.valueOf(1));
-		}
-		catch (Exception ex){
-			throw new IOException("Unable to create socket: " + ex.getMessage());
-		}
-		
-		//Connect to the remote device
-		//TODO: new thread?
-		socket.connect();
-				
-		//Get input and output streams
-    	output = new BufferedOutputStream(socket.getOutputStream());
-		input = new BufferedInputStream(socket.getInputStream());	
-		
-		//Start a background thread listening for input
-		inputThread = new InputListenerThread(input);
-		inputThread.start();
-		
-		//We are now connected!
-		isConnected = true;
+		//Register broadcast receivers
+//		context.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_REQUEST_ENABLE));
+		context.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+	}	
+	
+	synchronized void setConnectionState(ConnectionState setState) {
+		connectionState = setState;
 	}
+		
+    private synchronized final void establishConnection() {    	
+		//Start an asynchronous connection and return immediately so we do not interrupt program flow
+		ConnectionThread thread = new ConnectionThread(this);
+		thread.start();    	
+    }
+    
+	public synchronized void connect() {
+		
+		//Don't try to connect more than once
+		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
+			Log.w("BluetoothConnection", "Trying to connecto to the same device twice!");
+			return;
+		}
+		
+		//Start connecting
+    	setConnectionState(ConnectionState.STATE_CONNECTING);
+		
+		//Make sure bluetooth is enabled
+		if( !bluetooth.isEnabled() ) {
+			//wait until Bluetooth is enabled by the OS
+			context.sendBroadcast(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			return;
+		}
+		
+		//Stop discovery when connecting
+		if( bluetooth.isDiscovering() ){
+			//TODO: implement intent for this
+			return;
+		}
+		
+		//All is good!
+		establishConnection();
+	}
+
 	
 	public String getAddress() {
 		return device.getAddress();
@@ -105,26 +110,26 @@ public class BluetoothConnection implements ComLayerInterface {
 		output.write(data);
 	}
 	
-	public boolean isConnected() {
-		return isConnected;
+	public synchronized ConnectionState getConnectionState() {
+		return connectionState;
 	}
 
-
-/*	public void onDestroy(){
-		super.onDestroy();
+	public synchronized void disconnect() throws IOException {
 		
-		//Close socket
-		try {
-			socket.close();
+		//Close socket only if we are connected
+		if(getConnectionState() == ConnectionState.STATE_CONNECTED)
+		{
 			input.close();
 			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			socket.close();
 		}
 		
-	}*/
+		//We are now officially disconnected
+		setConnectionState(ConnectionState.STATE_DISCONNECTED);
+	}
 	
-	private class InputListenerThread extends Thread {
+/*
+  	private class InputListenerThread extends Thread {
 		private BufferedInputStream inputStream;
 		
 		public InputListenerThread(BufferedInputStream inputStream) {
@@ -150,10 +155,37 @@ public class BluetoothConnection implements ComLayerInterface {
 			}
 		}
 	}
-
-
-	public void setListener(ComLayerListener listener) {
-		this.listener = listener;
-	}
+*/
 	
+	 // Create a BroadcastReceiver for enabling bluetooth
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+                                    
+            //Device is turning on or off
+            if( action.equals(BluetoothAdapter.ACTION_STATE_CHANGED) ) {
+            	
+            	switch(bluetooth.getState())
+            	{
+            		case BluetoothAdapter.STATE_TURNING_ON:
+            			//Don't care
+            	    break;
+            	    
+            		case BluetoothAdapter.STATE_TURNING_OFF:
+            		case BluetoothAdapter.STATE_OFF:
+						try { disconnect(); } catch (IOException e) {}
+            		break;
+            		
+            		case BluetoothAdapter.STATE_ON:
+            			if( getConnectionState() == ConnectionState.STATE_CONNECTING ) {
+            				establishConnection();
+            			}
+            		break;         		
+            	}
+            	            		
+            }
+        }
+        
+    };	
+		
 }
