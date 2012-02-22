@@ -38,7 +38,6 @@ class ConnectionThread extends Thread {
 	
 	@Override
 	public void run() {
-		Log.e("", "STARTING CONNECTION");
 		
 		//Wait until bluetooth is finished discovering
 		while( connection.bluetooth.isDiscovering() ) {
@@ -76,12 +75,31 @@ class ConnectionThread extends Thread {
 			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
 			return;
 		}
-		
-		//Start a background thread listening for input
-//		inputThread = new InputListenerThread(input);
-//		inputThread.start();
-		
+				
 		//We are now connected!
 		connection.setConnectionState(ConnectionState.STATE_CONNECTED);
+		Log.e("DEBUG", "WE ARE CONNECTED!");
+		
+		//Keep listening bytes from the stream
+		while( connection.isConnected() ){
+			try {
+				byte[] buffer = new byte[1];
+				if( connection.input.read(buffer, 0, 1) != -1 ) {
+					Log.e("DEBUG", "WE GOT SOME DATA!");
+					connection.byteReceived( buffer[0] );					
+				}
+				else Log.e("DEBUG", "NOTHING...");
+			} catch (IOException e) {
+				Log.e("BluetoothConnection", "Read error: " + e.getMessage());
+				try {
+					connection.input.available();
+				} catch (IOException e1) {
+					//If this happens there is an error with the connection
+					try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
+				}
+			}
+		}
+		
+		Log.e("DEBUG", "WE ARE DISCONNECTED!");
 	}
 }

@@ -1,17 +1,7 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
-/**
- *
- * @author anders
- */
 public abstract class Protocol {
     
     public static final byte OPCODE_PING = 0;
@@ -225,12 +215,10 @@ public abstract class Protocol {
     private void ackProcessingComplete() {
         processingAck = false;
     }
-
-    public final synchronized void byteReceived(byte data) {
+    
+    protected final synchronized void byteReceived(byte data) {
         if (currentCommand.byteReceived(data)) {
             // Process command
-
-
             if (currentCommand.isAckFor(waitingForAck)) {
                 byte tempAck = waitingForAck;
                 
@@ -249,21 +237,15 @@ public abstract class Protocol {
         }
     }
 
-    public final synchronized void bytesReceived(byte[] data) {
+    protected final synchronized void bytesReceived(byte[] data) {
         for (byte item : data) {
             byteReceived(item);
         }
     }
 
-    public abstract void sendBytes(byte[] data) throws IOException;
-}
-
-class Command {
-
-    private final byte START_BYTE = (byte) 0xFF;
+    protected abstract void sendBytes(byte[] data) throws IOException;
 
     private enum State {
-
         STATE_START,
         STATE_SIZE,
         STATE_OPCODE,
@@ -271,64 +253,72 @@ class Command {
         STATE_CONTENT,
         STATE_DONE
     }
-    private State state;
-    private byte size;
-    private byte opcode;
-    private byte flag;
-    private byte[] content;
-    private int contentCounter;
+    
+    private class Command {
 
-    public Command() {
-        state = State.STATE_START;
-        contentCounter = 0;
-    }
+        private final byte START_BYTE = (byte) 0xFF;
 
-    public boolean byteReceived(byte data) {
-        switch (state) {
-            case STATE_START:
-                if (data == START_BYTE) {
-                    state = State.STATE_SIZE;
-                }
-                break;
-            case STATE_SIZE:
-                size = data;
-                content = new byte[size];
-                state = State.STATE_OPCODE;
-                break;
-            case STATE_OPCODE:
-                opcode = data;
-                state = State.STATE_FLAG;
-                break;
-            case STATE_FLAG:
-                flag = data;
-                state = State.STATE_CONTENT;
-                break;
-            case STATE_CONTENT:
-                content[contentCounter++] = data;
-                if (contentCounter >= size - 3) {
-                    state = State.STATE_DONE;
-                    return true;
-                }
-                break;
-            case STATE_DONE:
-                throw new IndexOutOfBoundsException("Command already finished");
-            default:
-                break;
+        private State state;
+        private byte size;
+        private byte opcode;
+        private byte flag;
+        private byte[] content;
+        private int contentCounter;
+
+        public Command() {
+            state = State.STATE_START;
+            contentCounter = 0;
         }
 
-        return false;
+        public boolean byteReceived(byte data) {
+            switch (state) {
+                case STATE_START:
+                    if (data == START_BYTE) {
+                        state = State.STATE_SIZE;
+                    }
+                    break;
+                case STATE_SIZE:
+                    size = data;
+                    content = new byte[size];
+                    state = State.STATE_OPCODE;
+                    break;
+                case STATE_OPCODE:
+                    opcode = data;
+                    state = State.STATE_FLAG;
+                    break;
+                case STATE_FLAG:
+                    flag = data;
+                    state = State.STATE_CONTENT;
+                    break;
+                case STATE_CONTENT:
+                    content[contentCounter++] = data;
+                    if (contentCounter >= size - 3) {
+                        state = State.STATE_DONE;
+                        return true;
+                    }
+                    break;
+                case STATE_DONE:
+                    throw new IndexOutOfBoundsException("Command already finished");
+                default:
+                    break;
+            }
+
+            return false;
+        }
+
+        public byte getOpcode() {
+            return opcode;
+        }
+
+        public byte[] getContent() {
+            return content;
+        }
+
+        public boolean isAckFor(byte command) {
+            return opcode == Protocol.OPCODE_RESPONSE
+                    && flag == command;
+        }
     }
 
-    public byte getOpcode() {
-        return opcode;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
-    public boolean isAckFor(byte command) {
-        return opcode == Protocol.OPCODE_RESPONSE
-                && flag == command;
-    }
 }
+

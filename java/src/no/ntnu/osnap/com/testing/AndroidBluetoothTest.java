@@ -1,4 +1,4 @@
-package no.ntnu.osnap.test;
+package no.ntnu.osnap.com.testing;
 
 import no.ntnu.osnap.com.BluetoothConnection;
 import android.app.Activity;
@@ -27,14 +27,9 @@ public class AndroidBluetoothTest extends Activity {
         super.onCreate(savedInstanceState);
         GUI = new TextView(this);
         setContentView(GUI);
-    }
         
-    @Override
-    public void onStart() {
-    	super.onStart();
-
+        //Start connection
 		setTitle("program is running");
-			
 		try {
 			con = new BluetoothConnection("00:10:06:29:00:48", this); //BluetoothBee address
 			con.connect();
@@ -43,6 +38,16 @@ public class AndroidBluetoothTest extends Activity {
 		} catch (Exception e) {
 			printLine("Could not establish connection: " + e.getMessage());
 		}
+    }
+        
+    @Override
+    public void onStart() {
+    	super.onStart();
+    	
+    	if(con != null){
+    		while(!con.isConnected()) {/*wait until we are connected*/}
+    		con.print("This is my message!");
+    	}
     }
     
     @Override

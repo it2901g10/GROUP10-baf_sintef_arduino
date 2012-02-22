@@ -21,7 +21,7 @@ import android.util.Log;
  * of this class with the remote device address and use connect() to establish the connection. 
  * This class will automatically create connection and communication threads to handle everything.
  */
-public class BluetoothConnection {
+public class BluetoothConnection extends Protocol {
 	
 	/** Unique requestResult ID when using startActivityForResult in the parentActivity to enable the Bluetooth Adapter*/
 	public static int REQUEST_ENABLE_BT = 374370074;
@@ -161,11 +161,7 @@ public class BluetoothConnection {
 	public String toString() {
 		return device.getName();
 	}
-	
-	public void sendBytes(byte[] data) throws IOException {
-		output.write(data);
-	}
-	
+		
 	/**
 	 * Returns the current connection state of this BluetoothConnection to the remote device
 	 * @return STATE_CONNECTED, STATE_CONNECTING or STATE_DISCONNECTED
@@ -200,36 +196,7 @@ public class BluetoothConnection {
 			socket.close();
 		}
 	}
-	
-/*
-  	private class InputListenerThread extends Thread {
-		private BufferedInputStream inputStream;
 		
-		public InputListenerThread(BufferedInputStream inputStream) {
-			super.setDaemon(true);
-			this.inputStream = inputStream;
-		}
-		
-		@Override
-		public void run() {
-			while(true){
-				try {
-					int readByte = inputStream.read();
-					listener.byteReceived((byte)readByte);
-				} catch (IOException e) {
-					Log.e("BluetoothConnection", "Read error: " + e.getMessage());
-					try {
-						inputStream.available();
-					} catch (IOException e1) {
-						//If this happens there is an error with the connection
-						break;
-					}
-				}
-			}
-		}
-	}
-*/
-	
 	 // Create a BroadcastReceiver for enabling bluetooth
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -287,5 +254,19 @@ public class BluetoothConnection {
     	//Allow deconstruction
 		super.finalize();
     }
-    
+
+
+	@Override
+	protected void sendBytes(byte[] data) throws IOException {
+		Log.e("DEBUG", "WE ARE SENDING DATA!");
+		
+		//Make sure we are connected before sending data
+		if( !isConnected() ){
+			throw new IOException("Trying to send data while Bluetooth is not connected!");
+		}
+		
+		//Send the data
+		output.write(data);
+	}
+	
 }
