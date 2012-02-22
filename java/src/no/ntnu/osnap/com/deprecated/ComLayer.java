@@ -9,10 +9,10 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import no.ntnu.osnap.com.ComLayerInterface;
 import no.ntnu.osnap.com.ComLayerListener;
+import no.ntnu.osnap.com.Protocol;
 
-public class ComLayer implements SerialPortEventListener, ComLayerInterface {
+public class ComLayer extends Protocol implements SerialPortEventListener {
 
     SerialPort serialPort;
     /**
@@ -46,21 +46,9 @@ public class ComLayer implements SerialPortEventListener, ComLayerInterface {
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
     
-    private ComLayerListener listener;
 
     public ComLayer() {
-        setListener(null);
         while (!findArduino());
-    }
-    
-    public ComLayer(ComLayerListener listener) {
-        setListener(listener);
-        while (!findArduino());
-    }
-    
-    @Override
-    public void setListener(ComLayerListener listener){
-        this.listener = listener;
     }
     
     private boolean findArduino(){
@@ -125,6 +113,7 @@ public class ComLayer implements SerialPortEventListener, ComLayerInterface {
             if (state == ConnectionState.SCANNING){
                 close();
                 System.out.println(" No response.");
+                close();
                 continue;
             }
             
@@ -169,7 +158,7 @@ public class ComLayer implements SerialPortEventListener, ComLayerInterface {
                         byte chunk[] = new byte[1];
                         input.read(chunk, 0, 1);
                         
-                        listener.byteReceived(chunk[0]);
+                        byteReceived(chunk[0]);
                     }
                 } catch (Exception e) {
                     System.err.println(e.toString());

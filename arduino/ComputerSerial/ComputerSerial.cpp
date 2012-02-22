@@ -79,8 +79,9 @@ void ComputerSerial::ack(uint8_t opcode, uint8_t content[], uint8_t contentSize)
 
 void ComputerSerial::ping() {
 	// Send ping response
-	Serial.write((byte)0x00);
-	Serial.write((byte)0xFF);
+	//Serial.write((byte)0x00);
+	//Serial.write((byte)0xFF);
+	ack(OPCODE_PING);
 }
 
 void ComputerSerial::text(uint8_t size, uint8_t flag, uint8_t content[]) {
