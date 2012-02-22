@@ -10,20 +10,33 @@ import no.ntnu.osnap.com.BluetoothConnection.ConnectionState;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+/**
+ * A package private class used by BluetoothConnection. Only one instance of this class should exist per
+ * BluetoothConnection after connect() has been executed. The thread will try to connect to the
+ * remote device through Bluetooth and set the BluetoothConnection state to STATE_CONNECTED and exit when
+ * the connection is established successfully. A disconnect() on the BluetoothConnection will kill any
+ * running ConnectionThread.
+ */
 class ConnectionThread extends Thread {	
 	private final BluetoothConnection connection;
 	
+	/**
+	 * Create new thread to connect with the remote device
+	 * @param connection Which BluetoothConnection created this thread
+	 * @throws IllegalArgumentException If the specified BluetoothConnection is already connected.
+	 */
 	public ConnectionThread(BluetoothConnection connection) throws IllegalArgumentException {
 		this.connection = connection;
 		
 		if( connection.getConnectionState() == ConnectionState.STATE_CONNECTED ) {
 			throw new IllegalArgumentException("The specified BluetoothConnection is already connected!");
 		}
-		
+				
 		setDaemon(true);
 		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");		
 	}
 	
+	@Override
 	public void run() {
 		Log.e("", "STARTING CONNECTION");
 		
