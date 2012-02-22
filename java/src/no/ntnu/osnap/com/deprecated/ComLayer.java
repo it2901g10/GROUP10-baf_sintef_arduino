@@ -9,6 +9,10 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+<<<<<<< HEAD
+=======
+import no.ntnu.osnap.com.ComLayerListener;
+>>>>>>> b2a2ccc7a5d100b39a06d97ec67e6c12f0b2fd40
 import no.ntnu.osnap.com.Protocol;
 
 public class ComLayer extends Protocol implements SerialPortEventListener {
