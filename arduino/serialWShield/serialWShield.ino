@@ -1,34 +1,48 @@
-#define LCD 1
-#define KEYS 0
+#define LCD 0
+#define LCD_LINES 2
+#define LCD_COLUMNS 16
 
-#include <LiquidCrystal.h>
-//#include <DogLcd.h>
+#if LCD==0
+	#include <LiquidCrystal.h>
+#elif LCD==1
+	#include <DogLcd.h>
+#endif
 
 #include <ComputerSerial.h>
 
-#include <Display.h>
-
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-//DogLcd lcd(12, 11, 9, 10);
+#if LCD==0
+	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+#elif LCD==1
+	DogLcd lcd(12, 11, 9, 10);
+#endif
 
 ComputerSerial comp;
-Display display(1);
 
-void text(byte flag, byte content[], byte contentSize){
+void* text(byte flag, byte content[], byte contentSize){
 	lcd.setCursor(7, 0);
-	display.print(flag, content, contentSize);
+	lcd.print((char*)content);
+}
+
+void* buttons(byte flag, byte content[], byte contentSize){
+	int *status = (int*)malloc(sizeof(int));
+	*status = analogRead(0);
+	return status;
 }
 
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	comp.attachFunction(comp.OPCODE_TEXT, &text);
-	display.attachDisplay(&lcd);
+	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
 	
   	pinMode(13, OUTPUT);
 	
-	//lcd.begin(DOG_LCD_M163);
-	lcd.begin(16, 2);
+#if LCD==0
+	lcd.begin(LCD_COLUMNS, LCD_LINES);
+#elif LCD==1
+	lcd.begin(DOG_LCD_M163);
+#endif
+	
 	lcd.setCursor(0, 0);
 	lcd.print("Recvd: -");
 	lcd.setCursor(0,1);

@@ -1,4 +1,4 @@
-package source;
+package no.ntnu.osnap.com.deprecated;
 
 
 import gnu.io.CommPortIdentifier;
@@ -6,10 +6,11 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import no.ntnu.osnap.com.ComLayerInterface;
+import no.ntnu.osnap.com.ComLayerListener;
 
 public class ComLayer implements SerialPortEventListener, ComLayerInterface {
 

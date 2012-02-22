@@ -1,25 +1,19 @@
-/*
-* Copyright 2012 NTNU
-*
-*   Licensed under the Apache License, Version 2.0 (the "License");
-*   you may not use this file except in compliance with the License.
-*   You may obtain a copy of the License at
-*
-*       http://www.apache.org/licenses/LICENSE-2.0
-*
-*   Unless required by applicable law or agreed to in writing, software
-*   distributed under the License is distributed on an "AS IS" BASIS,
-*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*   See the License for the specific language governing permissions and
-*   limitations under the License.
-*/
-package source;
+package no.ntnu.osnap.com;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author anders
+ */
 public class Protocol implements ComLayerListener {
     public static final byte OPCODE_PING      = 0;
     public static final byte OPCODE_TEXT      = 1;
@@ -66,7 +60,7 @@ public class Protocol implements ComLayerListener {
         release();
     }
     
-    public void sensor(int sensor){
+    public int sensor(int sensor){
         lock();
         int size = 5;
         
@@ -75,7 +69,7 @@ public class Protocol implements ComLayerListener {
         output[0] = (byte)0xFF;
         output[1] = (byte)(size-1);
         output[2] = OPCODE_SENSOR;
-        output[3] = (byte)sensor; // Will eventually specify display
+        output[3] = (byte)sensor; 
         output[4] = (byte)0;
         
         waitingForAck = OPCODE_SENSOR;
@@ -85,8 +79,33 @@ public class Protocol implements ComLayerListener {
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
+        
         release();
+        
+        while (waitingForAck != null){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                
+            }
+        }
+        
+        byte content[] = currentCommand.getContent();
+        
+        ackProcessingComplete();
+        
+        int sensorValue = (content[0] << 8) + toUnsigned(content[1]);
+        
+        return sensorValue;
     }
+    
+    public short toUnsigned(byte value){
+        if (value < 0){
+            return (short)((short)value & (short)0xFF);
+        }
+        return (short)value;
+    }
+    
     public void toggle(int pin){
         lock();
         int size = 5;
@@ -184,19 +203,31 @@ public class Protocol implements ComLayerListener {
         locked = false;
     }
     
+    private boolean processingAck = false;
+    private void ackProcessing(){
+        processingAck = true;
+        
+        while (processingAck);
+    }
+    
+    private void ackProcessingComplete(){
+        processingAck = false;
+    }
+    
     @Override
     public synchronized void byteReceived(byte data){
         if (currentCommand.byteReceived(data)){
             // Process command
+            
+            
             if (currentCommand.isAckFor(waitingForAck)){
                 waitingForAck = null;
+                ackProcessing();
                 currentCommand = new Command();
             }
             else {
                 throw new IllegalArgumentException("Received something unexpected");
             }
-            
-            notify();
         }
     }
 
@@ -267,6 +298,14 @@ class Command {
         }
         
         return false;
+    }
+    
+    public byte getOpcode(){
+        return opcode;
+    }
+    
+    public byte[] getContent(){
+        return content;
     }
     
     public boolean isAckFor(byte command){
