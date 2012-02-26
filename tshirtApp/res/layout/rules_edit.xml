@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rule_name"/>
+    <EditText
+            android:id="@+id/ruleNameBox"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="RuleName"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rule_output"/>
+    <EditText
+            android:id="@+id/ruleOutputBox"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="RuleOutput"/>
+    <ListView android:id="@id/android:list"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+    <TextView android:id="@id/android:empty"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/no_filters"/>
+    <Button
+            android:id="@+id/buttonNewFilter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_filter" />
+    <Button
+            android:id="@+id/buttonSaveRule"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_rule" />
+</LinearLayout>

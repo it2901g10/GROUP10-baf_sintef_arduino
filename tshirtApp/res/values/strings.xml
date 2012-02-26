@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TshirtApp dev</string>
+    <string name="note_edit">Note edit</string>
+    <string name="no_rules">No rules yet</string>
+    <string name="no_filters">No filters in this rule yet</string>
+    <string name="menu_insert">New rule</string>
+    <string name="rule_name">Rule name</string>
+    <string name="rule_output">Output</string>
+    <string name="save_rule">Save rule</string>
+    <string name="new_filter">Add new Filter</string>
+
+</resources>
