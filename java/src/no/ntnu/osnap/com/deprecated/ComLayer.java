@@ -7,6 +7,7 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.*;
 import java.util.Enumeration;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import no.ntnu.osnap.com.Protocol;
@@ -40,7 +41,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
         ACTIVE
     }
     
-    private ConnectionState state = ConnectionState.SCANNING;
+    private ConnectionState state = ConnectionState.ACTIVE;
     
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
@@ -95,28 +96,13 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
                 Thread.sleep(1500);
             } catch (InterruptedException ex) {
             }
-            try {
-                // Check for arduino
-                sendBytes(ack);
-            } catch (IOException ex) {
-                System.out.println("DERP");
-                continue;
-            }
-            
-            
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-            }
-            
-            if (state == ConnectionState.SCANNING){
-                close();
-                System.out.println(" No response.");
-                close();
-                continue;
-            }
-            
-            break;
+			
+			try {
+				ping();
+				break;
+			} catch (TimeoutException e) {
+				System.out.println("Ping timeout");
+			}
         }
         
         if (state == ConnectionState.SCANNING){

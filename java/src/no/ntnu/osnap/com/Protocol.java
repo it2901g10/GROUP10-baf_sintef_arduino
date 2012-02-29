@@ -2,6 +2,7 @@ package no.ntnu.osnap.com;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.concurrent.TimeoutException;
 
 public abstract class Protocol extends Thread {
 	private ArrayDeque<ProtocolInstruction> pendingInstructions;
@@ -9,6 +10,8 @@ public abstract class Protocol extends Thread {
 	
 	public boolean running;
     
+	protected static final int PING_TIMEOUT = 2000;
+	
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
     public static final byte OPCODE_SENSOR = 2;
@@ -22,7 +25,8 @@ public abstract class Protocol extends Thread {
     
     private static final byte[] ackProcessors = {
         OPCODE_SENSOR,
-		OPCODE_PIN_R
+		OPCODE_PIN_R,
+		OPCODE_PING
     };
 
     public Protocol() {
@@ -34,7 +38,7 @@ public abstract class Protocol extends Thread {
 	
 	@Override
 	public void run(){
-		while (running){
+		while (running && !interrupted()){
 			synchronized (pendingInstructions) {
 				while (pendingInstructions.isEmpty()){
 					try {
@@ -70,13 +74,15 @@ public abstract class Protocol extends Thread {
 			pendingInstructions.notify();
 		}
 	}
-    
-    private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
-    public final void ping(){
+	
+    public final void ping() throws TimeoutException {
         lock();
         
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PING, (byte)0, new byte[1]);
+		
         try {
-            sendBytes(ack);
+            sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
             System.out.println("Derp send");
         }
@@ -84,38 +90,26 @@ public abstract class Protocol extends Thread {
         waitingForAck = OPCODE_PING;
         
         release();
+		
+		long time = System.currentTimeMillis();
+		while (waitingForAck != null) {
+			if (System.currentTimeMillis() - time > PING_TIMEOUT)
+				throw new TimeoutException("Ping timed out");
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+
+        ackProcessingComplete();
     }
 	
-	public final void newPrint(String text){
+	public final void print(String text){
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_TEXT, (byte)0, text.getBytes());
 		
 		queueInstruction(newInstruction);
 	}
-
-    public final void print(String text) {
-        lock();
-        int size = text.length() + 4;
-
-        byte output[] = new byte[size];
-
-        output[0] = (byte) 0xFF;
-        output[1] = (byte) (size - 1);
-        output[2] = OPCODE_TEXT;
-        output[3] = 0; // Will eventually specify display
-
-        for (int i = 4; i < size; ++i) {
-            output[i] = text.getBytes()[i - 4];
-        }
-
-        waitingForAck = OPCODE_TEXT;
-        try {
-            sendBytes(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
-        release();
-    }
 
     public final int sensor(int sensor) {
         lock();
@@ -164,25 +158,10 @@ public abstract class Protocol extends Thread {
     }
 
     public final void pulse(int pin) {
-        lock();
-        int size = 5;
-
-        byte output[] = new byte[size];
-
-        output[0] = (byte) 0xFF;
-        output[1] = (byte) (size - 1);
-        output[2] = OPCODE_PIN_PULSE;
-        output[3] = (byte) pin;
-        output[4] = (byte) 0;
-
-        waitingForAck = OPCODE_PIN_PULSE;
-
-        try {
-            sendBytes(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
-        release();
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
+		
+		queueInstruction(newInstruction);
     }
 
     public final boolean read(int pin) {
@@ -222,24 +201,10 @@ public abstract class Protocol extends Thread {
     }
 
     public final void write(int pin, boolean value) {
-        lock();
-        int size = 5;
-
-        byte output[] = new byte[size];
-
-        output[0] = (byte) 0xFF;
-        output[1] = (byte) (size - 1);
-        output[2] = OPCODE_PIN_W;
-        output[3] = (byte) pin;
-        output[4] = value ? (byte) 1 : (byte) 0;
-
-        waitingForAck = OPCODE_PIN_W;
-        try {
-            sendBytes(output);
-        } catch (IOException ex) {
-            System.out.println("Send fail");
-        }
-        release();
+        ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
+		
+		queueInstruction(newInstruction);
     }
     private boolean locked = false;
 
