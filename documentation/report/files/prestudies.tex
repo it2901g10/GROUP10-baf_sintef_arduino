@@ -1,47 +1,60 @@
-\section{Communication resources}
-
-The team exchanged both e-mails and mobile numbers. A permanent Skype
-group chat on which we meet on a daily basis was set up, a mailing
-list was also created. Several documents of interest to the group
-were made available to everyone using Google Documents.
-
-
-\section{Time resources}
-
-A meeting table was arranged during the first meeting. Team members
-have weekly meetings on Monday, Wednesday and Friday at twelve o'clock.
-Meetings with the client were arranged for each Friday at two fifteen.
-
-
 \section{Existing solutions}
+We have done some research on the internet about similar and related products.  It is important to specify that our task
+was not to create another prototype, but create a  developer API that would ease future development of new protoypes 
+connecting Arduino and any type of social network. The relevancy of these existing products for us was to confirm that it 
+was possible to connect the user with Facebook in a tangible way using an Arduino.
 
-We have done some research on the internet about similar and related products. We found an interesting
-Facebook like indicator that would glow when some content the user posted on Facebook was liked by someone.
-It was realized with an Arduino board inside a giant Lego hand. Another funny product is a US-mailbox rising
-its 'arm'  whenever the user received a notification on Facebook. The relevancy of these existing products
-for us was to confirm that it was possible to connect the user with Facebook in a tangible way using an Arduino.
-Our own ideas do not have to differ much from already existing concepts, our goal is in fact to show that we can
-develop a general concept that would encompass these ideas if that was the case. We also looked into social
-networks other than Facebook like Twitter or LinkedIn. Facebook is definitely the most popular social network
-out there, but it uses a proprietary API that is not compatible with the other social networks's or open
-API implementations.
+We also looked into social networks other than Facebook like Twitter or LinkedIn. Facebook is definitely the 
+most popular social network out there, but it uses a proprietary API that is not compatible with the other social 
+networks or open API implementations.
 
-Ultimately we presented various ideas and concepts to the customer and let him decide on what he would
-like the group to work on. As a prototype he would like to see a T-Shirt with a built-in small LCD screen
-that will display user's data fetched from social networks, Facebook and Twitter.
+\subsection{LikeLight}
+The customer initially showed us the prototype of a Facebook like indicator that would glow when some content the
+ user posted on Facebook was liked by someone. It was realized with an Arduino board inside a giant Lego hand. 
+This prototype showed us social network connected to an Arduino, something that we ourselves were tasked to 
+implement.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.85]{img/prestudies-likehand} \caption{LikeLight from Red Pepper Labs}
+
+\label{fig:prestudies-likehand}
+\end{figure}
+
+\subsection{YepMailbox}
+The YepMailbox would be another tangiable Arduino-powered prototype that would signal whenever someone wrote
+on the facebook wall of the user. The mail flag would move by a small servo motor and a printer would print out the
+new message.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.4]{img/prestudies-YepMailbox} \caption{Our concept idea of the YepMailbox}
+
+\label{fig:prestudies-YepMailbox}
+\end{figure}
 
 
-\section{Software and hardware development tools}
+\subsection{Facebook Wall}
+\todo{describe how this one works}
 
-Various software tools will be used througout the project. These include:
-IDEs of choice: NetBeans and Eclipse
-Collabaration tools: git, svn, Trac
-Pre-existing software: Facebook Android SDK,    Android SDK, Twitter4j, Scribe and possibily others
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.22]{img/prestudies-facebookwall} \caption{Our concept idea of the Facebook Wall}
 
-The project task requires various hardware, namely Arduino boards, shields and modules and Android mobiles. Our customer kindly arragend for us so that we can borrow Arduino equipment from the lab. The team will use its own
-mobiles for running, testing and prototyping the system.
+\label{fig:prestudies-facebookwall}
+\end{figure}
 
+\subsection{T-shirt}
+\todo{describe how this one works}
 
-\section{Add more stuff}
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/prestudies-tshirt} \caption{Our concept idea of the T-shirt prototype}
 
-Something something
+\label{fig:prestudies-tshirt}
+\end{figure}
+
+\subsection{Conclusion}
+Ultimately we presented our various ideas and concepts to the customer and let him decide on what he would
+like the group to work on. As a prototype he would like to see a T-Shirt connected to one or more social media
+that will give the user updates on any changes or updates from the social networks such as Facebook or Twitter.
+This prototype would prove that our library can connect any social network (Twitter, Facebook, etc.) with any
+tangible Arduino interface (LED, buzzer, sound, buttons, etc.). The customer requested one or two additional
+smaller prototypes in addition to the T-shirt to prove that our API works on any prototype device and is not
+specific to the T-shirt.
