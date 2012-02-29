@@ -1,4 +1,4 @@
-#define LCD 0
+//#define LCD 0
 #define LCD_LINES 2
 #define LCD_COLUMNS 16
 
@@ -19,8 +19,16 @@
 ComputerSerial comp;
 
 void* text(byte flag, byte content[], byte contentSize){
+#ifdef LCD
+	lcd.setCursor(7, 0);
+	lcd.print("         ");
 	lcd.setCursor(7, 0);
 	lcd.print((char*)content);
+#else
+	static bool toggle = false;
+	digitalWrite(13, toggle ? HIGH : LOW);
+	toggle = !toggle;
+#endif
 }
 
 void* buttons(byte flag, byte content[], byte contentSize){
@@ -41,34 +49,38 @@ void setup(){
 	lcd.begin(LCD_COLUMNS, LCD_LINES);
 #elif LCD==1
 	lcd.begin(DOG_LCD_M163);
+	lcd.setCursor(0, 2);
+	lcd.print("Bytes: ");
 #endif
 	
+#ifdef LCD
 	lcd.setCursor(0, 0);
 	lcd.print("Recvd: -");
 	lcd.setCursor(0,1);
 	//lcd.print("Bytes: 0");
 	//lcd.setCursor(0, 2);
 	lcd.print("Alive: ");
+#endif
 }
 
 void loop(){
 	static unsigned long time = millis();
 	static unsigned long lastBytes = bytes;
 	if (millis() > time + 1000){
-		lcd.setCursor(7, 0);
-		lcd.print("         ");
 		//lcd.setCursor(7, 0);
 		//lcd.print(bytes-lastBytes);
 		//lcd.print("b/s");
 		lastBytes = bytes;
 		time = millis();
-		
+#ifdef LCD		
   		lcd.setCursor(7, 1);
 		lcd.print(millis()/1000);
 		lcd.print("s");
-
-		//lcd.setCursor(7, 1);
-		//lcd.print(bytes);
+#endif
+#if LCD==1
+		lcd.setCursor(7, 2);
+		lcd.print(bytes);
+#endif
 	}
 }
 

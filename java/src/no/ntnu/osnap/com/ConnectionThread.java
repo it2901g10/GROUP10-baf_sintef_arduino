@@ -83,12 +83,10 @@ class ConnectionThread extends Thread {
 		//Keep listening bytes from the stream
 		while( connection.isConnected() ){
 			try {
-				byte[] buffer = new byte[1];
-				if( connection.input.read(buffer, 0, 1) != -1 ) {
-					Log.e("DEBUG", "WE GOT SOME DATA!");
-					connection.byteReceived( buffer[0] );					
+				int readByte = connection.input.read();
+				if( readByte != -1 ) {
+					connection.byteReceived( (byte)readByte );
 				}
-				else Log.e("DEBUG", "NOTHING...");
 			} catch (IOException e) {
 				Log.e("BluetoothConnection", "Read error: " + e.getMessage());
 				try {
@@ -98,6 +96,9 @@ class ConnectionThread extends Thread {
 					try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
 				}
 			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
 		}
 		
 		Log.e("DEBUG", "WE ARE DISCONNECTED!");

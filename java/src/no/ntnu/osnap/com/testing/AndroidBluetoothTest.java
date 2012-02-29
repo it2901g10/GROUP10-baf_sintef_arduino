@@ -1,5 +1,7 @@
 package no.ntnu.osnap.com.testing;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import no.ntnu.osnap.com.BluetoothConnection;
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,7 +24,7 @@ public class AndroidBluetoothTest extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	
+    	Log.e("DEBUG", "onCreate");
     	//Initialize GUI, do first
         super.onCreate(savedInstanceState);
         GUI = new TextView(this);
@@ -45,8 +47,14 @@ public class AndroidBluetoothTest extends Activity {
     	super.onStart();
     	
     	if(con != null){
-    		while(!con.isConnected()) {/*wait until we are connected*/}
-    		con.print("This is my message!");
+    		while(!con.isConnected()) {
+				/*wait until we are connected*/
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {}
+			}
+    		con.print("Hi");
+			con.print("derp");
     	}
     }
     

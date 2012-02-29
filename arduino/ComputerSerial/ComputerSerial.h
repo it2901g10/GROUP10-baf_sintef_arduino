@@ -40,7 +40,7 @@ class ComputerSerial{
 	void ping();
 	void text(uint8_t size, uint8_t flag, uint8_t content[]);
 	void sensor(uint8_t number);
-	void pinToggle(uint8_t pin);
+	void pinPulse(uint8_t pin);
 	void pinRead(uint8_t pin);
 	void pinWrite(uint8_t pin, uint8_t value);
 	void reset();
@@ -64,7 +64,7 @@ public:
 		OPCODE_PING, 	// 0
 		OPCODE_TEXT, 	// 1
 		OPCODE_SENSOR, 	// 2
-		OPCODE_PIN_T, 	// 3
+		OPCODE_PIN_PULSE, 	// 3
 		OPCODE_PIN_R, 	// 4
 		OPCODE_PIN_W, 	// 5
 		OPCODE_RESPONSE = 0xFE,

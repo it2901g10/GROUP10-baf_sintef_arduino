@@ -257,7 +257,7 @@ public class BluetoothConnection extends Protocol {
 
 
 	@Override
-	protected void sendBytes(byte[] data) throws IOException {
+	protected synchronized void sendBytes(byte[] data) throws IOException {
 		Log.e("DEBUG", "WE ARE SENDING DATA!");
 		
 		//Make sure we are connected before sending data
@@ -265,8 +265,16 @@ public class BluetoothConnection extends Protocol {
 			throw new IOException("Trying to send data while Bluetooth is not connected!");
 		}
 		
+		String temp = "";
+		for (byte value : data){
+			temp += value + " - ";
+		}
+		Log.e("DEBUG", "Sending: " + temp);
+		
 		//Send the data
 		output.write(data);
+		output.flush();
+		Log.e("DEBUG", "Writing done");
 	}
 	
 }

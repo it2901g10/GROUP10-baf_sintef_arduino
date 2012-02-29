@@ -1,13 +1,18 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
 
-public abstract class Protocol {
+public abstract class Protocol extends Thread {
+	private ArrayDeque<ProtocolInstruction> pendingInstructions;
+	private ProtocolInstruction currentInstruction;
+	
+	public boolean running;
     
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
     public static final byte OPCODE_SENSOR = 2;
-    public static final byte OPCODE_PIN_T = 3;
+    public static final byte OPCODE_PIN_PULSE = 3;
     public static final byte OPCODE_PIN_R = 4;
     public static final byte OPCODE_PIN_W = 5;
     public static final byte OPCODE_RESPONSE = (byte) 0xFE;
@@ -16,13 +21,55 @@ public abstract class Protocol {
     private Byte waitingForAck;
     
     private static final byte[] ackProcessors = {
-        OPCODE_SENSOR
+        OPCODE_SENSOR,
+		OPCODE_PIN_R
     };
 
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
+		pendingInstructions = new ArrayDeque<ProtocolInstruction>();
+		running = true;
     }
+	
+	@Override
+	public void run(){
+		while (running){
+			synchronized (pendingInstructions) {
+				while (pendingInstructions.isEmpty()){
+					try {
+						pendingInstructions.wait(1000);
+					} catch (InterruptedException ex) {
+					}
+				}
+			}
+			
+			lock();
+			
+			currentInstruction = pendingInstructions.pop();
+			
+			try {
+				sendBytes(currentInstruction.getInstructionBytes());
+				
+				System.out.println("Sent: " + currentInstruction.getOpcode());
+				
+				waitingForAck = currentInstruction.getOpcode();
+			} catch (IOException ex) {
+				// TODO: use logger
+				System.out.println("Send derp");
+			}
+			
+			release();
+		}
+	}
+	
+	private void queueInstruction(ProtocolInstruction instr){
+		synchronized (pendingInstructions) {
+			pendingInstructions.add(instr);
+			System.out.println("Size: " + pendingInstructions.size());
+			pendingInstructions.notify();
+		}
+	}
     
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     public final void ping(){
@@ -38,6 +85,13 @@ public abstract class Protocol {
         
         release();
     }
+	
+	public final void newPrint(String text){
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_TEXT, (byte)0, text.getBytes());
+		
+		queueInstruction(newInstruction);
+	}
 
     public final void print(String text) {
         lock();
@@ -84,13 +138,14 @@ public abstract class Protocol {
         }
 
         release();
-
-        while (waitingForAck != null) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-            }
-        }
+		
+		while (waitingForAck != null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+		
 
         byte content[] = currentCommand.getContent();
 
@@ -108,7 +163,7 @@ public abstract class Protocol {
         return (short) value;
     }
 
-    public final void toggle(int pin) {
+    public final void pulse(int pin) {
         lock();
         int size = 5;
 
@@ -116,11 +171,11 @@ public abstract class Protocol {
 
         output[0] = (byte) 0xFF;
         output[1] = (byte) (size - 1);
-        output[2] = OPCODE_PIN_T;
+        output[2] = OPCODE_PIN_PULSE;
         output[3] = (byte) pin;
         output[4] = (byte) 0;
 
-        waitingForAck = OPCODE_PIN_T;
+        waitingForAck = OPCODE_PIN_PULSE;
 
         try {
             sendBytes(output);
@@ -130,7 +185,7 @@ public abstract class Protocol {
         release();
     }
 
-    public final void read(int pin) {
+    public final boolean read(int pin) {
         lock();
         int size = 5;
 
@@ -150,6 +205,20 @@ public abstract class Protocol {
             System.out.println("Send fail");
         }
         release();
+		
+		while (waitingForAck != null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+		
+
+        byte content[] = currentCommand.getContent();
+
+        ackProcessingComplete();
+
+        return content[0] > 0 ? true : false;
     }
 
     public final void write(int pin, boolean value) {
@@ -183,13 +252,14 @@ public abstract class Protocol {
         }
 
         locked = true;
-
-        while (waitingForAck != null) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-            }
-        }
+		
+		while (waitingForAck != null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+		
     }
 
     private void release() {
@@ -198,18 +268,20 @@ public abstract class Protocol {
         }
         locked = false;
     }
-    private boolean processingAck = false;
+    private Boolean processingAck = false;
 
     private void ackProcessing() {
         processingAck = true;
+		
+		synchronized (processingAck) {
+			while (processingAck){
+				try {
+					processingAck.wait(10);
+				} catch (InterruptedException ex) {
 
-        while (processingAck){
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                
-            }
-        }
+				}
+			}
+		}
     }
 
     private void ackProcessingComplete() {
@@ -220,10 +292,12 @@ public abstract class Protocol {
         if (currentCommand.byteReceived(data)) {
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
+				System.out.println("Ack received for: " + waitingForAck);
                 byte tempAck = waitingForAck;
                 
-                waitingForAck = null;
-                
+				
+				waitingForAck = null;
+				
                 for (byte ack : ackProcessors){
                     if (tempAck == ack){
                         ackProcessing();

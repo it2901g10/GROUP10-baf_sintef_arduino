@@ -45,12 +45,14 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 		case OPCODE_SENSOR:
 			sensor(flag);
 			break;
-		case OPCODE_PIN_T:
+		case OPCODE_PIN_PULSE:
+			pinPulse(flag);
 			break;
 		case OPCODE_PIN_R:
+			pinRead(flag);
 			break;
 		case OPCODE_PIN_W:
-			//ack(OPCODE_PIN_W);
+			pinWrite(flag, content[0]);
 			break;
 		case OPCODE_RESET:
 			break;
@@ -79,9 +81,9 @@ void ComputerSerial::ack(uint8_t opcode, uint8_t content[], uint8_t contentSize)
 
 void ComputerSerial::ping() {
 	// Send ping response
-	//Serial.write((byte)0x00);
-	//Serial.write((byte)0xFF);
-	ack(OPCODE_PING);
+	Serial.write((byte)0x00);
+	Serial.write((byte)0xFF);
+	//ack(OPCODE_PING);
 }
 
 void ComputerSerial::text(uint8_t size, uint8_t flag, uint8_t content[]) {
@@ -103,16 +105,27 @@ void ComputerSerial::sensor(uint8_t number) {
 	free(status);
 }
 
-void ComputerSerial::pinToggle(uint8_t pin) {
+void ComputerSerial::pinPulse(uint8_t pin) {
 	// Toggle pin(pin)
+	pinMode(pin, OUTPUT);
+	digitalWrite(pin, HIGH);
+	delay(200);
+	digitalWrite(pin, LOW);
+	ack(OPCODE_PIN_PULSE);
 }
 
 void ComputerSerial::pinRead(uint8_t pin) {
 	// Send pin(pin) value
+	pinMode(pin, INPUT);
+	uint8_t content[] = {digitalRead(pin)};
+	ack(OPCODE_PIN_R, content, 1);
 }
 
 void ComputerSerial::pinWrite(uint8_t pin, uint8_t value) {
 	// Set value of pin(pin)
+	pinMode(pin, OUTPUT);
+	digitalWrite(pin, value ? HIGH : LOW);
+	ack(OPCODE_PIN_W);
 }
 
 void ComputerSerial::reset() {
