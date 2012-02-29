@@ -3,3 +3,4 @@ designmodel-waterfall.png	wikipedia
 designmodel-spiral			http://www.designingprojectmanagement.com
 designmodel-scrum			wikipedia
 designmodel-aup				wikipedia
+prestudies-likehand.jpg		http://redpepperland.tumblr.com/post/3785566578/let-your-likelight-shine
