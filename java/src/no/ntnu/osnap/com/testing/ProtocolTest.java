@@ -6,6 +6,8 @@ package no.ntnu.osnap.com.testing;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import no.ntnu.osnap.com.deprecated.ComLayer;
 
 /**
@@ -24,21 +26,17 @@ public class ProtocolTest {
             //arduino.print(new String(new char[250]));
             //arduino.newPrint(new SimpleDateFormat("HH:mm:ss").format(new Date()));
 			//arduino.pulse(13);
-			boolean value = arduino.read(10);
+			int value = arduino.sensor(0);
             //System.out.println("value: " + value);
-			arduino.write(13, value);
+			//arduino.write(13, value);
             //arduino.print(i + "s");
 			
-			
-            /*try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                
-            }*/
+			arduino.print(value + "   ", true);
         }
         
         //arduino.print("ZooPark");
         //arduino.print("D");
+		System.out.println("Done");
     }
     
 }

@@ -117,7 +117,8 @@ void ComputerSerial::pinPulse(uint8_t pin) {
 void ComputerSerial::pinRead(uint8_t pin) {
 	// Send pin(pin) value
 	pinMode(pin, INPUT);
-	uint8_t content[] = {digitalRead(pin)};
+	int value = digitalRead(pin);
+	uint8_t content[] = {value > 0 ? 1 : 0};
 	ack(OPCODE_PIN_R, content, 1);
 }
 

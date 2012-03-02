@@ -105,10 +105,38 @@ public abstract class Protocol extends Thread {
     }
 	
 	public final void print(String text){
+		print(text, false);
+	}
+	
+	public final void print(String text, boolean blocking){
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_TEXT, (byte)0, text.getBytes());
-		
-		queueInstruction(newInstruction);
+		if (!blocking){
+			queueInstruction(newInstruction);
+		}
+		else {
+			// Blocking methodlock();
+
+			waitingForAck = OPCODE_PIN_R;
+
+			try {
+				sendBytes(newInstruction.getInstructionBytes());
+			} catch (IOException ex) {
+				System.out.println("Send fail");
+			}
+			release();
+			
+			synchronized (this) {
+				while (waitingForAck != null) {
+					try {
+						this.wait(100);
+					} catch (InterruptedException ex) {
+					}
+				}
+			}
+
+			ackProcessingComplete();
+		}
 	}
 
     public final int sensor(int sensor) {
@@ -135,7 +163,7 @@ public abstract class Protocol extends Thread {
 		
 		while (waitingForAck != null) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(100);
 			} catch (InterruptedException ex) {
 			}
 		}
@@ -158,11 +186,20 @@ public abstract class Protocol extends Thread {
     }
 
     public final void pulse(int pin) {
-		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
-		
-		queueInstruction(newInstruction);
+		pulse(pin, false);
     }
+	
+	public final void pulse(int pin, boolean blocking){
+		if (!blocking){
+			ProtocolInstruction newInstruction =
+					new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
+
+			queueInstruction(newInstruction);
+		}
+		else {
+			// Blocking method
+		}
+	}
 
     public final boolean read(int pin) {
         lock();
@@ -201,17 +238,27 @@ public abstract class Protocol extends Thread {
     }
 
     public final void write(int pin, boolean value) {
-        ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
-		
-		queueInstruction(newInstruction);
+		write(pin, value, false);
     }
+	
+	public final void write(int pin, boolean value, boolean blocking){
+		if (!blocking){
+			ProtocolInstruction newInstruction =
+					new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
+
+			queueInstruction(newInstruction);
+		}
+		else {
+			// Blocking method
+		}
+	}
+	
     private boolean locked = false;
 
-    private void lock() {
+    private synchronized void lock() {
         while (locked) {
             try {
-                Thread.sleep(10);
+                this.wait(10);
             } catch (InterruptedException ex) {
             }
         }
@@ -220,31 +267,31 @@ public abstract class Protocol extends Thread {
 		
 		while (waitingForAck != null) {
 			try {
-				Thread.sleep(10);
+				this.wait(10);
 			} catch (InterruptedException ex) {
 			}
 		}
-		
     }
 
-    private void release() {
+    private synchronized void release() {
         if (!locked) {
             throw new IllegalStateException("Already released");
         }
         locked = false;
+		this.notify();
     }
     private Boolean processingAck = false;
 
     private void ackProcessing() {
         processingAck = true;
 		
-		synchronized (processingAck) {
-			while (processingAck){
-				try {
-					processingAck.wait(10);
-				} catch (InterruptedException ex) {
+		waitingForAck = null;
+		
+		while (processingAck){
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
 
-				}
 			}
 		}
     }
@@ -253,22 +300,27 @@ public abstract class Protocol extends Thread {
         processingAck = false;
     }
     
-    protected final synchronized void byteReceived(byte data) {
+    protected final void byteReceived(byte data) {
         if (currentCommand.byteReceived(data)) {
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
 				//System.out.println("Ack received for: " + waitingForAck);
                 byte tempAck = waitingForAck;
                 
+				boolean hadAckProcessor = false;
+
+				for (byte ack : ackProcessors){
+					if (tempAck == ack){
+						ackProcessing();
+						hadAckProcessor = true;
+						break;
+					}
+				}
 				
-				waitingForAck = null;
+				if (!hadAckProcessor){
+					waitingForAck = null;
+				}
 				
-                for (byte ack : ackProcessors){
-                    if (tempAck == ack){
-                        ackProcessing();
-                        break;
-                    }
-                }
                 currentCommand = new Command();
             } else {
                 throw new IllegalArgumentException("Received something unexpected");
@@ -276,7 +328,7 @@ public abstract class Protocol extends Thread {
         }
     }
 
-    protected final synchronized void bytesReceived(byte[] data) {
+    protected final void bytesReceived(byte[] data) {
         for (byte item : data) {
             byteReceived(item);
         }
