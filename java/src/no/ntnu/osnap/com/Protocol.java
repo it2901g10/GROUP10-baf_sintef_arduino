@@ -55,7 +55,7 @@ public abstract class Protocol extends Thread {
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());
 				
-				//System.out.println("Sent: " + currentInstruction.getOpcode());
+				System.out.println("Sent: " + currentInstruction.getOpcode());
 				
 				waitingForAck = currentInstruction.getOpcode();
 			} catch (IOException ex) {
@@ -70,7 +70,7 @@ public abstract class Protocol extends Thread {
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-			//System.out.println("Size: " + pendingInstructions.size());
+			System.out.println("Size: " + pendingInstructions.size());
 			pendingInstructions.notify();
 		}
 	}
@@ -257,7 +257,7 @@ public abstract class Protocol extends Thread {
         if (currentCommand.byteReceived(data)) {
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-				//System.out.println("Ack received for: " + waitingForAck);
+				System.out.println("Ack received for: " + waitingForAck);
                 byte tempAck = waitingForAck;
                 
 				

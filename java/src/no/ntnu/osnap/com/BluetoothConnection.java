@@ -125,7 +125,7 @@ public class BluetoothConnection extends Protocol {
 		
 		//Don't try to connect more than once
 		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
-			Log.w("BluetoothConnection", "Trying to connecto to the same device twice!");
+			Log.w("BluetoothConnection", "Trying to connect to the same device twice!");
 			return;
 		}
 		
@@ -135,6 +135,7 @@ public class BluetoothConnection extends Protocol {
 		//Make sure bluetooth is enabled
 		if( !bluetooth.isEnabled() ) {
 			//wait until Bluetooth is enabled by the OS
+			Log.v("BluetoothConnection", "BluetoothDevice is DISABLED. Asking user to enable Bluetooth");
 			parentActivity.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BT);
 			return;
 		}
@@ -142,6 +143,7 @@ public class BluetoothConnection extends Protocol {
 		//Stop discovery when connecting
 		if( bluetooth.isDiscovering() ){
 			//wait until discovery has finished before connecting
+			Log.v("BluetoothConnection", "BluetoothDevice is in discovery mode. Waiting for discovery to finish before connecting");
 			return;
 		}
 		
@@ -185,16 +187,22 @@ public class BluetoothConnection extends Protocol {
 	 * @throws IOException if there was a problem closing the connection.
 	 */
 	public synchronized void disconnect() throws IOException {
-		
-		//We are now officially disconnected
-		setConnectionState(ConnectionState.STATE_DISCONNECTED);
-		
+				
 		//Close socket only if we are connected
 		if(getConnectionState() == ConnectionState.STATE_CONNECTED) {
+			setConnectionState(ConnectionState.STATE_DISCONNECTED);
 			input.close();
+			input = null;
 			output.close();
+			output = null;
 			socket.close();
+			socket = null;
+			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
+			return;
 		}
+		
+		//This can happen if state == STATE_CONNECTING (meaning we abort trying to connect)
+		setConnectionState(ConnectionState.STATE_DISCONNECTED);		
 	}
 		
 	 // Create a BroadcastReceiver for enabling bluetooth
@@ -258,23 +266,15 @@ public class BluetoothConnection extends Protocol {
 
 	@Override
 	protected synchronized void sendBytes(byte[] data) throws IOException {
-		Log.e("DEBUG", "WE ARE SENDING DATA!");
 		
 		//Make sure we are connected before sending data
 		if( !isConnected() ){
 			throw new IOException("Trying to send data while Bluetooth is not connected!");
 		}
 		
-		String temp = "";
-		for (byte value : data){
-			temp += value + " - ";
-		}
-		Log.e("DEBUG", "Sending: " + temp);
-		
 		//Send the data
 		output.write(data);
 		output.flush();
-		Log.e("DEBUG", "Writing done");
 	}
 	
 }
