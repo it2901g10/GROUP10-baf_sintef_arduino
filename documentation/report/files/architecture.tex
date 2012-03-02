@@ -47,6 +47,30 @@ The arduino board includes a wrapper around the input/output of the firmware to 
 \label{fig:architecture}
 \end{figure}
 
+\section{Package Structure}
+The system can be divided into smaller sections. This section describes some of the structures we have divided the system into. The most obvious division is between Java code that is
+run on the Android platform and the C code which is run on the Arduino platform. The Java code is again divided into packaged libraries as described below.
+
+\subsection{Java Code}
+\begin{itemize}
+\item{no.ntnu.osnap.com}  \newline
+Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such as
+Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication methods. The
+user can easily add new communication types by extending an abstract class.
+\item{no.ntnu.osnap.com.testing}  \newline
+Test units and sample programs for the ComLib. These are simple test applications that are run on the Android to test if the ComLib is communication correctly using the specified
+protocol.
+\item{no.ntnu.osnap.social}  \newline
+Social Library provides an easy to use interface between social networks such as Facebook, Twitter and Myspace and any application or service running on the Android platform.
+The SocialLib also provides some general data models such as Person, Group or Post which are concepts that are similar between any social network. This library should be very modular
+and support any current and future network.
+\item{no.ntnu.osnap.social.testing}  \newline
+Test units and sample programs for the SocialLib.
+\end{itemize}
+
+\subsection{Arduino C code}
+C source code for the Arduino firmware supporting the ComLib protocol.
+
 \newpage
 \section{Use cases}
 Use Case:

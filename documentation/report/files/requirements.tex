@@ -1,40 +1,54 @@
+%Functional Requirements
+\section{Functional Requirements}
 
-\section{Preliminary requirements}
-\begin{itemize}
-\item Wireless connectivity
-\end{itemize}
+\subsection{Wireless connectivity}
 Since the product will target a user-base with no technical background,
 the customer required all connections between devices to be wireless,
 so that connecting the User Interface to the Android mobile will be
 as easy as possible for the end-users. For this reason, the technical
 details of the connection should be hidden to the end-user so that
 the product can be easily operated.
-\begin{itemize}
-\item Flexible software architecture
-\end{itemize}
+
+\subsection{Prototype}
+Develop three prototypes, one more complex prototype showcasing the 
+functionality of both the Communication Library and Social Library. The other
+two prototypes should be much simpler in complexity and prove that the 
+libraries can be integerated in different applications.
+
+\subsection{Communication Library}
+The Android should use the Communication Library to connect wirelessly 
+to an Arduino module and establish duplex communication.
+
+\subsection{Social Library}
+Android applications should be able to retrieve social data from any 
+supported social network through the use of the Social Library. General 
+concepts applicable in any social network such as Person, Group, Message, etc.
+should be extracted and devised into a model interface that is easy for the application
+developer to use.
+
+
+%Non functional Requirements
+\section{Non-functional Requirements}
+
+\subsection{Flexible software architecture}
 The software that will be developed for this project will serve as
 a proof-of-concept and possibily as a starting point for other research
 projects. For this reason a flexible, modular software architecture
 is an important requirement for our customer. The code shall be developed
 in independent, thus reusable modules so that adding new functionality
 will be fairly easy for new developers.
-\begin{itemize}
-\item Software licenses
-\end{itemize}
+
+\subsection{Software licenses}
 The customer made clear that the software developed needs to be released
 under a permissive, Apache compatible software license. This implies
 that pre-existing software that will eventually be adopted and incorporated
 in the project must have a compatible license.
-\begin{itemize}
-\item Target platforms
-\end{itemize}
+
+\subsection{Target platforms}
 The product has to target the Android platform and Arduino.
 This will place restrictions on the software and on the programming languages that will be adopted.
 
-\newpage
-\begin{itemize}
-\item Working prototype
-\end{itemize}
+\subsection{Working prototype}
 To show that the concept of Tangible User Interfaces for Android applications
 (including social networks) using Arduino is not only possible, but
 also a feasible market product, the customer is interested in a working
@@ -42,3 +56,10 @@ prototype. As the project evolves, together with our customer we will
 gradually decide on the specifications of the prototype that will
 be produced at the end of the project. Such prototype will play an
 important role for the customer satisfaction.
+
+\subsection{API Documentation and Javadoc}
+Since the product is going to be further developed by other people and is
+mainly designed for easier application development then proper research and usage
+documentation is important. Proper documentation or tutorials should describe how
+the end-user can easily use the libraries without any technical knowledge of how
+the library works.
