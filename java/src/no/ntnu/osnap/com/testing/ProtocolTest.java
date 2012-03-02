@@ -15,20 +15,23 @@ import no.ntnu.osnap.com.deprecated.ComLayer;
 public class ProtocolTest {
     public static void main(String[] args) {
         ComLayer arduino = new ComLayer();
+		arduino.setDaemon(true);
 		arduino.start();
 		
 		boolean toggle = false;
         
-        for (int i = 0; i < 100; ++i){
+        for (long i = 0; i < 10000000; ++i){
             //arduino.print(new String(new char[250]));
             //arduino.newPrint(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-			arduino.pulse(13);
-            System.out.println("value: " + arduino.read(0));
+			//arduino.pulse(13);
+			boolean value = arduino.read(10);
+            //System.out.println("value: " + value);
+			arduino.write(13, value);
             //arduino.print(i + "s");
 			
 			
             /*try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch (InterruptedException ex) {
                 
             }*/
