@@ -1,4 +1,4 @@
-//#define LCD 0
+/#define LCD 0
 #define LCD_LINES 2
 #define LCD_COLUMNS 16
 
