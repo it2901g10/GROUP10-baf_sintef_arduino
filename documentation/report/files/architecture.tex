@@ -7,10 +7,8 @@ Our first approach to design the system architecture was to develop:
 abstracted many common concepts found in different social networks (Facebook, Twitter, LinkedIn..)
 like User, Post, Reply, Image and so on, to give the developers the possibility to use
 (and extend) these abstractions seamlessly between different social networks.
-\end{itemize}
 
-\begin{itemize}
-\item A java library to connect, using different mediums, to the Arduino devices in order
+\item A java library to connect, using different interfaces, to the Arduino devices in order
 to send the data fetched from the social networks, and also a mechanism to manage Arduino's firmware,
 to allow the device to support different configurations.
 \end{itemize}
@@ -20,10 +18,12 @@ our customer really had in mind. Some of the code and documentation we produced 
 
 See appendix~\ref{app:firstdraftarchi} for more.
 
+\newpage
+
 \section{Revised approach}
 The biggest difference in the new design is that API will still provide abstractions
-for concepts common to the social network, but it will now focus on the estabilishing an interface,
-using Android's Intent mechanism, between Social applications and the Bluetooth library.
+for concepts common to the social network, but it will now focus on estabilishing an interface,
+using Android's Intent mechanism, between Social applications and the Android-Arduino applications.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/architecture-toplevel.png}
@@ -32,15 +32,37 @@ using Android's Intent mechanism, between Social applications and the Bluetooth 
 \end{figure}
 
 \newpage
+
+\subsection{First design}
+Our first design was based on the scenario where the user would
+download the t-shirt and the social applications and then browse for some content
+from within the social application and actively send it to the t-shirt application
+pressing a 'share' button. This scenario is represented in the following use case.
+
+use case here
+
+
+
+
+\subsection{Second design}
+
+
+\newpage
 \section{Architecture diagram}
-The API layer is the social service layer. It uses androids build in broadcast intents to send and recive data to social services. Included in the social service we have classes that extends Intent class to indicate if its a social Post, social Group, social Image, social User etc. Multiple apps can use the API layer to send and retrive this data. 
+The API layer is the social service layer. It uses androids build in broadcast intents to send and
+recive data to social services. Included in the social service we have classes that extends Intent
+class to indicate if its a social Post, social Group, social Image, social User etc. Multiple apps
+can use the API layer to send and retrive this data.
 
 Example:
-The API layer is connected with twitter. Twitter retrives a new post and the API layer sends out a broadcast intent marked as $SOCIAL_POST_IN$. The android OS see who are listeneing to $SOCIAL_POST_IN$ and relay the message to all connected apps. The Developed app now has the post. If the developed app wants to send a post it sends an intent with $SOCIAL_POST_OUT$ that our API can pick up.
+The API layer is connected with twitter. Twitter retrives a new post and the API layer sends out
+a broadcast intent marked as $SOCIAL_POST_IN$. The android OS see who are listeneing to $SOCIAL_POST_IN$ and relay the message to all connected apps. The Developed app now has the post. If the developed app wants to send a post it sends an intent with $SOCIAL_POST_OUT$ that our API can pick up.
 
-The bluetooth protocol in the application is a framework that the developed application includes to be able to send and recive raw data from the arduino board. It includes handshake and confirmation commands that is similar to tcp.
+The bluetooth protocol in the application is a framework that the developed application includes
+to be able to send and recive raw data from the arduino board. It includes handshake and
+confirmation commands that is similar to tcp.
 
-The arduino board includes a wrapper around the input/output of the firmware to connect to our protocol. 
+The arduino board includes a wrapper around the input/output of the firmware to connect to our protocol.
 \begin{figure}[hb!]
 \centering \includegraphics[scale=0.40]{img/architecture-diagram.png}
 \caption{System architecture}
@@ -48,19 +70,21 @@ The arduino board includes a wrapper around the input/output of the firmware to 
 \end{figure}
 
 \section{Package Structure}
-The system can be divided into smaller sections. This section describes some of the structures we have divided the system into. The most obvious division is between Java code that is
-run on the Android platform and the C code which is run on the Arduino platform. The Java code is again divided into packaged libraries as described below.
+The system can be divided into smaller sections. This section describes some of the structures
+we have divided the system into. The most obvious distinction is between the Java code runs
+on the Android platform and the C code which is executed by the Arduino platform.
+The Java code is again divided into packaged libraries as described below.
 
 \subsection{Java Code}
 \begin{itemize}
-\item{no.ntnu.osnap.com}  \newline
+\item{no.ntnu.osnap.com}\newline
 Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such as
 Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication methods. The
 user can easily add new communication types by extending an abstract class.
-\item{no.ntnu.osnap.com.testing}  \newline
+\item{no.ntnu.osnap.com.testing}\newline
 Test units and sample programs for the ComLib. These are simple test applications that are run on the Android to test if the ComLib is communication correctly using the specified
 protocol.
-\item{no.ntnu.osnap.social}  \newline
+\item{no.ntnu.osnap.social}\newline
 Social Library provides an easy to use interface between social networks such as Facebook, Twitter and Myspace and any application or service running on the Android platform.
 The SocialLib also provides some general data models such as Person, Group or Post which are concepts that are similar between any social network. 
 \item{no.ntnu.osnap.social.testing}  \newline
