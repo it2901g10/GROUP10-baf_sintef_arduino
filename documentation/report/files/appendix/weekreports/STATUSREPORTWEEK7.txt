@@ -1,0 +1,31 @@
+﻿PROJECT 10 Open Source Network Arduino Platform(oSNAP)
+
+
+
+
+SUMMARY STATUS REPORT
+Week 7
+
+
+
+
+1 Introduction
+
+
+
+
+2 Progress summary
+This week we had discussions on which process we should use. Xtreme Programming, spiral and others were considered but we concluded that a modified version of scrum like we previously decided on was feasible. This would also be the most reasonable choice to promote continuity with past work. Other than this we had a slow week with not much progress in regards to programming, rather we focused on process and planning work.
+3 Open / closed problems
+Closed: Final decision on using scrum as development/process system. 
+
+
+
+
+Open:
+Protocol, bluetooth, social media all need refinement to fit in the scope of the project as it stands.
+
+
+4 Planned work for next period
+Continue work on all established work packages.
+5 Updated risks analysis

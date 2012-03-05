@@ -28,7 +28,7 @@ using Android's Intent mechanism, between Social applications and the Android-Ar
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/architecture-toplevel.png}
 \caption{Revised architecture}
-\label{fig:architecture}
+\label{fig:architecture-toplevel}
 \end{figure}
 
 \newpage
@@ -66,7 +66,7 @@ The arduino board includes a wrapper around the input/output of the firmware to 
 \begin{figure}[hb!]
 \centering \includegraphics[scale=0.40]{img/architecture-diagram.png}
 \caption{System architecture}
-\label{fig:architecture}
+\label{fig:architecture-diagram}
 \end{figure}
 
 \section{Package Structure}
@@ -86,8 +86,7 @@ Test units and sample programs for the ComLib. These are simple test application
 protocol.
 \item{no.ntnu.osnap.social}\newline
 Social Library provides an easy to use interface between social networks such as Facebook, Twitter and Myspace and any application or service running on the Android platform.
-The SocialLib also provides some general data models such as Person, Group or Post which are concepts that are similar between any social network. This library should be very modular
-and support any current and future network.
+The SocialLib also provides some general data models such as Person, Group or Post which are concepts that are similar between any social network. 
 \item{no.ntnu.osnap.social.testing}  \newline
 Test units and sample programs for the SocialLib.
 \end{itemize}
@@ -106,6 +105,6 @@ For the end user, we want the setup to connect his phone to the developer to be 
 \begin{figure}[hb!]
 \centering \includegraphics[scale=0.50]{img/use-cases.png}
 \caption{Use cases}
-\label{fig:architecture}
+\label{fig:architecture-usecases}
 \end{figure}
 

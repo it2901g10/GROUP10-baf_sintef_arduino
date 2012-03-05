@@ -1,0 +1,41 @@
+﻿PROJECT 10 Open Source Network Arduino Platform(oSNAP)
+
+
+
+
+SUMMARY STATUS REPORT
+Week 5
+
+
+
+
+1 Introduction
+A report of a very productive week with some breakthroughs and setbacks.
+
+
+2 Progress summary
+We started of by working on the tasks set forth. The bluetooth module(SHIELD) we got to work much faster than we planned for so we set the bar higher and started working on a general protocol to be used for communication between Arduino and computers regardless of technology(USB,BT,WiFi etc). We also had people work on getting a working Facebook application fetch data from Facebook(last post on Facebook wall). Getting a bluetooth connection between Android and Arduino was also a challenging task that we got working by the end of the week. Our results this week was presented to the customer on the friday as we had agreed on. Our progress relative to our plan is very good, we are actually ahead of schedule.
+We also started working on the preliminary report that is due in WEEK 6. We chose to write this in LaTeX language as this is the most powerful way to customise the style of our report. 
+
+
+In the meeting with the customer we had to revise our plan regarding to the Android framework. The way social networks/applications connect to our framework should be with intents(an Android standard) and the framework should be highly flexible in regards to which applications can work on it. This lead us to reject some of the code we had made for Facebook fetching, Android Bluetooth talking amongst other things.
+
+
+We also established working process management tools in GitHub and ScrumDo(www.scrumdo.com). 
+
+
+3 Open / closed problems
+Closed: wireless connectivity to Arduino is a reality and Bluetooth was decided upon as this is a standard in all mobile smart phones these days so the possibilties are bigger.
+
+
+Open:
+The concept of intents on Android needs to be understood and tried in action.
+
+
+4 Planned work for next period
+Revise established plans on all levels of our project.
+Set the plans in motion.
+5 Updated risks analysis
+
+
+The risk of wireless connectivity not working is void after this weeks progress.
