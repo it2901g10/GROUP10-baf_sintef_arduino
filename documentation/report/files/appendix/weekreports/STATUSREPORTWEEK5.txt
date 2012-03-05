@@ -1,12 +1,5 @@
-﻿PROJECT 10 Open Source Network Arduino Platform(oSNAP)
-
-
-
-
 SUMMARY STATUS REPORT
 Week 5
-
-
 
 
 1 Introduction
@@ -21,7 +14,8 @@ We also started working on the preliminary report that is due in WEEK 6. We chos
 In the meeting with the customer we had to revise our plan regarding to the Android framework. The way social networks/applications connect to our framework should be with intents(an Android standard) and the framework should be highly flexible in regards to which applications can work on it. This lead us to reject some of the code we had made for Facebook fetching, Android Bluetooth talking amongst other things.
 
 
-We also established working process management tools in GitHub and ScrumDo(www.scrumdo.com). 
+We also established working process management tools in GitHub and 
+ScrumDo(www.scrumdo.com). 
 
 
 3 Open / closed problems

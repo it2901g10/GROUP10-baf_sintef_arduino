@@ -1,39 +1,20 @@
-﻿PROJECT 10 Open Source Network Arduino Platform(oSNAP)
-
-
-
-
 SUMMARY STATUS REPORT
 Week 9
 
 
-
-
 1 Introduction
-
-
-
 
 2 Progress summary
 This week much planning and design discussions was had on the social library. Progress was done and now the work of implementing some of this is to be undertaken. The communication library between arduino and android bluetooth is finished pending further development.
 The mid-term report is due next week, so we started working on that as well.
 
-
-
-
 Open:
-
-
 Social Library
 Prototypes
 
 
 Closed:
-
-
 Social library(Facebook, OpenSocial, etc)
-
-
 
 
 4 Planned work for next period
@@ -41,6 +22,4 @@ Finish the mid-term report
 
 
 5 Updated risks analysis
-
-
 There is still a major risk involving the difficulty of finding viable solutions on the social library part of the architecture.

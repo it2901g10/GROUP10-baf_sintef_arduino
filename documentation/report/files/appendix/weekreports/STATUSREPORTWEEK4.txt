@@ -1,12 +1,5 @@
-﻿PROJECT 10 Open Source Network Arduino Platform(oSNAP)
-
-
-
-
 SUMMARY STATUS REPORT
 Week 4
-
-
 
 
 1 Introduction
@@ -30,5 +23,5 @@ In the meeting with the customer we decided on a task for the next period. If we
 
 
 5 Updated risks analysis
-Wireless connectivity; if the Arduino chip addon modules(called SHIELDS) for Bluetooth etc. was too hard to implement we would have to reconsider wireless connectivity. We set the “get wireless to work” deadline to be one month. Otherwise we would have to use only cabled connections and that would be clumsy on a lot of cool concepts.
+Wireless connectivity; if the Arduino chip addon modules(called SHIELDS) for Bluetooth etc. was too hard to implement we would have to reconsider wireless connectivity. We set the get "wireless to work" deadline to be one month. Otherwise we would have to use only cabled connections and that would be clumsy on a lot of cool concepts.
  Likelihood: 4 Impact: 6 Importance: 24
