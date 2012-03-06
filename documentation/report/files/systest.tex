@@ -20,9 +20,24 @@ us to understand the most common use case scenarios and from those obtain a set 
 to design the system.
 
 \section{Unit testing}
+This involves testing small portions, like methods and functions, of the code, making sure they work 
+as intended throughout the process of implementing code. Tests will be executed after changes in the 
+code to make sure that it still works as expected, this means that unit tests have to be written for 
+large portions of the API.
 
 \section{User interface testing}
 
 \section{Integration testing}
+After each module of the API has been Unit tested, they will be put together to form bigger components 
+of the working system. This is to make sure that the smaller modules will work correctly when placed 
+into bigger components.
+
+In our case this will be to run tests on ComLib and SocialLib making sure they work individually, 
+before they are tested together.
 
 \section{System testing}
+This involves butting the components from integration testing together to form a complete system that 
+can be tested. Preferably each module will be added incrementaly, to easier spot wich module, if any, 
+produces an error.
+
+At this stage we will also have three prototypes to do some thoroughly testing with.
