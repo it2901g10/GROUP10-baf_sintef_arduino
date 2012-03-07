@@ -108,3 +108,45 @@ For the end user, we want the setup to connect his phone to the developer to be 
 \label{fig:architecture-usecases}
 \end{figure}
 
+\section{The Protocol}
+
+The protocol is a basic set of rules defined for how devices can communicate to the ardunio. Software needed to be implemented on both sides in addition to these rules to be able to use this protocol. The protocol in itself is created by us, and has seen much editing in terms of which instructions was to be included, and how the communication was to be executed. With the current design the arduino cannot initiate the communication, but is instead a passive device. For all instructions sent by any device to the arduino, the arduino sends a response, if only just to acknowledge that it is finished executing the corresponding tasks. If the instruction is asking for information form the arduino, then the response will contain the corresponding information in the "Content" field. An overview of the current instructions in the protocol can be seen in Table~\ref{tbl:opcodes}.
+
+\begin{table}
+	\begin{tabular}{ | c | c | p{1.5cm} | p{1.7cm} | p{6cm} |}
+		\hline
+		\textbf{Name} & \textbf{OPCODE} & \textbf{Flag} & \textbf{Content} & \textbf{Description} \\ \hline
+		Ping & 0x00 & N/A & N/A & Pings the arduino, to check that it's there \\ \hline
+		Text & 0x01 & N/A & Text to send & Sends text to the arduino, which then displays it depending on the implementation on the ardunio \\ \hline
+		Sensor & 0x02 & Sensor number & N/A & Requests sensor information from the arduino \\ \hline
+		Pin pulse & 0x03 & Pin number & N/A & Sends a 500ms pulse on the specified pin \\ \hline
+		Pin read & 0x04 & Pin number & N/A & Reads the current digital state of the specified pin on the arduino \\ \hline
+		Pin write & 0x05 & Pin number & Pin value (0~or1) & Writes a digital state of a pin on the arduino \\ \hline
+		Response & 0xFE & Opcode & Response content & A response to a previous instruction, where the flag is the opcode for which it is the response to \\ \hline
+		Reset & 0xFF & N/A & N/A & Resets the arduino \\ \hline
+	\end{tabular}
+	\caption{Overview of the protocol's instructions}
+	\label{tbl:opcodes}
+\end{table}
+
+\subsection{Arduino implementation}
+On the arduino all code related to our protocol is abstracted into a ComputerSerial library. This library is a very basic state machine which processes single bytes received (see Figure~\ref{fig:arduino_states}). The user of this library can register local methods to be called with RPC when the corresponding instruction is called.
+
+The instructions follow strict rules on how they are constructed (see Table~\ref{tbl:instr_struct} for sizes of the different parts). Each instruction has to start with a "start-byte" which is always 0xFF. The next part is the size, which tells the number of bytes to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to remember that the content cannot be empty, and has to at least contain 1 byte. This byte however, is not necessarily read or used.
+
+\begin{table}
+	\begin{tabular}{c|c|c|c|c|c|}
+		\cline{2-6}
+		& \textbf{Start-byte} & \textbf{Size} & \textbf{Opcode} & \textbf{Flag} & \textbf{Content} \\ \hline
+		\multicolumn{1}{|c|}{\textbf{Size}} & 1 & 1 & 1 & 1 & 1-252 \\ \hline
+	\end{tabular}
+	\caption{The byte-structure of instructions}
+	\label{tbl:instr_struct}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{img/arduino_state-machine.pdf}
+	\caption{The arduino's state-machine}
+	\label{fig:arduino_states}
+\end{figure}
