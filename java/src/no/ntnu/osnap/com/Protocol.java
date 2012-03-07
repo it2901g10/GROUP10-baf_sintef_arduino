@@ -28,11 +28,14 @@ public abstract class Protocol extends Thread {
 		OPCODE_PIN_R,
 		OPCODE_PING
     };
+	
+	private Byte tempAckProcessor;
 
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
 		pendingInstructions = new ArrayDeque<ProtocolInstruction>();
+		tempAckProcessor = null;
 		running = true;
     }
 	
@@ -116,8 +119,10 @@ public abstract class Protocol extends Thread {
 		}
 		else {
 			// Blocking methodlock();
+			lock();
 
-			waitingForAck = OPCODE_PIN_R;
+			waitingForAck = OPCODE_TEXT;
+			tempAckProcessor = OPCODE_TEXT;
 
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
@@ -126,14 +131,14 @@ public abstract class Protocol extends Thread {
 			}
 			release();
 			
-			synchronized (this) {
-				while (waitingForAck != null) {
-					try {
-						this.wait(100);
-					} catch (InterruptedException ex) {
-					}
+			while (waitingForAck != null) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {
 				}
 			}
+			
+			tempAckProcessor = null;
 
 			ackProcessingComplete();
 		}
@@ -256,9 +261,9 @@ public abstract class Protocol extends Thread {
     private boolean locked = false;
 
     private synchronized void lock() {
-        while (locked) {
+        if (locked) {
             try {
-                this.wait(10);
+                this.wait();
             } catch (InterruptedException ex) {
             }
         }
@@ -318,7 +323,12 @@ public abstract class Protocol extends Thread {
 				}
 				
 				if (!hadAckProcessor){
-					waitingForAck = null;
+					if (tempAck == tempAckProcessor){
+						ackProcessing();
+					}
+					else {
+						waitingForAck = null;
+					}
 				}
 				
                 currentCommand = new Command();

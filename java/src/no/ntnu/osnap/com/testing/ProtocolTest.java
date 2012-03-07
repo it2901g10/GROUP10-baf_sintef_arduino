@@ -31,7 +31,7 @@ public class ProtocolTest {
 			//arduino.write(13, value);
             //arduino.print(i + "s");
 			
-			arduino.print(value + "   ", true);
+			arduino.print(value + "   ", false);
         }
         
         //arduino.print("ZooPark");
