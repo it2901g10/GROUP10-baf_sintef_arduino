@@ -5,7 +5,6 @@ consideration in order to make a good choice. The choice of the development proc
 planning and many other aspects of the teamwork. The following section describes
 which development processes we have considered using and the reasons behind our final choice.
 
-
 \subsection{Waterfall}
 The Waterfall model is a strict top-down design process. \cite{bib:waterfall}It features detailed planning, design and
 documentation before design. This model is useful when going back and changing requirements is
@@ -91,21 +90,30 @@ In the end we continued to use Scrum after making some changes to the process it
 \begin{itemize}
 	\item{Scrum Master:} Henrik Goldsack\newline
 	Took care of managing the Scrum process.
+	
 	\item{Customer Relations:} Henrik Goldsack\newline
 	Took care of contacting the customer in order to arrange meetings and such.
-	\item{Arduino developers:} Johan Jansen and Asbjørn Lucassen\newline
+
+	\item{Arduino developers:} Anders Behne Eie and Bjørnar Håkenstad Wold\newline
 	Took care of developing the Arduino code and the Java library that takes
 	care of estabilishing connections with Arduino.
+
 	\item{Android developers:} Emanuele Di Santo, Henrik Nikolai Goldsack\newline
 	Took care of the designing the user interfaces for the Android applications
 	as well as designing the Java library that allows Android applications
 	to exchange social data.
-	\item{Quality Assurance:} ???\newline
-	\item{Documentation:}\newline
+	
+	\item{Quality Assurance:} Johan Jansen, Asbjørn Lucassen, Jonas Svarvaa\newline
+	Ensure that every package and module in the system passes the requirement tests
+	that were setup in the Requirements section. The final product must statisfy certain
+	requirements before we can deliver it to the customer.
+
+	\item{Documentation:} Everyone\newline
 	Every team member produced documentation regarding their work areas and
 	collaborated in writing the reports.
-	\item{Student assistant:} \newline
-	Helped us not to fail the exam. Very nice of him :)
+
+	\item{Student assistant:} Jarl C. A. Jerde \newline
+	Documentation support and report revisions.
 \end{itemize}
 
 \section{Milestones}
@@ -144,9 +152,6 @@ Project delivery & ?-?-2012 \\
 \label{table:milestone}
 \end{table}
 
-
-\newpage
-
 \newpage
 \section{Project management tools}
 
@@ -170,19 +175,22 @@ Various software tools were used for this project.
 These include:\newline
 \begin{itemize}
 	\item{IDE for Coding:} \newline
-	NetBeans and Eclipse for Java development and Arduino for embedded C development.
+	NetBeans and Eclipse for Java development. SublimeText amd Arduino for embedded C development.
 
 	\item{Collabaration tools:} \newline
-	We decided to use GIT, which is a fast, scalable, distributed revision control system with an unusually 
-	rich command set that provides both high-level operations and full access to internals. Also several 
-	team members had experience with GIT through other projects which was a significant factor for 
+	For our code repository we decided to use GIT,. GIT is a fast, scalable, distributed revision control system 
+	with an unusually rich command set that provides both high-level operations and full access to internals. Also 
+	several team members had experience with GIT through other projects which was a significant factor for 
 	this choice.
+
+	We used Skype for instant message communication.
 
 	\item{Libraries and external software:} \newline
 	 Facebook Android SDK, Android SDK, RXTX
 
-	\item{\LaTeX{}:} \newline
-	Used for producing documentation.
+	\item{\LaTeX{}: and Google Documents} \newline
+	Used for producing documentation. Google Documents for realtime documentation collaboration.
+
 \end{itemize}
 
 The project task requires various hardware, namely Arduino boards, shields and modules and Android mobiles.
