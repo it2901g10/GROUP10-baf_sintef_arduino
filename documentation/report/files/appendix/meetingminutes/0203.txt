@@ -1,0 +1,30 @@
+Participants: Everyone except Bjoernar present.
+
+
+Meeting started at 14.15
+
+
+
+
+Agenda
+Show the structure of the social API and how it interacts with the various parts on an Android-Arduino system.
+Show prototype 3: Wearable pixels.
+
+
+
+
+Additional Information
+
+
+
+
+
+
+
+
+To do for next meeting
+Work on mid-term report
+
+
+To do for next meeting with the customer
+Work on mid-term report will be prioritised, so we can not show progress to the customer in the next meeting.
