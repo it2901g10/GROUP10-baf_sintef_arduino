@@ -1,3 +1,4 @@
+
 \section{The Team}
 The team consisted of seven students from NTNU. About half of the members have worked
 together on previous projects and thus shared some teamwork skills and experiences.
@@ -115,13 +116,13 @@ Project delivery & 25-5-2012 \\
 
 
 \newpage
+
 \section{Selecting Development Process}
 The choice of a development process is crucial for every project and many factors
 such as project size and scope, team members skills and time resources have to be taken into
 consideration in order to make a good choice. The choice of the development process will affect
 planning and many other aspects of the teamwork. The following section describes
 which development processes we have considered using and the reasons behind our final choice.
-
 
 \subsection{Waterfall}
 The Waterfall model is a strict top-down design process. \cite{bib:waterfall}It features detailed planning, design and
@@ -189,8 +190,6 @@ features of the model is risk analysis, strict system design specifications and 
 \label{fig:desigmodel-spiral}
 \end{figure}
 
-\newpage
-
 \subsection{Conclusions}
 We initially chosed Scrum as our development process. The reasons behind this choice were the iterative nature
 of our work schedule and of our weekly meetings with the customer during which we had to present a new version
@@ -204,6 +203,73 @@ but also and especially to some delays in the overall system design. We research
 processes, namely Extreme Programming and Spiral. The Spiral model did not suit our project, it is rather meant
 for larger projects with many employees. XP didn't fit us either as we needed a process that produced more documentation.
 In the end we continued to use Scrum after making some changes to the process itself.
+
+%Roles of each member? Scrum Master, Team Leader, Customer Relations, etc.
+\section{Project Roles}
+\begin{itemize}
+	\item{Scrum Master:} Henrik Goldsack\newline
+	Took care of managing the Scrum process.
+	
+	\item{Customer Relations:} Henrik Goldsack\newline
+	Took care of contacting the customer in order to arrange meetings and such.
+
+	\item{Arduino developers:} Anders Behne Eie and Bjørnar Håkenstad Wold\newline
+	Took care of developing the Arduino code and the Java library that takes
+	care of estabilishing connections with Arduino.
+
+	\item{Android developers:} Emanuele Di Santo, Henrik Nikolai Goldsack\newline
+	Took care of the designing the user interfaces for the Android applications
+	as well as designing the Java library that allows Android applications
+	to exchange social data.
+	
+	\item{Quality Assurance:} Johan Jansen, Asbjørn Lucassen, Jonas Svarvaa\newline
+	Ensure that every package and module in the system passes the requirement tests
+	that were setup in the Requirements section. The final product must statisfy certain
+	requirements before we can deliver it to the customer.
+
+	\item{Documentation:} Everyone\newline
+	Every team member produced documentation regarding their work areas and
+	collaborated in writing the reports.
+
+	\item{Student assistant:} Jarl C. A. Jerde \newline
+	Documentation support and report revisions.
+\end{itemize}
+
+\section{Milestones}
+\begin{table}
+	\begin{center}
+		\caption{Project milestones}
+		\begin{tabular}{| l | r |}
+			\hline
+
+\textbf{Description} & \textbf{Estimated completition date} \\
+\hline
+
+Working Social networks communication & 20-1-2012 \\
+\hline
+
+Working Android Arduino wireless comm. & 10-2-2012 \\
+\hline
+
+Preliminary project report & 6-2-2012 \\
+\hline
+
+System design completed & ?-2/3?-2012 \\
+\hline
+
+Mid. semester project report & 9-3-2012 \\
+\hline
+
+Last supervised project report & ?-?-2012 \\
+\hline
+
+Project delivery & ?-?-2012 \\
+\hline
+
+		\end{tabular}
+	\end{center}
+\label{table:milestone}
+\end{table}
 
 \newpage
 \section{Project management tools}
@@ -224,19 +290,26 @@ and eventually to \char`\"{}Done'' areas.
 \newpage
 \subsection{Software and hardware development tools}
 Various software tools were used for this project.
+
 These include:\newline
 \begin{itemize}
-	\item{IDEs of choice:} NetBeans, Eclipse, Android/SublimeText \newline
-	\item{Collabaration tools:} Git, Skype, Google Docs\newline
-	We decided to use Git, which is a fast, scalable,
-	distributed revision control system with an unusually rich command
-	set that provides both high-level operations and full access to internals.
-	Also some team members had already used it with success in
-	other projects and that was also a factor that led to this choice.
-	Skype for instant message communication, and Google Docs for real
-	time documentation collaboration.
-	\item{Pre-existing software:} Facebook Android SDK, Android SDK\newline
-	\item{LaTex editors:} used for producing documentation.
+	\item{IDE for Coding:} \newline
+	NetBeans and Eclipse for Java development. SublimeText amd Arduino for embedded C development.
+
+	\item{Collabaration tools:} \newline
+	For our code repository we decided to use GIT,. GIT is a fast, scalable, distributed revision control system 
+	with an unusually rich command set that provides both high-level operations and full access to internals. Also 
+	several team members had experience with GIT through other projects which was a significant factor for 
+	this choice.
+
+	We used Skype for instant message communication.
+
+	\item{Libraries and external software:} \newline
+	 Facebook Android SDK, Android SDK, RXTX
+
+	\item{\LaTeX{}: and Google Documents} \newline
+	Used for producing documentation. Google Documents for realtime documentation collaboration.
+
 \end{itemize}
 
 The project task requires various hardware, namely Arduino boards, shields and modules and Android mobiles.

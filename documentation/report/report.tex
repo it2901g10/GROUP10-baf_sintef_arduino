@@ -97,7 +97,7 @@ breaklines=true}}
 
 
 
-\DeclareGraphicsExtensions{.pdf, .png, .jpg, .gif}
+\DeclareGraphicsExtensions{.pdf, .png, .jpg, .gif, .eps}
 \graphicspath{{./img/}}
 
 \setlength{\headheight}{15pt}
@@ -118,6 +118,18 @@ breaklines=true}}
 % Title page, table of contents, list of tables and figures goes here
 
 \input{./title}
+
+%Abstract
+%An experienced reader should be able to understand 
+%exactly what you have done from only reading the 
+%abstract:
+% - This is different from a summary.  
+% - Should be short, varies from 150 to 200 word maximum 
+% - Should include a description of the problem, the solution and the main results. 
+% - Typically the last thing you write
+\begin{abstract}
+This is our abstract. Last thing we will write.
+\end{abstract}
 
 \cleardoublepage
 \tableofcontents
@@ -199,10 +211,6 @@ breaklines=true}}
 \cleardoublepage
 \chapter{Meeting reports}\label{app:meetings}
 \input{./files/appendix/meetings}
-
-\cleardoublepage
-\bibliographystyle{plain}
-\bibliography{it2901}
 
 \end{document}
 
