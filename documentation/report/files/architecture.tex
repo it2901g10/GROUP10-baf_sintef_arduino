@@ -1,29 +1,31 @@
-\section{First approach}
 
-Our first approach to design the system architecture was to develop:
+\section{First approach}
+Our first approach to design the product was to develop:
 
 \begin{itemize}
-\item A software framework that
-abstracted many common concepts found in different social networks (Facebook, Twitter, LinkedIn..)
-like User, Post, Reply, Image and so on, to give the developers the possibility to use
-(and extend) these abstractions seamlessly between different social networks.
+\item A java 'Social' library that abstracted many common concepts found in different
+social networks (Facebook, Twitter, LinkedIn..) like User, Post, Image and so on,
+in order to give the developers the possibility to use and extend these concepts seamlessly
+between different social networks. It would also handle the connection to the social networks,
+to allow the developer to write full-fledged social 'multi-network' clients.
 
-\item A java library to connect, using different interfaces, to the Arduino devices in order
-to send the data fetched from the social networks, and also a mechanism to manage Arduino's firmware,
-to allow the device to support different configurations.
+\item A java 'Communication' library to connect, using different interfaces, to the Arduino devices
+in order to send the data fetched from the social networks. It would also provide a mechanism to manage
+Arduino's firmware, to allow the device to support different hardware configurations.
 \end{itemize}
 
 After the second meeting with the customer we decided to revise this plan, as this was not what
-our customer really had in mind. Some of the code and documentation we produced earlier could be re-used, but some could not.
+our customer really had in mind and also a bit ambitious. Some of the code and documentation we produced
+earlier could be re-used, but some could not.
 
 See appendix~\ref{app:firstdraftarchi} for more.
 
 \newpage
-
 \section{Revised approach}
-The biggest difference in the new design is that API will still provide abstractions
-for concepts common to the social network, but it will now focus on estabilishing an interface,
-using Android's Intent mechanism, between Social applications and the Android-Arduino applications.
+The biggest difference in the new design is that while the Social library will still provide
+abstractions for concepts common found in social networks, it will now focus rather than handling
+the connection to the social networks, on estabilishing a communication interface (using Android's Intent mechanism)
+between Social applications and the Android-Arduino applications to allow them to request and forward 'social' data.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/architecture-toplevel.png}
@@ -33,19 +35,33 @@ using Android's Intent mechanism, between Social applications and the Android-Ar
 
 \newpage
 
-\subsection{First design}
-Our first design was based on the scenario where the user would
-download the t-shirt and the social applications and then browse for some content
-from within the social application and actively send it to the t-shirt application
-pressing a 'share' button. This scenario is represented in the following use case.
+\subsection{First system design}
+Our first system design was based on the scenario where the user would download the t-shirt
+and the social applications, browse for some content from within the social application
+and actively send it to the t-shirt application pressing a 'share' button.
+This scenario is represented in the following use case.
 
-use case here
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/use-case1.png}
+\caption{Use case for the first design}
+\label{fig:use-case1}
+\end{figure}
 
+Different sample applications following this design were developed and showed to the
+customer for feedback, and this helped us realize at some point that this design wouldn't fit
+the customer ideas for the final product. S
 
+\subsection{Second system design}
+During the meetings with the customer, in which we showed him various simple prototype applications
+in order to receive feedback and as much information we could use to proceed with the system design,
+we understood that our first design was not really fitting in the common use-case scenarios
+that the customer came up with.
 
-
-\subsection{Second design}
-
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/use-case2.png}
+\caption{Use case for the second design}
+\label{fig:use-case2}
+\end{figure}
 
 \newpage
 \section{Architecture diagram}
