@@ -1,4 +1,4 @@
-#define LCD 1
+#define LCD 0
 #define LCD_LINES 2
 #define LCD_COLUMNS 16
 
@@ -33,7 +33,7 @@ void* text(byte flag, byte content[], byte contentSize){
 
 void* buttons(byte flag, byte content[], byte contentSize){
 	int *status = (int*)malloc(sizeof(int));
-	*status = analogRead(0);
+	*status = analogRead(flag < 6 ? flag : 0);
 	return status;
 }
 
