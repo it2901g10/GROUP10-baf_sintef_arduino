@@ -25,6 +25,7 @@
 \usepackage{appendix}
 \usepackage{fixltx2e}
 \usepackage{color}
+\usepackage{xcolor}
 
 \usepackage{hyperref}         % Lenker !! Må være til slutt !!
 \usepackage[xindy]{glossaries}
@@ -154,7 +155,7 @@ breaklines=true}}
 \input{./files/architecture}
 
 \cleardoublepage
-\chapter{System Testing}\label{ch:systest}
+\chapter{Testing}\label{ch:systest}
 \input{./files/systest}
 
 \cleardoublepage
@@ -169,11 +170,19 @@ breaklines=true}}
 \chapter{Conclusion and Further Work}\label{ch:conclusion}
 \input{./files/conclusion}
 
+%\cleardoublepage
+%\chapter{Bibliography}\label{ch:bibliography}
+\input{./files/bibliography}
+
 % ---------------------------------------------------------------------------- %
 % Report appendixes goes here
 \appendix
 \appendixpage
 \addappheadtotoc
+
+\cleardoublepage
+\chapter{Planning of Prototypes}\label{app:prototypeplanning}
+\input{./files/appendix/prototypes}
 
 \cleardoublepage
 \chapter{Status Reports}\label{app:statusreports}

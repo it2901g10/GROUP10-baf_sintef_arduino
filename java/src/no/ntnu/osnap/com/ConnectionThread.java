@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 
 import no.ntnu.osnap.com.BluetoothConnection.ConnectionState;
 
+
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
@@ -63,6 +64,7 @@ class ConnectionThread extends Thread {
 		} catch (IOException ex) {
 			Log.e("ConnectionThread", "Unable to open socket: " + ex.getMessage());
 			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
+			connection.socket = null;
 			return;
 		}
 				
@@ -73,12 +75,12 @@ class ConnectionThread extends Thread {
 		} catch (IOException ex) {
 			Log.e("ConnectionThread", "Unable to get input/output stream: " + ex.getMessage());
 			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
+			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
 			return;
 		}
 				
 		//We are now connected!
 		connection.setConnectionState(ConnectionState.STATE_CONNECTED);
-		Log.e("DEBUG", "WE ARE CONNECTED!");
 		
 		//Keep listening bytes from the stream
 		while( connection.isConnected() ){
@@ -99,8 +101,8 @@ class ConnectionThread extends Thread {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {}
+			
 		}
 		
-		Log.e("DEBUG", "WE ARE DISCONNECTED!");
 	}
 }

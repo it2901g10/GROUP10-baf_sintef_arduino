@@ -1,0 +1,47 @@
+
+Testing is an integral part of every development process.
+Many different testing approaches have been proposed during the history of
+software development, but they all suggest that testing has to be performed continuously
+during the development process. This is of particular importance to our process since
+it follows an iterative approach. Testing should be planned in the early stages of each
+iteration for each testable unit that is going to be implemented and performed as soon as
+the iteration is complete. As the system evolves so does the testing approach which should
+then be more comprehensive and cover the integration of each module into the system and the
+system itself as a whole.
+
+\section{Customer feedback}
+Customer feedback was an important part of the testing approach for our project.
+Working prototypes and/or documentation were produced for each meeting with the customer
+in order to test the features implemented in the prototypes, receive a general acceptance
+on our iteration goals and plan the next iteration. Receiving a constant feedback from the
+user was very important as especially the 'social' part of the project didn't really have a
+specific set of requirements from the beginning, so acquiring feedback from the customer allowed
+us to understand the most common use case scenarios and from those obtain a set of requirements used
+to design the system.
+
+\section{Unit testing}
+This involves testing small portions, like methods and functions, of the code, making sure they work 
+as intended throughout the process of implementing code. Tests will be executed after changes in the 
+code to make sure that it still works as expected, this means that unit tests have to be written for 
+large portions of the API.
+
+\section{User interface testing}
+For the prototypes we made some applications that will run on an Android phone. To make sure our 
+prototypes are understandable and easy to use, we have used group members that have not been 
+involved in the process of making the UI, as test candidates. It might not be the ideal way of testing 
+an UI, but in the given timeframe of this project it was the easiest and fastest way of doing it.
+
+\section{Integration testing}
+After each module of the API has been Unit tested, they will be put together to form bigger components 
+of the working system. This is to make sure that the smaller modules will work correctly when placed 
+into bigger components. 
+
+In our case this will be to run tests on ComLib and SocialLib making sure they work individually, 
+before they are tested together.
+
+\section{System testing}
+This involves butting the components from integration testing together to form a complete system that 
+can be tested. Preferably each module will be added incrementaly, to easier spot wich module, if any, 
+produces an error.
+
+At this stage we will also have three prototypes to do some thoroughly testing with.
