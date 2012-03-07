@@ -86,17 +86,12 @@ that a mechanism to specify what content to fetch had to be provided by the Soci
 \newpage
 \section{Architecture diagram}
 
-\todo{
-	needs to be rewritten
-}
-The API layer is the social service layer. It uses androids build in broadcast intents to send and
-recive data to social services. Included in the social service we have classes that extends Intent
-class to indicate if its a social Post, social Group, social Image, social User etc. Multiple apps
-can use the API layer to send and retrive this data.
+
+The API layer is the social service layer. It uses androids built in Intents and Messenger class to communicate between social services and applications. Using these two classes we send JSONObject strings including data wrapped as social concepts such as Person, Group, Stream, Message, Activity etc. Multiple apps can use the API layer to send and retrieve this data.
 
 Example:
-The API layer is connected with twitter. Twitter retrives a new post and the API layer sends out
-a broadcast intent marked as $SOCIAL_POST_IN$. The android OS see who are listeneing to $SOCIAL_POST_IN$ and relay the message to all connected apps. The Developed app now has the post. If the developed app wants to send a post it sends an intent with $SOCIAL_POST_OUT$ that our API can pick up.
+The API layer is connected with twitter. Twitter retrieves a new post and the API layer sends out
+a broadcast intent telling a new Message has arrived. The android OS see who are listening to this type of intent and relay the message to all connected apps. The Developed app will now connect to the Twitter service to fetch the Message. 
 
 The bluetooth protocol in the application is a framework that the developed application includes
 to be able to send and recive raw data from the arduino board. It includes handshake and
