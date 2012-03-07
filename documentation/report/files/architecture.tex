@@ -12,6 +12,8 @@ to allow the developer to write full-fledged social 'multi-network' clients.
 \item A java 'Communication' library to connect, using different interfaces, to the Arduino devices
 in order to send the data fetched from the social networks. It would also provide a mechanism to manage
 Arduino's firmware, to allow the device to support different hardware configurations.
+
+\item A prototype showcasing the functionalities of the two libraries.
 \end{itemize}
 
 After the second meeting with the customer we decided to revise this plan, as this was not what
@@ -22,14 +24,14 @@ See appendix~\ref{app:firstdraftarchi} for more.
 
 \newpage
 \section{Revised approach}
-The biggest difference in the new design is that while the Social library will still provide
+The biggest difference in the new approach is that while the Social library will still provide
 abstractions for concepts common found in social networks, it will now focus rather than handling
 the connection to the social networks, on estabilishing a communication interface (using Android's Intent mechanism)
 between Social applications and the Android-Arduino applications to allow them to request and forward 'social' data.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/architecture-toplevel.png}
-\caption{Revised architecture}
+\caption{Revised system architecture}
 \label{fig:architecture-toplevel}
 \end{figure}
 
@@ -39,32 +41,54 @@ between Social applications and the Android-Arduino applications to allow them t
 Our first system design was based on the scenario where the user would download the t-shirt
 and the social applications, browse for some content from within the social application
 and actively send it to the t-shirt application pressing a 'share' button.
-This scenario is represented in the following use case.
+This scenario is represented in figure \ref{fig:use-case1}
 
 \begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/use-case1.png}
+\centering \includegraphics[scale=0.35]{img/architecture-usecase1.png}
 \caption{Use case for the first design}
 \label{fig:use-case1}
 \end{figure}
 
 Different sample applications following this design were developed and showed to the
 customer for feedback, and this helped us realize at some point that this design wouldn't fit
-the customer ideas for the final product. S
-
-\subsection{Second system design}
-During the meetings with the customer, in which we showed him various simple prototype applications
-in order to receive feedback and as much information we could use to proceed with the system design,
-we understood that our first design was not really fitting in the common use-case scenarios
-that the customer came up with.
+the customer ideas for the final product.
 
 \begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/use-case2.png}
+\centering \includegraphics[scale=0.35]{img/architecture-resp.png}
+\caption{}
+\label{fig:resp}
+\end{figure}
+
+\subsection{Second system design}
+Showing the customer various simple prototype applications in order to receive feedback we would use
+to proceed with the system design, we understood that our first design was not really fitting in the
+common use-case scenarios that the customer was mentioning.
+
+The user was not supposed to browse for social content and send it actively to the T-Shirt application.
+Instead, after downloading the software, he would just setup a set of rules specifying the behavior of the T-Shirt.
+
+This made clear that both the Social and the T-Shirt applications needed to be implemented
+as Android services in order to run in background, without user interaction; it also implied 
+that a mechanism to specify what content to fetch had to be provided by the Social library.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/architecture-usecase2.png}
 \caption{Use case for the second design}
 \label{fig:use-case2}
 \end{figure}
 
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/architecture-reqresp.png}
+\caption{?}
+\label{fig:reqresp}
+\end{figure}
+
 \newpage
 \section{Architecture diagram}
+
+\todo{
+	needs to be rewritten
+}
 The API layer is the social service layer. It uses androids build in broadcast intents to send and
 recive data to social services. Included in the social service we have classes that extends Intent
 class to indicate if its a social Post, social Group, social Image, social User etc. Multiple apps
@@ -79,11 +103,6 @@ to be able to send and recive raw data from the arduino board. It includes hands
 confirmation commands that is similar to tcp.
 
 The arduino board includes a wrapper around the input/output of the firmware to connect to our protocol.
-\begin{figure}[hb!]
-\centering \includegraphics[scale=0.40]{img/architecture-diagram.png}
-\caption{System architecture}
-\label{fig:architecture-diagram}
-\end{figure}
 
 \section{Package Structure}
 The system can be divided into smaller sections. This section describes some of the structures
