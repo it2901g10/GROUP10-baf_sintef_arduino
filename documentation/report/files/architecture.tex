@@ -13,7 +13,7 @@ The system consists of:
 	\item[Prototypes:] T-Shirt prototype, other prototypes
 \end{description}
 
-The following diagram represents the overall system architecture.
+The figure \ref{fig:design-toplevel} illustrates the overall system architecture.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/design-toplevel.png}
@@ -35,7 +35,7 @@ to exchange social data. This mechanism is based on Android Intent's API.
 Our first design approach consisted in a library that would handle the connection to social networks
 such as Facebook, Twitter, LinkedIn and so on, allowing the developers to write full-fledged
 social 'multi-network' clients. It would also provide abstractions for many common concepts
-found in these networks such as Post, User, Comment and so on.biggest biggest 
+found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
 The difference in the new approach is that while the Social library will still provide
@@ -52,18 +52,7 @@ for the previous design was re-used, but some could not.
 	a class diagram maybe?
 }
 
-\subsubsection{Sequence Diagram}
-This sequence diagram shows a sample communication between the Social and T-Shirt applications.
-The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
-
 \newpage
-
-\begin{figure}[h!]
-\centering \includegraphics[width=1.0\textwidth]{img/sequenceDiagramSocialService.png}
-\caption{Sequence Diagram Social Service}
-\label{fig:sequenceDiagramSocialService}
-\end{figure}
-
 
 \subsection{The Communication library}
 This library consists of a Java library and an Arduino firmware. Both implement the ComLib protocol.
@@ -83,7 +72,7 @@ but is instead a passive device. For all instructions sent by any device to the 
 either to acknowledge that it is finished executing the corresponding tasks, or the actually return the required
 information in the "Content" field. An overview of the current instructions in the protocol can be seen in Table~\ref{tbl:opcodes}.
 
-\begin{table}
+\begin{table}[h!]
 \begin{tabular}{ | c | c | p{1.5cm} | p{1.7cm} | p{6cm} |}
 \hline
 \textbf{Name} & \textbf{OPCODE} & \textbf{Flag} & \textbf{Content} & \textbf{Description} \\
@@ -146,12 +135,11 @@ The following figure illustrates the Arduino automata.
 
 \newpage
 \section{Prototypes}
-We have three different prototypes that use the oSNAP library. These three different prototypes serve both
-as a proof of concept and to test that the library works. Each of the prototypes should be different
-to show that the library can be used to quickly prototype Arduino Tangible User Interfaces.do we have a 
-One of the protoypes, the T-Shirt, is significantly bigger and more complex than the other two.
-The T-Shirt is the prototype for the entire project and the other two are
-just proof that the library works for other applications.
+Three different prototypes will be produced for the project. They serve both as a proof of concept and
+to test that the library works. Each of the prototypes should be different to show that the library can be
+used to quickly prototype Arduino Tangible User Interfaces. One of the protoypes, the T-Shirt, is significantly
+bigger and more complex than the other two. The T-Shirt is the main prototype of the project; the purpose of the other two
+is just to show that the libraries can be use for other applications and in different contexts.
 
 \subsection{The social T-Shirt}
 	
@@ -168,17 +156,17 @@ just proof that the library works for other applications.
 	
 This is our main prototype and will showcase a lot features.
 It consists of a T-Shirt or sweater connected to a Lilypad Arduino that will feature
-several displays and indicator which will all receive data from the Android phone. The data sent will be social media
-statistics or updates. The shirt has many planned tangiable features (see figure \ref{fig:design-TShirt}):
+several displays and indicators which will receive social data from the Android phone.
+The shirt features different tangible interfaces (see figure \ref{fig:design-TShirt}):
 	
 \begin{itemize}
-\item LED lights
+\item LEDs
 \item LCD Display
 \item Sound speaker
 \item Vibration module
 \end{itemize}
 	
-Any of these output devices can be mapped to a fair deal of concepts found in social network.
+Any of these can be mapped to a fair deal of concepts found in social network.
 So a "Poke" from Facebook could become a vibration on the T-Shirt. When someone "Likes" your post a small sound effect
 could be played, a LED blinking on status updates from Twitter, etc. The T-Shirt is connected to the social networks
 throu a wireless connection to the Android mobile. Specifically, the mobile Android is connected to the internet
@@ -189,9 +177,11 @@ and carried in the pocket of the person using the T-Shirt and is connected wirel
 	%\caption{Concept drawing of the T-Shirt Prototype}
 	%\label{fig:testing-TShirt}
 	%\end{figure}
+
+\newpage
 	
 \subsection{Prototype 2: Temperature Sensor for Android}
-This prototype will primarily be made to show communication going from the Arduino to the Android using our libraries.
+This prototype will primarily showcase the communication from Arduino to Android using our libraries.
 A temperature sensor will be connected to an Arduino board and then constantly send its output over bluetooth to a
 an Android application.
 	
@@ -221,8 +211,9 @@ reviewed. This involved especially the Social library and the Applications.
 Our first system design was based on the scenario where the user would download the t-shirt
 and the social applications, browse for some content from within the social application
 and actively send it to the t-shirt application pressing a 'share' button.
-This scenario is represented in figure \ref{fig:req-usecase1}
-The following figure represents the communication between the applications.
+This scenario is illustrated in figure \ref{fig:req-usecase1}.
+
+The figure \ref{fig:design-resp} represents the communication between the applications.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/design-resp.png}
@@ -231,31 +222,47 @@ The following figure represents the communication between the applications.
 \end{figure}
 
 Please note that in this scenario the user is required to actively send data from
-the social application to the T-Shirt application, which is merely capable of receiving.
-Also, both are implemented as Android applications.
+the social application (which acts as a Facebook client) to the T-Shirt application,
+which is merely capable of receiving. Also, both are implemented as Android applications.
 
 \subsection{Second design}
 It turned out that the user was not supposed to browse for social content and send it actively
 to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
-specifying the behavior of the T-Shirt. This scenario is represent in figure \ref{fig:req-usecase2}
+specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:req-usecase2}
 
 This new scenario made clear that that both the Social and the T-Shirt applications needed to
 be split into:
 
 \begin{itemize}
 \item A user interface, implemented as one or more Android applications, that the user could use to
-authenticate within the social network and setup the rules for the T-Shirt app.
+authenticate within the social network and setup the rules for the T-Shirt.
 \item Two Android services that would run in the background, without user interaction,
 to fetch data from the social networks and forward it to the Arduino.
 \end{itemize}
 
-It also implied that a mechanism to specify what content to fetch had to be provided by the Social library.
-The following figure represents the communication between the services and the applications.
+It also implied that a mechanism to request and exchange social content had to be provided
+by the Social library. The figure \ref{fig:design-reqresp} illustrates the communication between
+the services and the applications.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/design-reqresp.png}
 \caption{Communication diagram (second design)}
 \label{fig:design-reqresp}
+\end{figure}
+
+The T-Shirt service is now 'asking' the Social service for a specific content.
+This happens in the background, without user interaction.
+
+\newpage
+
+\subsubsection{Sequence Diagram}
+This sequence diagram shows a sample communication between the Social and T-Shirt applications.
+The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
+
+\begin{figure}[h!]
+\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
+\caption{Sequence diagram}
+\label{fig:design-sequence}
 \end{figure}
 
 \newpage
