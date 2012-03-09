@@ -147,3 +147,30 @@ service.addSocialListener(new SocialListener(){
 //New post
 service.postNewPost(new Post("Hello Profile"));
 \end{lstlisting}
+
+  The design of the Facebook application was changed after roughly one month.
+
+  \section{Initial design of Facebook Application}
+
+  \begin{description}
+    \item[Login (Authentication):] The application shall handle the authentication with Facebook.
+    \item[Logoff:] The user shall be able to log off once logged in.
+    \item[Facebook connectivity:] The application shall be able to fetch and push data from/to Facebook.
+    \item[Browsing:] The application shall let the user browse for some social content.
+    \item[Sharing:] The application shall send social content to the T-Shirt application
+    upon user request.
+  \end{description}
+
+  \begin{figure}[h!]
+  \centering \includegraphics[scale=0.50]{img/req-socialappusecase1.png}
+  \caption{Use case for the social application}
+  \label{fig:req-tshirtappusecase1}
+  \end{figure}
+
+  
+
+  \begin{figure}[h!]
+  \centering \includegraphics[scale=0.50]{img/req-socialappusecase2.png}
+  \caption{Use case for the social application}
+  \label{fig:req-tshirtappusecase2}
+  \end{figure}
