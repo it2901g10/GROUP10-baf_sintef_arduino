@@ -26,16 +26,23 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 As the requirements for the product were not set early on by the customer, a lot of effort
 was put into producing working prototypes to show during the meetings in order to receive
 as much feedback as possible and identify the ideas the customer had in mind.
-These would provide what was needed to proceed with system design. At some point thou,
-we understood that we were going in the wrong direction, and that our design wouldn't
-satisfy the requirements for the use cases the customer mentioned and the system design had to be
-reviewed. This involved especially the Social library and the Applications.
+These would provide what was needed to proceed with system design.
+At some point thou, after roughly one month, we understood that we were going in the wrong direction,
+and that our design wouldn't satisfy the requirements for the use cases the customer mentioned and the
+design of some parts of the system had to be revised. It involved especially the Social library and both
+the Facebook and T-Shirt applications.
 
 \subsection{First design}
 Our first system design was based on the scenario where the user would download the t-shirt
 and the social applications, browse for some content from within the social application
 and actively send it to the t-shirt application pressing a 'share' button.
-This scenario is illustrated in figure \ref{fig:req-usecase1}.
+This scenario is illustrated in figure \ref{fig:design-usecase1}.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-usecase1}
+\caption{Use case for the product (first design)}
+\label{fig:design-usecase1}
+\end{figure}
 
 The figure \ref{fig:design-resp} represents the communication between the applications.
 
@@ -52,7 +59,13 @@ which is merely capable of receiving. Also, both are implemented as Android appl
 \subsection{Second design}
 It turned out that the user was not supposed to browse for social content and send it actively
 to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
-specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:req-usecase2}
+specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:design-usecase2}
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-usecase2}
+\caption{Use case for the product (second design)}
+\label{fig:design-usecase2}
+\end{figure}
 
 This new scenario made clear that that both the Social and the T-Shirt applications needed to
 be split into:
@@ -199,8 +212,24 @@ The following figure illustrates the Arduino automata.
 
 \newpage
 \section{Applications and Services}
-\subsection{T-Shirt application and Services}
-\subsection{Other applications and Serivices}
+
+\subsection{T-Shirt application and Service}
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/req-tshirtappusecase}
+\caption{Use case }
+\label{fig:design-resp}
+\end{figure}
+
+\subsection{Facebook application and Service}
+
+The Facebook application design had to be reviewed after roughly one month.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/req-socialappusecase2}
+\caption{Use case for the Social application }
+\label{fig:design-socialappusecase2}
+\end{figure}
 
 \newpage
 \section{Prototypes}
