@@ -25,33 +25,9 @@ for the various parts of the project.
 		Arduino device to Android and vice-versa.
 	\end{description}
 
-
 	\newpage
 
 	\subsection{Facebook application}
-
-	The design of the Facebook application was changed after roughly one month.
-
-	\subsubsection{Initial design}
-
-	\begin{description}
-		\item[Login (Authentication):] The application shall handle the authentication with Facebook.
-		\item[Logoff:] The user shall be able to log off once logged in.
-		\item[Facebook connectivity:] The application shall be able to fetch and push data from/to Facebook.
-		\item[Browsing:] The application shall let the user browse for some social content.
-		\item[Sharing:] The application shall send social content to the T-Shirt application
-		upon user request.
-	\end{description}
-
-	\begin{figure}[h!]
-	\centering \includegraphics[scale=0.50]{img/req-socialappusecase1.png}
-	\caption{Use case for the social application}
-	\label{fig:req-tshirtappusecase1}
-	\end{figure}
-
-	\newpage
-	
-	\subsubsection{Revised design}
 
 	\begin{description}
 		\item[Login (Authentication):] The application shall handle the authentication with Facebook.
@@ -60,12 +36,6 @@ for the various parts of the project.
 		from/to Facebook as requested, even when the mobile itself is idle (not operated).
 		\item[User input:] Once the user is authenticated, no further user action is required.
 	\end{description}
-	
-	\begin{figure}[h!]
-	\centering \includegraphics[scale=0.50]{img/req-socialappusecase2.png}
-	\caption{Use case for the social application}
-	\label{fig:req-tshirtappusecase2}
-	\end{figure}
 
 	\newpage
 
@@ -273,27 +243,4 @@ This will place restrictions on the software and on the programming languages th
 \end{itemize}
 
 \newpage
-\section{Use cases}
-\todo{
-	review.
-}
-Use Case:
-We have two actors we are working with. One is the developer creating the application using our framework.
-The other one is the end user with the final product. We are not directly working with the end user as an actor,
-but we still want to make our framework so it is simple for developer to have a product with an easy connection to the arduino board.
-
-Our focus on the actor developer is centered around the software he create. We do not know, and we don't need to
-know what product he is making. We will work on two parts he can to implement in his software. It will be the setup and
-transfer protocol to arduino and Intents to send and recive updates from social services.
-
-For the end user, we want the setup to connect his phone to the developer to be as easy as possible. The focus will be on
-simplified connection to arduino board, and easy connection to social services from application.
-
-\todo{
-	outdated?
-}
-\begin{figure}[hb!]
-\centering \includegraphics[scale=0.50]{img/use-cases.png}
-\caption{Use cases}
-\label{fig:architecture-usecases}
-\end{figure}
+\
