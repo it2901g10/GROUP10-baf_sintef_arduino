@@ -21,6 +21,75 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 \label{fig:design-toplevel}
 \end{figure}
 
+\newpage
+\section{System design}
+As the requirements for the product were not set early on by the customer, a lot of effort
+was put into producing working prototypes to show during the meetings in order to receive
+as much feedback as possible and identify the ideas the customer had in mind.
+These would provide what was needed to proceed with system design. At some point thou,
+we understood that we were going in the wrong direction, and that our design wouldn't
+satisfy the requirements for the use cases the customer mentioned and the system design had to be
+reviewed. This involved especially the Social library and the Applications.
+
+\subsection{First design}
+Our first system design was based on the scenario where the user would download the t-shirt
+and the social applications, browse for some content from within the social application
+and actively send it to the t-shirt application pressing a 'share' button.
+This scenario is illustrated in figure \ref{fig:req-usecase1}.
+
+The figure \ref{fig:design-resp} represents the communication between the applications.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-resp.png}
+\caption{Communication diagram (first design)}
+\label{fig:design-resp}
+\end{figure}
+
+Please note that in this scenario the user is required to actively send data from
+the social application (which acts as a Facebook client) to the T-Shirt application,
+which is merely capable of receiving. Also, both are implemented as Android applications.
+
+\subsection{Second design}
+It turned out that the user was not supposed to browse for social content and send it actively
+to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
+specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:req-usecase2}
+
+This new scenario made clear that that both the Social and the T-Shirt applications needed to
+be split into:
+
+\begin{itemize}
+\item A user interface, implemented as one or more Android applications, that the user could use to
+authenticate within the social network and setup the rules for the T-Shirt.
+\item Two Android services that would run in the background, without user interaction,
+to fetch data from the social networks and forward it to the Arduino.
+\end{itemize}
+
+It also implied that a mechanism to request and exchange social content had to be provided
+by the Social library. The figure \ref{fig:design-reqresp} illustrates the communication between
+the services and the applications.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-reqresp.png}
+\caption{Communication diagram (second design)}
+\label{fig:design-reqresp}
+\end{figure}
+
+The T-Shirt service is now 'asking' the Social service for a specific content.
+This happens in the background, without user interaction.
+
+\newpage
+
+\subsubsection{Sequence Diagram}
+This sequence diagram shows a sample communication between the Social and T-Shirt applications.
+The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
+
+\begin{figure}[h!]
+\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
+\caption{Sequence diagram}
+\label{fig:design-sequence}
+\end{figure}
+
+\newpage
 
 \section{Libraries}
 
@@ -196,74 +265,6 @@ the bundled picture. For prototyping purposes the wearable product will feature 
 prototype program will map to certain pixels and then transmit over Bluetooth to the Arduino
 component and this will promptly light the LEDs.
 
-
-\newpage
-\section{System design}
-As the requirements for the product were not set early on by the customer, a lot of effort
-was put into producing working prototypes to show during the meetings in order to receive
-as much feedback as possible and identify the ideas the customer had in mind.
-These would provide what was needed to proceed with system design. At some point thou,
-we understood that we were going in the wrong direction, and that our design wouldn't
-satisfy the requirements for the use cases the customer mentioned and the system design had to be
-reviewed. This involved especially the Social library and the Applications.
-
-\subsection{First design}
-Our first system design was based on the scenario where the user would download the t-shirt
-and the social applications, browse for some content from within the social application
-and actively send it to the t-shirt application pressing a 'share' button.
-This scenario is illustrated in figure \ref{fig:req-usecase1}.
-
-The figure \ref{fig:design-resp} represents the communication between the applications.
-
-\begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/design-resp.png}
-\caption{Communication diagram (first design)}
-\label{fig:design-resp}
-\end{figure}
-
-Please note that in this scenario the user is required to actively send data from
-the social application (which acts as a Facebook client) to the T-Shirt application,
-which is merely capable of receiving. Also, both are implemented as Android applications.
-
-\subsection{Second design}
-It turned out that the user was not supposed to browse for social content and send it actively
-to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
-specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:req-usecase2}
-
-This new scenario made clear that that both the Social and the T-Shirt applications needed to
-be split into:
-
-\begin{itemize}
-\item A user interface, implemented as one or more Android applications, that the user could use to
-authenticate within the social network and setup the rules for the T-Shirt.
-\item Two Android services that would run in the background, without user interaction,
-to fetch data from the social networks and forward it to the Arduino.
-\end{itemize}
-
-It also implied that a mechanism to request and exchange social content had to be provided
-by the Social library. The figure \ref{fig:design-reqresp} illustrates the communication between
-the services and the applications.
-
-\begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/design-reqresp.png}
-\caption{Communication diagram (second design)}
-\label{fig:design-reqresp}
-\end{figure}
-
-The T-Shirt service is now 'asking' the Social service for a specific content.
-This happens in the background, without user interaction.
-
-\newpage
-
-\subsubsection{Sequence Diagram}
-This sequence diagram shows a sample communication between the Social and T-Shirt applications.
-The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
-
-\begin{figure}[h!]
-\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
-\caption{Sequence diagram}
-\label{fig:design-sequence}
-\end{figure}
 
 \newpage
 
