@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="app_name">TempMeasure</string>
+    <string name="app_settings">Settings</string>
+    <!-- options_menu item names -->
+    <string name="menu_share">Share</string>
+    <string name="menu_setting">Settings</string>
+    <!-- tab_item names -->
+    <string name="tab_stats">Statistics</string>
+    <string name="tab_temp">Temperature</string>
+    <!-- preference keys -->
+    <string name="pref_tap">preftap</string>
+    <string name="pref_time">preftime</string>
+    <!-- div text strings -->
+    <string name="text_refresh">Tap screen to update</string>
+    <string name="text_reset">Reset</string>
+    <string name="text_mintemp">Lowest temperature</string>
+    <string name="text_maxtemp">Highest temperature</string>
+    <string name="text_avgtemp">Average temperature</string>
+</resources>
