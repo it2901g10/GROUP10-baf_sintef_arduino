@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package no.ntnu.osnap.temp;
+package no.ntnu.osnap.prototypes.temp;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;

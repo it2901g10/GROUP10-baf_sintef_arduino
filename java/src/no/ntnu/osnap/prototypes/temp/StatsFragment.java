@@ -1,4 +1,4 @@
-package no.ntnu.osnap.temp;
+package no.ntnu.osnap.prototypes.temp;
 
 import android.app.Fragment;
 import android.os.Bundle;
