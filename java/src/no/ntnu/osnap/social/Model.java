@@ -16,8 +16,11 @@ package no.ntnu.osnap.social;
 
 import android.util.Log;
 
-import org.json.JSONException;
+import java.util.Map;
+import java.util.Set;
+
 import org.json.JSONObject;
+import org.json.JSONException;
 
 /**
  * A generic class for all social objects.
@@ -25,17 +28,19 @@ import org.json.JSONObject;
  */
 public class Model extends JSONObject {
 	
-	/** Used for logging purposes
-	 * 
+	/** 
+	 * Used for logging purposes
 	 */
 	protected final String APP_TAG = "SocialLib";
 	
-	/** Constructs an empty Model.
+	/**
+	 * Constructs an empty Model.
 	 * An empty Model has no fields.
 	 */
 	public Model() {;}
 	
-	/** Constructs a Model from a source JSON text string.
+	/**
+	 * Constructs a Model from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
@@ -44,7 +49,33 @@ public class Model extends JSONObject {
 			super(json);
 	}
 	
-	/** Constructs a Model from a JSONObject.
+	/**
+	 * Constructs a Model from a source JSON text string, then translates it.
+	 * 
+	 * @param json a JSON string, starting with { and ending with }.
+	 * @param transl a translation table for key names.
+	 * @throws JSONException if there's a syntax error or duplicated key.
+	 */
+	public Model(String json, Map<String, String> transl)
+			throws JSONException {
+		
+		super(json);
+			
+		String key, val;
+		Set<Map.Entry<String, String>> fields = transl.entrySet();
+		
+		for (Map.Entry<String, String> field : fields) {
+			key = field.getKey();
+			val = field.getValue();
+			if (has(key)) {
+				put(val, get(key));
+				remove(key);
+			}
+		}
+	}
+	
+	/**
+	 * Constructs a Model from a JSONObject.
 	 * 
 	 * @param object a JSONObject instance
 	 * @throws JSONException 
@@ -53,21 +84,21 @@ public class Model extends JSONObject {
 		super(object.toString());
 	}
 	
-	/** Gets the network this object belongs to.
+	/**
+	 * Constructs a Model from a JSONObject, then translates it.
 	 * 
-	 * @return the value of the key 'network' as a string
-	 * or an empty string if the key doesn't exist.
+	 * @param object a JSONObject instance
+	 * @param transl a translation table for key names.
+	 * @throws JSONException 
 	 */
-	public String getNetwork () {
-		String ret;
-		ret = optString("network");
-		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'network' doesn't exist.");
-		}
-		return ret;
+	public Model(JSONObject object, Map<String, String> transl)
+			throws JSONException {
+		
+		this(object.toString(), transl);
 	}
 	
-	/** Gets the ID of this object.
+	/**
+	 * Gets the ID of this object.
 	 * 
 	 * @return the value of the key 'id' as a string
 	 * or an empty string if the key doesn't exist.
@@ -77,6 +108,21 @@ public class Model extends JSONObject {
 		ret = optString("id");
 		if (ret.equals("")) {
 			Log.d(APP_TAG, "key 'id' doesn't exist.");
+		}
+		return ret;
+	}
+	
+	/**
+	 * Gets the network this object belongs to.
+	 * 
+	 * @return the value of the key 'osnap:network' as a string
+	 * or an empty string if the key doesn't exist.
+	 */
+	public String getNetwork () {
+		String ret;
+		ret = optString("osnap:network");
+		if (ret.equals("")) {
+			Log.d(APP_TAG, "key 'osnap:network' doesn't exist.");
 		}
 		return ret;
 	}

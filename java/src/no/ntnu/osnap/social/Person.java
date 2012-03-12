@@ -15,25 +15,81 @@
 package no.ntnu.osnap.social;
 
 import android.util.Log;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/** Represents a person.
- *
+/**
+ * Represents a person.
  * @author Emanuele 'lemrey' Di Santo
  */
 public class Person extends Model {
 	
-	public Person() {
-		try {
-			put("groups", new JSONArray());
-		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
-		}
-	}
+	/*
+	 * OpenSocial	|	FB
+	 * displayName		name
+	 * aboutMe			bio
+	 * birthday			birthday
+	 * gender			gender
+	 */
+	public static final Map<String, String> FBMap = 
+	new HashMap<String, String> () {{
+		put("name", "displayName");
+		put("bio", "aboutMe");
+	}};
+	
+	public static enum REQUEST {
+		
+		/**
+		 * Retrieves the full user profile.
+		 */
+		FULL_PROFILE,
+		/**
+		 * Retrieves the user's Facebook wall.
+		 * Facebook specific.
+		 */
+		GET_FBHOME,
+		/**
+		 * Retrieves the posts made by the user.
+		 * Facebook specific. For OpenSocial
+		 * containers use GET_MESSAGES.
+		 */
+		GET_FBPOSTS,
+		/**
+		 * Retrieves user's statuses.
+		 */
+		GET_STATUSES,
+		/**
+		 * Retrieves the user's friend list.
+		 */
+		GET_FRIENDS,
+		/**
+		 * Retrieves the list of groups the user belongs to.
+		 */
+		GET_GROUPS,
+		/**
+		 * Retrieves the list of events the user is attending.
+		 */
+		GET_EVENTS,
+		/**
+		 * Retrieves the notifications received by the user.
+		 */
+		GET_NOTIFICATIONS,
+		/**
+		 * Retrieves the posts made by the user.
+		 */
+		GET_ALBUMS,
+		
+		SEND_STATUS,
+		SEND_POST,
+		SEND_COMMENT,
+		SEND_MESSAGE,
+		SEND_PHOTO,
+	};
+	
+	public Person() {;}
 	
 	/** Constructs a Person from a source JSON text string.
 	 * 
@@ -52,115 +108,45 @@ public class Person extends Model {
 	public Person (JSONObject object) throws JSONException {
 		super(object);
 	}
+	
+	/**
+	 * 
+	 * @param json
+	 * @param transl 
+	 */
+	public Person(String json, Map<String, String> transl) 
+			throws JSONException {
+		
+		super(json, transl);
+	}
+	
+	/**
+	 * 
+	 * @param json
+	 * @param transl
+	 * @throws JSONException 
+	 */
+	public Person(JSONObject object, Map<String, String> transl) 
+			throws JSONException {
+		
+		super(object, transl);
+	}
 
 	/** Returns the name of this person.
 	 * 
-	 * @return the value of the key 'name' as a string
+	 * @return the value of the key 'displayName' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getName() {
 		String ret;
-		ret = optString("name");
+		ret = optString("displayName");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'name' doesn't exist.");
-		}
-		return ret;
-	}
-
-	/** Returns the family name of this person.
-	 * 
-	 * @return the value of the key 'familyName' as a string
-	 * or an empty string if the key doesn't exist.
-	 */
-	public String getFamilyName() {
-		String ret;
-		ret = optString("familyName");
-		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'familyName' doesn't exist.");
+			Log.d(APP_TAG, "key 'displayName' doesn't exist.");
 		}
 		return ret;
 	}
 	
-	/** Returns the friends of this person.
-	 * 
-	 * @return the value of the key 'friends' as a {@code JSONArray}
-	 * or {@code null} if the key doesn't exist.
-	 */
-	public JSONArray getFriends() {
-		JSONArray ret;
-		ret = optJSONArray("friends");
-		if (ret == null) {
-			Log.d(APP_TAG, "key 'friends' doesn't exist.");
-		}
-		return ret;
-	}
-	
-	/** Returns the groups this person belongs to.
-	 * 
-	 * @return the value of the key 'groups' as a {@code JSONArray}
-	 * or {@code null} if the key doesn't exist.
-	 */
-	public JSONArray getGroups() {
-		JSONArray ret;
-		ret = optJSONArray("groups");
-		if (ret == null) {
-			Log.d(APP_TAG, "key 'groups' doesn't exist.");
-		}
-		return ret;
-	}
-
-	/** Returns a list of friends of this person.
-	 * 
-	 * @return the value of the key 'friends' as an {@code ArrayList}
-	 * of {@link Person} or {@code null} if the key doesn't exist.
-	 * @see Person
-	 */
-	public ArrayList<Person> getFriendsAsList() {
-		Person p;
-		JSONArray friends = getFriends();
-		ArrayList<Person> ret = new ArrayList<Person>();
-		try {
-			for (int i =  0; i < friends.length(); i++) {
-				p = new Person(friends.getJSONObject(i));
-				ret.add(p);
-			}
-		} catch (JSONException ex) {
-				Log.d(APP_TAG, ex.toString());
-		}
-		return ret;
-	}
-	
-	/** Returns a list of the groups this person belongs.
-	 * 
-	 * @return the value of the key 'friends' as an {@code ArrayList} of
-	 * {@link Group} or {@code null} if the key doesn't exist.
-	 * @see Group
-	 */	
-	public ArrayList<Group> getGroupsAsList() {
-		Group g;
-		JSONArray groups = getGroups();
-		ArrayList<Group> ret = new ArrayList<Group>();
-		try {
-			for (int i =  0; i < groups.length(); i++) {
-				g = new Group(groups.getJSONObject(i));
-				ret.add(g);
-			}
-		} catch (JSONException ex) {
-				Log.d(APP_TAG, ex.toString());
-		}
-		return ret;
-	}
-	
-	/** Adds this person in a group.
-	 * @param group the group which the person will belong to.
-	 */
-	public void addGroup (Group group) {
-		Group g = null;
-		try {
-			g = new Group(group);
-		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
-		}
-		getGroups().put(g);
+	public Request obtainRequest(Person person, int req) {
+		return Request.obtain(person, req);
 	}
 }

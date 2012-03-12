@@ -21,30 +21,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-/** Represents a group.
+/**
+ * Represents a group.
  * @author Emanuele 'lemrey' Di Santo
  */
 public class Group extends Model {
 	
-	/** Constructs an empty Group.
-	 * An empty group has no field except 'members'
-	 * whose value is an empty JSONArray.
+	public static final Map<String, String> FBMap =
+	new HashMap<String, String>() {{
+		put("name","title");
+		//put("","");
+	}};
+	
+	public static enum REQUEST {
+		GET_FULL,
+		GET_MEMBERS,
+		GET_FEED,
+		POST_MESSAGE
+	};
+	
+	/**
+	 * Constructs an empty Group.
 	 */
-	public Group () {
-		try {
-			put("members", new JSONArray());
-		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
-		}
-	}
+	public Group () {;}
 	
 	/** Constructs a Group from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
-	public Group (String json) throws JSONException {
+	public Group(String json) throws JSONException {
 		super(json);
 	}
 	
@@ -53,72 +62,60 @@ public class Group extends Model {
 	 * @param object a JSONObject
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
-	public Group (JSONObject object) throws JSONException {
+	public Group(JSONObject object) throws JSONException {
 		super(object);
+	}
+	
+	/**
+	 * 
+	 * @param json
+	 * @param transl
+	 * @throws JSONException 
+	 */
+	public Group (String json, Map<String, String> transl)
+			throws JSONException {
+		super(json, transl);
+		
+	}
+	
+	/**
+	 * 
+	 * @param object
+	 * @param transl
+	 * @throws JSONException 
+	 */
+	public Group (JSONObject object, Map<String, String> transl)
+			throws JSONException {
+		super(object, transl);
+		
 	}
 	
 	/** Returns the name of this group.
 	 * 
-	 * @return the value of the key 'name' as a string
+	 * @return the value of the key 'title' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
-	public String getName() {
+	public String getTitle() {
 		String ret;
-		ret = optString("name");
+		ret = optString("title");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'name' doesn't exist.");
+			Log.d(APP_TAG, "key 'title' doesn't exist.");
 		}
 		return ret;
 	}
 	
-	/** Returns the members of this group.
+	/**
+	 * Returns the description of this group.
 	 * 
-	 * @return the value of the key 'members' as a {@code JSONArray} or
-	 * {@code null} if the key doesn't exist.
+	 * @return the value of the key 'description' as a string
+	 * or an empty string if the key doesn't exist.
 	 */
-	public JSONArray getMembers() {
-		JSONArray ret;
-		ret = optJSONArray("members");
-		if (ret == null) {
-			Log.d(APP_TAG, "key 'members' doesn't exist.");
+	public String getDescription() {
+		String ret;
+		ret = optString("description");
+		if (ret.equals("")) {
+			Log.d(APP_TAG, "key 'description' doesn't exist.");
 		}
 		return ret;
 	}
-	
-	/** Returns a list of the members of this group.
-	 * 
-	 * @return an {@code ArrayList} of {@link Person} representing
-	 * the members of the group
-	 * @see Person
-	 */
-	public ArrayList<Person> getMembersAsList () {
-		Person p;
-		JSONArray members = getMembers();
-		ArrayList<Person> ret = new ArrayList<Person>();
-		try {
-			for (int i =  0; i < members.length(); i++) {
-				p = new Person(members.getJSONObject(i));
-				ret.add(p);
-			}			
-		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
-		}
-		return ret;
-	}
-	
-	/** Adds a member to this group.
-	 * 
-	 * @param person the person to be added.
-	 * A copy of the object will be added.
-	 */
-	public void addMember(Person person) {
-		Person p = null;
-		try {
-			p = new Person(person);
-		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
-		}
-		getMembers().put(p);
-	}
-	
 }
