@@ -21,6 +21,91 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 \label{fig:design-toplevel}
 \end{figure}
 
+\newpage
+\section{System design}
+As the requirements for the product were not set early on by the customer, a lot of effort
+was put into producing working prototypes to show during the meetings in order to receive
+as much feedback as possible and identify the ideas the customer had in mind.
+These would provide what was needed to proceed with system design.
+At some point thou, after roughly one month, we understood that we were going in the wrong direction,
+and that our design wouldn't satisfy the requirements for the use cases the customer mentioned and the
+design of some parts of the system had to be revised. It involved especially the Social library and both
+the Facebook and T-Shirt applications.
+
+\subsection{First design}
+Our first system design was based on the scenario where the user would download the t-shirt
+and the social applications, browse for some content from within the social application
+and actively send it to the t-shirt application pressing a 'share' button.
+This scenario is illustrated in figure \ref{fig:design-usecase1}.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-usecase1}
+\caption{Use case for the product (first design)}
+\label{fig:design-usecase1}
+\end{figure}
+
+Please note that in this scenario the user is required to actively send data from
+the social application (which acts as a Facebook client) to the T-Shirt application,
+which is merely capable of receiving. Also, both are implemented as Android applications.
+
+\newpage
+
+The figure \ref{fig:design-resp} represents the communication between the applications.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-resp.png}
+\caption{Communication diagram (first design)}
+\label{fig:design-resp}
+\end{figure}
+
+
+\subsection{Second design}
+It turned out that the user was not supposed to browse for social content and send it actively
+to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
+specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:design-usecase2}
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-usecase2}
+\caption{Use case for the product (second design)}
+\label{fig:design-usecase2}
+\end{figure}
+
+This new scenario made clear that that both the Social and the T-Shirt applications needed to
+be split into:
+
+\begin{itemize}
+\item A user interface, implemented as one or more Android applications, that the user could use to
+authenticate within the social network and setup the rules for the T-Shirt.
+\item Two Android services that would run in the background, without user interaction,
+to fetch data from the social networks and forward it to the Arduino.
+\end{itemize}
+
+It also implied that a mechanism to request and exchange social content had to be provided
+by the Social library. The figure \ref{fig:design-reqresp} illustrates the communication between
+the services and the applications.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-reqresp.png}
+\caption{Communication diagram (second design)}
+\label{fig:design-reqresp}
+\end{figure}
+
+The T-Shirt service is now 'asking' the Social service for a specific content.
+This happens in the background, without user interaction.
+
+\newpage
+
+\subsubsection{Sequence Diagram}
+This sequence diagram shows a sample communication between the Social and T-Shirt applications.
+The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
+
+\begin{figure}[h!]
+\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
+\caption{Sequence diagram}
+\label{fig:design-sequence}
+\end{figure}
+
+\newpage
 
 \section{Libraries}
 
@@ -130,8 +215,43 @@ The following figure illustrates the Arduino automata.
 
 \newpage
 \section{Applications and Services}
-\subsection{T-Shirt application and Services}
-\subsection{Other applications and Serivices}
+
+\subsection{T-Shirt application}
+
+As discussed in chapter 5.2 the T-Shirt application design had to be reviewed after roughly one month.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-tshirtappusecase2}
+\caption{Use case for the T-Shirt application}
+\label{fig:design-tshirtappusecase2}
+\end{figure}
+
+For completeness we present the previous application use case in figure \ref{fig:design-tshirtappusecase1}
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-tshirtappusecase1}
+\caption{Initial use case for the T-Shirt application}
+\label{fig:design-tshirtappusecase1}
+\end{figure}
+
+\subsection{Facebook application}
+
+As discussed in chapter 5.2 the Facebook application design had to be reviewed after roughly one month.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-socialappusecase2}
+\caption{Use case for the Social application}
+\label{fig:design-socialappusecase2}
+\end{figure}
+
+For completeness we present the previous application use case in figure \ref{fig:design-socialappusecase1}.
+
+\begin{figure}[h!]
+\centering \includegraphics[scale=0.35]{img/design-socialappusecase1}
+\caption{Initial use case for the Social application}
+\label{fig:design-socialappusecase1}
+\end{figure}
+
 
 \newpage
 \section{Prototypes}
@@ -149,7 +269,7 @@ is just to show that the libraries can be use for other applications and in diff
 \includegraphics[scale=0.2]{img/design-tshirtproto}
 \end{center}
 \vspace{-10pt}
-\caption{Concept drawing of the T-Shirt Prototypel}
+\caption{Concept drawing of the T-Shirt Prototype}
 \label{fig:design-TShirt}
 \vspace{-50pt}
 \end{wrapfigure}
@@ -198,74 +318,6 @@ component and this will promptly light the LEDs.
 
 
 \newpage
-\section{System design}
-As the requirements for the product were not set early on by the customer, a lot of effort
-was put into producing working prototypes to show during the meetings in order to receive
-as much feedback as possible and identify the ideas the customer had in mind.
-These would provide what was needed to proceed with system design. At some point thou,
-we understood that we were going in the wrong direction, and that our design wouldn't
-satisfy the requirements for the use cases the customer mentioned and the system design had to be
-reviewed. This involved especially the Social library and the Applications.
-
-\subsection{First design}
-Our first system design was based on the scenario where the user would download the t-shirt
-and the social applications, browse for some content from within the social application
-and actively send it to the t-shirt application pressing a 'share' button.
-This scenario is illustrated in figure \ref{fig:req-usecase1}.
-
-The figure \ref{fig:design-resp} represents the communication between the applications.
-
-\begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/design-resp.png}
-\caption{Communication diagram (first design)}
-\label{fig:design-resp}
-\end{figure}
-
-Please note that in this scenario the user is required to actively send data from
-the social application (which acts as a Facebook client) to the T-Shirt application,
-which is merely capable of receiving. Also, both are implemented as Android applications.
-
-\subsection{Second design}
-It turned out that the user was not supposed to browse for social content and send it actively
-to the T-Shirt application. Instead, after downloading the software, he would just setup a set of rules
-specifying the behavior of the T-Shirt. This scenario is illustrated in figure \ref{fig:req-usecase2}
-
-This new scenario made clear that that both the Social and the T-Shirt applications needed to
-be split into:
-
-\begin{itemize}
-\item A user interface, implemented as one or more Android applications, that the user could use to
-authenticate within the social network and setup the rules for the T-Shirt.
-\item Two Android services that would run in the background, without user interaction,
-to fetch data from the social networks and forward it to the Arduino.
-\end{itemize}
-
-It also implied that a mechanism to request and exchange social content had to be provided
-by the Social library. The figure \ref{fig:design-reqresp} illustrates the communication between
-the services and the applications.
-
-\begin{figure}[h!]
-\centering \includegraphics[scale=0.35]{img/design-reqresp.png}
-\caption{Communication diagram (second design)}
-\label{fig:design-reqresp}
-\end{figure}
-
-The T-Shirt service is now 'asking' the Social service for a specific content.
-This happens in the background, without user interaction.
-
-\newpage
-
-\subsubsection{Sequence Diagram}
-This sequence diagram shows a sample communication between the Social and T-Shirt applications.
-The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
-
-\begin{figure}[h!]
-\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
-\caption{Sequence diagram}
-\label{fig:design-sequence}
-\end{figure}
-
-\newpage
 
 \section{Architecture diagram}
 \todo{
@@ -287,9 +339,6 @@ confirmation commands that is similar to tcp.
 The arduino board includes a wrapper around the input/output of the firmware to connect to our protocol.
 
 \section{Package Structure}
-\todo{
-	review and remove.
-}
 The system can be divided into smaller sections. This section describes some of the structures
 we have divided the system into. The most obvious distinction is between the Java code runs
 on the Android platform and the C code which is executed by the Arduino platform.
@@ -315,3 +364,27 @@ Test units and sample programs for the SocialLib.
 C source code for the Arduino firmware supporting the ComLib protocol.
 
 
+\section{Use cases}
+\todo{
+	review.
+}
+Use Case:
+We have two actors we are working with. One is the developer creating the application using our framework.
+The other one is the end user with the final product. We are not directly working with the end user as an actor,
+but we still want to make our framework so it is simple for developer to have a product with an easy connection to the arduino board.
+
+Our focus on the actor developer is centered around the software he create. We do not know, and we don't need to
+know what product he is making. We will work on two parts he can to implement in his software. It will be the setup and
+transfer protocol to arduino and Intents to send and recive updates from social services.
+
+For the end user, we want the setup to connect his phone to the developer to be as easy as possible. The focus will be on
+simplified connection to arduino board, and easy connection to social services from application.
+
+\todo{
+	outdated?
+}
+\begin{figure}[hb!]
+\centering \includegraphics[scale=0.50]{img/use-cases.png}
+\caption{Use cases}
+\label{fig:architecture-usecases}
+\end{figure}
