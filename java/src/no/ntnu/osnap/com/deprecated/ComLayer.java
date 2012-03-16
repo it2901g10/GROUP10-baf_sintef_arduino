@@ -135,7 +135,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
      * Handle an event on the serial port. Read the data and print it.
      */
     @Override
-    public synchronized void serialEvent(SerialPortEvent oEvent) {
+    public void serialEvent(SerialPortEvent oEvent) {
         if (state == ConnectionState.ACTIVE) {
             if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
                 try {

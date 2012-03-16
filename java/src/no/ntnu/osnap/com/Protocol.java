@@ -145,21 +145,15 @@ public abstract class Protocol extends Thread {
 	}
 
     public final int sensor(int sensor) {
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_SENSOR, (byte)sensor, new byte[1]);
+		
         lock();
-        int size = 5;
-
-        byte output[] = new byte[size];
-
-        output[0] = (byte) 0xFF;
-        output[1] = (byte) (size - 1);
-        output[2] = OPCODE_SENSOR;
-        output[3] = (byte) sensor;
-        output[4] = (byte) 0;
 
         waitingForAck = OPCODE_SENSOR;
 
         try {
-            sendBytes(output);
+            sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -195,33 +189,46 @@ public abstract class Protocol extends Thread {
     }
 	
 	public final void pulse(int pin, boolean blocking){
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
+		
 		if (!blocking){
-			ProtocolInstruction newInstruction =
-					new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
-
 			queueInstruction(newInstruction);
 		}
 		else {
-			// Blocking method
+
+			lock();
+
+			waitingForAck = OPCODE_PIN_PULSE;
+
+			try {
+				sendBytes(newInstruction.getInstructionBytes());
+			} catch (IOException ex) {
+				System.out.println("Send fail");
+			}
+			release();
+
+			while (waitingForAck != null) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {
+				}
+			}
+
+			ackProcessingComplete();
 		}
 	}
 
     public final boolean read(int pin) {
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PIN_R, (byte)pin, new byte[1]);
+		
         lock();
-        int size = 5;
-
-        byte output[] = new byte[size];
-
-        output[0] = (byte) 0xFF;
-        output[1] = (byte) (size - 1);
-        output[2] = OPCODE_PIN_R;
-        output[3] = (byte) pin;
-        output[4] = (byte) 0;
 
         waitingForAck = OPCODE_PIN_R;
 
         try {
-            sendBytes(output);
+            sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
             System.out.println("Send fail");
         }
@@ -247,21 +254,39 @@ public abstract class Protocol extends Thread {
     }
 	
 	public final void write(int pin, boolean value, boolean blocking){
-		if (!blocking){
-			ProtocolInstruction newInstruction =
-					new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
+		ProtocolInstruction newInstruction =
+				new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
 
+		if (!blocking){
 			queueInstruction(newInstruction);
 		}
 		else {
-			// Blocking method
+			lock();
+
+			waitingForAck = OPCODE_PIN_W;
+
+			try {
+				sendBytes(newInstruction.getInstructionBytes());
+			} catch (IOException ex) {
+				System.out.println("Send fail");
+			}
+			release();
+
+			while (waitingForAck != null) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException ex) {
+				}
+			}
+
+			ackProcessingComplete();
 		}
 	}
 	
-    private boolean locked = false;
+    private volatile boolean locked = false;
 
     private synchronized void lock() {
-        if (locked) {
+        while (locked) {
             try {
                 this.wait();
             } catch (InterruptedException ex) {
@@ -272,7 +297,14 @@ public abstract class Protocol extends Thread {
 		
 		while (waitingForAck != null) {
 			try {
-				this.wait(10);
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+		
+		while (processingAck){
+			try {
+				Thread.sleep(10);
 			} catch (InterruptedException ex) {
 			}
 		}
@@ -285,7 +317,7 @@ public abstract class Protocol extends Thread {
         locked = false;
 		this.notify();
     }
-    private Boolean processingAck = false;
+    private boolean processingAck = false;
 
     private void ackProcessing() {
         processingAck = true;
@@ -323,7 +355,7 @@ public abstract class Protocol extends Thread {
 				}
 				
 				if (!hadAckProcessor){
-					if (tempAck == tempAckProcessor){
+					if (tempAckProcessor != null && tempAck == tempAckProcessor){
 						ackProcessing();
 					}
 					else {
