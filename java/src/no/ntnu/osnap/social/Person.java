@@ -40,27 +40,12 @@ public class Person extends Model {
 		put("bio", "aboutMe");
 	}};
 	
-	public static enum REQUEST {
+	protected static enum REQUEST {
 		
 		/**
 		 * Retrieves the full user profile.
 		 */
 		FULL_PROFILE,
-		/**
-		 * Retrieves the user's Facebook wall.
-		 * Facebook specific.
-		 */
-		GET_FBHOME,
-		/**
-		 * Retrieves the posts made by the user.
-		 * Facebook specific. For OpenSocial
-		 * containers use GET_MESSAGES.
-		 */
-		GET_FBPOSTS,
-		/**
-		 * Retrieves user's statuses.
-		 */
-		GET_STATUSES,
 		/**
 		 * Retrieves the user's friend list.
 		 */
@@ -77,10 +62,6 @@ public class Person extends Model {
 		 * Retrieves the notifications received by the user.
 		 */
 		GET_NOTIFICATIONS,
-		/**
-		 * Retrieves the posts made by the user.
-		 */
-		GET_ALBUMS,
 		
 		SEND_STATUS,
 		SEND_POST,
@@ -146,7 +127,7 @@ public class Person extends Model {
 		return ret;
 	}
 	
-	public Request obtainRequest(Person person, int req) {
+	/*public Request obtainRequest(Person person, int req) {
 		return Request.obtain(person, req);
-	}
+	}*/
 }

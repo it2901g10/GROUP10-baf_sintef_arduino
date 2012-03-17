@@ -1,6 +1,5 @@
 package no.ntnu.osnap.social.facebook;
 
-
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;

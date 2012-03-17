@@ -17,10 +17,8 @@ package no.ntnu.osnap.social;
 import android.util.Log;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

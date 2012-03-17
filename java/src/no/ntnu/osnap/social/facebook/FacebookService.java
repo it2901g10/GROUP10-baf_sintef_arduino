@@ -1,9 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package no.ntnu.osnap.social.facebook;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 
 
@@ -18,6 +30,8 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import no.ntnu.osnap.social.ISocialService;
+
 /**
  *
  * @author lemrey
@@ -25,79 +39,30 @@ import org.json.JSONObject;
 public class FacebookService extends Service {
 
 	private final String TAG = "Facebook-Service";
-	
+	private NotificationManager mNM;
+	/**
+	 * The IRemoteInterface is defined through IDL
+	 */
+	private final ISocialService.Stub mBinder = new ISocialService.Stub() {
+
+		public void noop() {;
+		}
+
+		public String hello() {
+			return new String("Hello from FBService!");
+		}
+	};
+
 	@Override
 	public void onCreate() {
+		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		//Notification notification = new Notification()
+
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flag, int cmd) {
-		Log.d(TAG, "onStartCommand");
-		/*Intent i = new Intent();
-		i.setClassName("no.ntnu.osnap.social.testing", "SampleService");
-		startService(i);*/
-		//FB.getAsyncInstance().request("", null);
-		/*
-		 * Timer t = new Timer("timer!"); t.schedule(new TimerTask() {
-		 *
-		 * public void run() { Log.d(TAG, "RUNNING!"); } }, 0, 5000);
-		 */
-		//FB.getIstance().re
-
-		return START_STICKY;
-	}
-
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-
-	private class PostRequestListener extends BaseRequestListener {
-
-		public void onComplete(final String response, final Object state) {
-
-			JSONObject json;
-			//Log.d(TAG, "parsing response: "+response.toString());
-
-			try {
-				json = Util.parseJson(response);
-				//post = new Post(json);
-
-				/*
-				 * Iterator<String> iter = post.keys(); while (iter.hasNext()) {
-				 * String s = iter.next(); Log.d(TAG, s + " : " +
-				 * post.get(s).toString()); }
-				 */
-
-				//Log.d(TAG, "post message: " + post.getMessage());
-
-				/*
-				 * ArrayList<Person> p = post.getLikesAsList();
-				 *
-				 * for (int i = 0; i < p.size(); i++) { Log.d(TAG,
-				 * p.get(i).getName() + " liked it"); }
-				 *
-				 * Comment comment; ArrayList<Comment> c =
-				 * post.getCommentsAsList();
-				 *
-				 * for (int i = 0; i < c.size(); i++) { comment = c.get(i);
-				 * Log.d(TAG, "post comment by: " +
-				 * comment.getSenderAsPerson().getName()); Log.d(TAG, "post
-				 * comment: " + comment.getMessage()); }
-				 */
-
-				/*
-				 * FacebookActivity.this.runOnUiThread( new Runnable() {
-				 *
-				 * public void run() { //mText.setText(text);
-				 * mShareButton.setVisibility(View.VISIBLE); } });
-				 */
-
-			} catch (FacebookError ex) {
-				Log.d(TAG, ex.toString());
-			} catch (JSONException ex) {
-				Log.d(TAG, ex.toString());
-			}
-		}
+	public IBinder onBind(Intent intent) {
+		Log.d(TAG, "onBind received.");
+		return mBinder;
 	}
 }
