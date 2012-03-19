@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
-public abstract class Protocol extends Thread {
+public abstract class Protocol implements Runnable {
 	private LinkedList<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 	
@@ -41,7 +41,7 @@ public abstract class Protocol extends Thread {
 	
 	@Override
 	public void run(){
-		while (running && !interrupted()){
+		while (running){
 			synchronized (pendingInstructions) {
 				while (pendingInstructions.isEmpty()){
 					try {

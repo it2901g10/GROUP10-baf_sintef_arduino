@@ -34,7 +34,7 @@ class ConnectionThread extends Thread {
 		}
 				
 		setDaemon(true);
-		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");		
+		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");
 	}
 	
 	@Override
@@ -105,4 +105,5 @@ class ConnectionThread extends Thread {
 		}
 		
 	}
+
 }
