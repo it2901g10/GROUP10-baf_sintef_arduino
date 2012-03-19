@@ -41,7 +41,7 @@ class ConnectionThread extends Thread {
 	public void run() {
 		
 		//Wait until bluetooth is finished discovering
-		while( connection.bluetooth.isDiscovering() ) {
+		while( connection.bluetooth.isDiscovering() && connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ) {
 			try {
 				wait(250);
 			} catch (InterruptedException e) {}
@@ -56,7 +56,7 @@ class ConnectionThread extends Thread {
 			Log.e("ConnectionThread", "Unable to create socket: " + ex.getMessage());
 			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
 			return;
-		}		
+		}
 		
 		//Connect to the remote device
 		try {

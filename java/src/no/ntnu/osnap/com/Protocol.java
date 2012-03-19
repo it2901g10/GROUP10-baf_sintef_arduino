@@ -1,11 +1,11 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
 public abstract class Protocol extends Thread {
-	private ArrayDeque<ProtocolInstruction> pendingInstructions;
+	private LinkedList<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 	
 	public boolean running;
@@ -34,7 +34,7 @@ public abstract class Protocol extends Thread {
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
-		pendingInstructions = new ArrayDeque<ProtocolInstruction>();
+		pendingInstructions = new LinkedList<ProtocolInstruction>();
 		tempAckProcessor = null;
 		running = true;
     }
@@ -53,7 +53,7 @@ public abstract class Protocol extends Thread {
 			
 			lock();
 			
-			currentInstruction = pendingInstructions.pop();
+			currentInstruction = pendingInstructions.poll();
 			
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());

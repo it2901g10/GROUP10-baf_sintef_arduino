@@ -188,21 +188,20 @@ public class BluetoothConnection extends Protocol {
 	 */
 	public synchronized void disconnect() throws IOException {
 				
-		//Close socket only if we are connected
-		if(getConnectionState() == ConnectionState.STATE_CONNECTED) {
+		//Close socket only if we are connected or trying to connect
+		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
 			setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			input.close();
-			input = null;
-			output.close();
-			output = null;
-			socket.close();
-			socket = null;
+			if(socket != null)
+			{
+				socket.close();
+				input = null;
+				output = null;
+				socket = null;
+			}
 			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
 		}
 		
-		//This can happen if state == STATE_CONNECTING (meaning we abort trying to connect)
-		setConnectionState(ConnectionState.STATE_DISCONNECTED);		
 	}
 		
 	 // Create a BroadcastReceiver for enabling bluetooth
