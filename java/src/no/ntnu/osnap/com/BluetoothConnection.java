@@ -4,10 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import no.ntnu.osnap.com.ConnectionMetadata.DefaultServices;
-
 import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -149,7 +146,7 @@ public class BluetoothConnection extends Protocol {
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
      * active connection (STATE_CONNECTING to STATE_DISCONNECTED)
      */
-	public synchronized void connect(ConnectionListener listener) {
+	public synchronized void connect() {
 		
 		//Don't try to connect more than once
 		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
@@ -309,7 +306,7 @@ public class BluetoothConnection extends Protocol {
 	@Override
 	public ConnectionMetadata getConnectionData() {
 		if(super.connectionMetadata == null) 
-			super.connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null, null); //TODO: fix this
+			super.connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null); //TODO: fix this
 		
 		return super.connectionMetadata;
 	}

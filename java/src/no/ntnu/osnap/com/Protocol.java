@@ -8,7 +8,7 @@ public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.0.2";
+	public final static String LIBRARY_VERSION = "1.1.2";
 	
 	/**
 	 * The unique metadata package for this connection
