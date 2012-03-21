@@ -80,6 +80,7 @@ class ConnectionThread extends Thread {
 		}
 				
 		//We are now connected!
+		new Thread(connection).start();
 		connection.setConnectionState(ConnectionState.STATE_CONNECTED);
 		
 		//Keep listening bytes from the stream

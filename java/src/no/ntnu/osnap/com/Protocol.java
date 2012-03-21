@@ -6,9 +6,23 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
 public abstract class Protocol extends Thread {
+public abstract class Protocol implements Runnable {
+	/**
+	 * The version number of this ComLib release
+	 */
+	public final static String LIBRARY_VERSION = "1.0.2";
+	
+	/**
+	 * The unique metadata package for this connection
+	 * This is initially set to null and need to be retrieved
+	 * in getConnectionData() that is inherited by the connection
+	 * implementation.
+	 */
+	protected ConnectionMetadata connectionMetadata;
+	
 	private LinkedList<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
-	
+
 	public boolean running;
     
 	protected static final int PING_TIMEOUT = 2000;
@@ -21,6 +35,7 @@ public abstract class Protocol extends Thread {
     public static final byte OPCODE_PIN_W = 5;
     public static final byte OPCODE_RESPONSE = (byte) 0xFE;
     public static final byte OPCODE_RESET = (byte) 0xFF;
+    
     private Command currentCommand;
     private Byte waitingForAck;
     
@@ -39,6 +54,8 @@ public abstract class Protocol extends Thread {
 		tempAckProcessor = null;
 		running = true;
     }
+	
+    public abstract ConnectionMetadata getConnectionData();
 	
 	@Override
 	public void run(){
@@ -107,7 +124,7 @@ public abstract class Protocol extends Thread {
 
         ackProcessingComplete();
     }
-	
+    
 	public final void print(String text){
 		print(text, false);
 	}
