@@ -225,6 +225,7 @@ public class BluetoothConnection extends Protocol {
 				input = null;
 				output = null;
 				socket = null;
+				super.running = false;
 			}
 			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
@@ -307,10 +308,10 @@ public class BluetoothConnection extends Protocol {
 
 	@Override
 	public ConnectionMetadata getConnectionData() {
-		if(connectionMetadata == null) 
-			connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null, null); //TODO: fix this
+		if(super.connectionMetadata == null) 
+			super.connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null, null); //TODO: fix this
 		
-		return connectionMetadata;
+		return super.connectionMetadata;
 	}
 	
 }
