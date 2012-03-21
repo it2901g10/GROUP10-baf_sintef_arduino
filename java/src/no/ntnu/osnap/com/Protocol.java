@@ -1,11 +1,12 @@
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
 public abstract class Protocol extends Thread {
-	private ArrayDeque<ProtocolInstruction> pendingInstructions;
+	private LinkedList<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 	
 	public boolean running;
@@ -15,7 +16,7 @@ public abstract class Protocol extends Thread {
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
     public static final byte OPCODE_SENSOR = 2;
-    public static final byte OPCODE_PIN_PULSE = 3;
+    public static final byte OPCODE_DATA = 3;
     public static final byte OPCODE_PIN_R = 4;
     public static final byte OPCODE_PIN_W = 5;
     public static final byte OPCODE_RESPONSE = (byte) 0xFE;
@@ -34,7 +35,7 @@ public abstract class Protocol extends Thread {
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
-		pendingInstructions = new ArrayDeque<ProtocolInstruction>();
+		pendingInstructions = new LinkedList<ProtocolInstruction>();
 		tempAckProcessor = null;
 		running = true;
     }
@@ -53,7 +54,7 @@ public abstract class Protocol extends Thread {
 			
 			lock();
 			
-			currentInstruction = pendingInstructions.pop();
+			currentInstruction = pendingInstructions.poll();
 			
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());
@@ -184,13 +185,22 @@ public abstract class Protocol extends Thread {
         return (short) value;
     }
 
-    public final void pulse(int pin) {
-		pulse(pin, false);
+    public final void data(int pin, byte[] data) {
+		data(pin, data, false);
     }
 	
-	public final void pulse(int pin, boolean blocking){
+	public final void data(int pin, byte[] data, boolean blocking){
+		ArrayList<ProtocolInstruction> newInstructions = new ArrayList<ProtocolInstruction>();
+		
+		ProtocolInstruction tempInstruction;
+		ArrayList<Byte> tempBytes = new ArrayList<Byte>();
+		for (int i = 0; i < data.length; ++i){
+			tempBytes.add(data[i]);
+		}
+		
+		
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PIN_PULSE, (byte)pin, new byte[1]);
+				new ProtocolInstruction(OPCODE_DATA, (byte)pin, new byte[1]);
 		
 		if (!blocking){
 			queueInstruction(newInstruction);
@@ -199,7 +209,7 @@ public abstract class Protocol extends Thread {
 
 			lock();
 
-			waitingForAck = OPCODE_PIN_PULSE;
+			waitingForAck = OPCODE_DATA;
 
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
@@ -288,7 +298,7 @@ public abstract class Protocol extends Thread {
     private synchronized void lock() {
         while (locked) {
             try {
-                this.wait();
+                this.wait(1000);
             } catch (InterruptedException ex) {
             }
         }
