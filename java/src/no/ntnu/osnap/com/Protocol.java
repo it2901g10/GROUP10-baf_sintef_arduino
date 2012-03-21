@@ -42,7 +42,7 @@ public abstract class Protocol extends Thread {
 	
 	@Override
 	public void run(){
-		while (running && !interrupted()){
+		while (running){
 			synchronized (pendingInstructions) {
 				while (pendingInstructions.isEmpty()){
 					try {

@@ -29,6 +29,9 @@ public class BluetoothConnection extends Protocol {
 	/** The Activity that created this instance of BluetoothConnection (others could still be using this instance) */
 	private Activity parentActivity;
 	
+	/** We notify this listener on any connection state changes */
+	private ConnectionListener connectionListener;
+	
 	protected BufferedInputStream input;
 	protected BufferedOutputStream output;
 	
@@ -58,8 +61,8 @@ public class BluetoothConnection extends Protocol {
 	 * Is useful for connecting to a specific device through discovery mode
 	 * @see BluetoothConnection(String address, Activity parentActivity)
 	 */
-	public BluetoothConnection(BluetoothDevice device, Activity parentActivity) throws UnsupportedHardwareException, IllegalArgumentException {
-		this(device.getAddress(), parentActivity);
+	public BluetoothConnection(BluetoothDevice device, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException {
+		this(device.getAddress(), parentActivity, listener);
 	}
 	
 	
@@ -68,13 +71,18 @@ public class BluetoothConnection extends Protocol {
 	 * @param address The Bluetooth MAC address of the remote device
 	 * @param parentActivity The Activity that wants exclusive access to the BluetoothConnection
 	 * @throws UnsupportedHardwareException is thrown if the Android device does not support Bluetooth
-	 * @throws IllegalArgumentException is thrown if the specified address/remote device is invalid
+	 * @throws IllegalArgumentException is thrown if the specified address/remote device is invalid or if ConnectionListener is null
 	 */
-	public BluetoothConnection(String address, Activity parentActivity) throws UnsupportedHardwareException, IllegalArgumentException{
+	public BluetoothConnection(String address, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException{
 		
 		//Validate the address
 		if( !BluetoothAdapter.checkBluetoothAddress(address) ){
 			throw new IllegalArgumentException("The specified bluetooth address is not valid");
+		}
+		
+		//Make sure there is a valid listener
+		if(listener == null){
+			throw new IllegalArgumentException("ConnectionListener cannot be null in BluetoothConnection constructor");
 		}
 		
 		//Make sure this device has bluetooth
@@ -83,6 +91,7 @@ public class BluetoothConnection extends Protocol {
 			throw new UnsupportedHardwareException("No bluetooth hardware found");
 		}		
 		
+		this.connectionListener = listener;
 		this.parentActivity = parentActivity;
 		connectionState = ConnectionState.STATE_DISCONNECTED;
 		device = bluetooth.getRemoteDevice(address);
@@ -98,6 +107,22 @@ public class BluetoothConnection extends Protocol {
 	 */
 	synchronized void setConnectionState(ConnectionState setState) {
 		connectionState = setState;
+		
+		//Tell listener about any connection changes
+		switch(setState) {
+			case STATE_CONNECTED:
+				connectionListener.onConnect(this);
+				break;
+				
+			case STATE_DISCONNECTED:
+				connectionListener.onDisconnect(this);
+				break;
+				
+			case STATE_CONNECTING:
+				connectionListener.onConnecting(this);
+				break;
+		}
+		
 	}
 		
 	/**
@@ -121,7 +146,7 @@ public class BluetoothConnection extends Protocol {
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
      * active connection (STATE_CONNECTING to STATE_DISCONNECTED)
      */
-	public synchronized void connect() {
+	public synchronized void connect(ConnectionListener listener) {
 		
 		//Don't try to connect more than once
 		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
@@ -180,7 +205,7 @@ public class BluetoothConnection extends Protocol {
 	public boolean isConnected() {
 		return getConnectionState() == ConnectionState.STATE_CONNECTED;
 	}
-
+	
 	/**
 	 * Disconnects the remote device. connect() has to be called before any communication to the
 	 * remote device can be done again.
@@ -188,21 +213,20 @@ public class BluetoothConnection extends Protocol {
 	 */
 	public synchronized void disconnect() throws IOException {
 				
-		//Close socket only if we are connected
-		if(getConnectionState() == ConnectionState.STATE_CONNECTED) {
+		//Close socket only if we are connected or trying to connect
+		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
 			setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			input.close();
-			input = null;
-			output.close();
-			output = null;
-			socket.close();
-			socket = null;
+			if(socket != null)
+			{
+				socket.close();
+				input = null;
+				output = null;
+				socket = null;
+			}
 			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
 		}
 		
-		//This can happen if state == STATE_CONNECTING (meaning we abort trying to connect)
-		setConnectionState(ConnectionState.STATE_DISCONNECTED);		
 	}
 		
 	 // Create a BroadcastReceiver for enabling bluetooth

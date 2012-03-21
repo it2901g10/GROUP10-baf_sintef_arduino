@@ -34,14 +34,14 @@ class ConnectionThread extends Thread {
 		}
 				
 		setDaemon(true);
-		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");		
+		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");
 	}
 	
 	@Override
 	public void run() {
 		
 		//Wait until bluetooth is finished discovering
-		while( connection.bluetooth.isDiscovering() ) {
+		while( connection.bluetooth.isDiscovering() && connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ) {
 			try {
 				wait(250);
 			} catch (InterruptedException e) {}
@@ -56,7 +56,7 @@ class ConnectionThread extends Thread {
 			Log.e("ConnectionThread", "Unable to create socket: " + ex.getMessage());
 			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
 			return;
-		}		
+		}
 		
 		//Connect to the remote device
 		try {
@@ -105,4 +105,5 @@ class ConnectionThread extends Thread {
 		}
 		
 	}
+
 }
