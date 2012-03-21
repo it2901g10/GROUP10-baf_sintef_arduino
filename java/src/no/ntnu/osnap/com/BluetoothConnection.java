@@ -4,7 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
+import no.ntnu.osnap.com.ConnectionMetadata.DefaultServices;
+
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -40,7 +43,7 @@ public class BluetoothConnection extends Protocol {
 	protected BluetoothAdapter bluetooth;	
 	
 	private ConnectionState connectionState;
-	
+		
 	/**
 	 * An enumeration describing the different connection states a BluetoothConnection can be
 	 */
@@ -137,7 +140,7 @@ public class BluetoothConnection extends Protocol {
     	
 		//Start an asynchronous connection and return immediately so we do not interrupt program flow
 		ConnectionThread thread = new ConnectionThread(this);
-		thread.start();    	
+		thread.start();
     }
     
     /**
@@ -299,6 +302,15 @@ public class BluetoothConnection extends Protocol {
 		//Send the data
 		output.write(data);
 		output.flush();
+	}
+
+
+	@Override
+	public ConnectionMetadata getConnectionData() {
+		if(connectionMetadata == null) 
+			connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null, null); //TODO: fix this
+		
+		return connectionMetadata;
 	}
 	
 }
