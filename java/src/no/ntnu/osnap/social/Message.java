@@ -15,6 +15,7 @@
 package no.ntnu.osnap.social;
 
 import android.util.Log;
+import java.util.HashMap;
 
 //import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,13 +32,32 @@ import org.json.JSONObject;
  */
 public class Message extends Model {
 	
+	private JSONObject jsonModel;
+	
+	public static final HashMap<String, String> Facebook = 
+	new HashMap<String, String> () {{
+		put("story", "message");
+	}};
+	
+	/**
+	 * Constructs an empty Message.
+	 */
+	public Message () {
+		jsonModel = new JSONObject();
+	}
+	
 	/** Constructs a Message from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Message (String json) throws JSONException {
-		super(json);
+		try {
+			jsonModel = new JSONObject(json);
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
 	}
 	
 	/** Constructs a Message from a {@code JSONObject} instance.
@@ -46,7 +66,24 @@ public class Message extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Message (JSONObject object) throws JSONException {
-		super(object);
+		try {
+			jsonModel = new JSONObject(object.toString());
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
+	}
+	
+	public Message (String json, HashMap<String, String> transl)
+			throws JSONException {
+		this(json);
+		translate(transl);
+	}
+	
+	public Message (JSONObject object, HashMap<String, String> transl)
+			throws JSONException {
+		this(object);
+		translate(transl);
 	}
 	
 	/** Gets the sender of this post.
@@ -56,11 +93,11 @@ public class Message extends Model {
 	 */
 	private JSONObject getSender() {
 		JSONObject ret;
-		ret = optJSONObject("from");
+		ret = jsonModel.optJSONObject("from");
 		
 		// raise an exception maybe?
 		if (ret == null) {
-			Log.d(APP_TAG, "key 'from' doesn't exist.");
+			Log.d(TAG, "key 'from' doesn't exist.");
 		}
 		return ret;
 	}
@@ -76,7 +113,7 @@ public class Message extends Model {
 		try {
 			p = new Person(getSender());
 		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
+			Log.d(TAG, ex.toString());
 		}
 		return p;
 	}
@@ -87,10 +124,11 @@ public class Message extends Model {
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getText() {
-		String ret;
-		ret = optString("message");
+		String ret = null;
+		//String type = optString("type");
+		ret = jsonModel.optString("message");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'message' doesn't exist.");
+			Log.d(TAG, "key 'message' doesn't exist.");
 		}
 		return ret;
 	}

@@ -42,6 +42,8 @@ public class TshirtActivity extends Activity implements View.OnClickListener {
 		mButton = (Button) findViewById(R.id.start);
 		mButton.setVisibility(View.INVISIBLE);
 		mButton.setOnClickListener(this);	
+		
+		Tshirt.setActivity(this);
 
 		/* create an intent and bundle the classname of the Tshirt service, the
 		 * one that will receive the reply from the broadcast receiver via
