@@ -16,7 +16,7 @@ package no.ntnu.osnap.social;
 
 import android.util.Log;
 import java.util.HashMap;
-import java.util.Map;
+//import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,17 +27,17 @@ import org.json.JSONObject;
  */
 public class Person extends Model {
 	
+	private JSONObject jsonModel;
+	
 	/*
 	 * OpenSocial	|	FB
 	 * displayName		name
 	 * aboutMe			bio
-	 * birthday			birthday
-	 * gender			gender
 	 */
-	public static final Map<String, String> FBMap = 
+	public static final HashMap<String, String> OpenSocial = 
 	new HashMap<String, String> () {{
-		put("name", "displayName");
-		put("bio", "aboutMe");
+		put("displayName", "name");
+		put("aboutMe", "bio");
 	}};
 	
 	public static enum REQUEST {
@@ -47,49 +47,35 @@ public class Person extends Model {
 		 */
 		FULL_PROFILE,
 		/**
-		 * Retrieves the user's Facebook wall.
-		 * Facebook specific.
-		 */
-		GET_FBHOME,
-		/**
-		 * Retrieves the posts made by the user.
-		 * Facebook specific. For OpenSocial
-		 * containers use GET_MESSAGES.
-		 */
-		GET_FBPOSTS,
-		/**
-		 * Retrieves user's statuses.
-		 */
-		GET_STATUSES,
-		/**
 		 * Retrieves the user's friend list.
 		 */
 		GET_FRIENDS,
+		/**
+		 * Retrieves the public messages sent by the user.
+		 */
+		GET_MESSAGES,
 		/**
 		 * Retrieves the list of groups the user belongs to.
 		 */
 		GET_GROUPS,
 		/**
-		 * Retrieves the list of events the user is attending.
+		 * Retrieves the user home page.
 		 */
-		GET_EVENTS,
+		//GET_HOME,
 		/**
 		 * Retrieves the notifications received by the user.
 		 */
 		GET_NOTIFICATIONS,
-		/**
-		 * Retrieves the posts made by the user.
-		 */
-		GET_ALBUMS,
 		
 		SEND_STATUS,
-		SEND_POST,
-		SEND_COMMENT,
 		SEND_MESSAGE,
+		//SEND_COMMENT,
 		SEND_PHOTO,
 	};
 	
-	public Person() {;}
+	public Person() {
+		jsonModel = new JSONObject();
+	}
 	
 	/** Constructs a Person from a source JSON text string.
 	 * 
@@ -97,7 +83,12 @@ public class Person extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Person(String json) throws JSONException {
-		super(json);
+		try {
+			jsonModel = new JSONObject(json);
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
 	}
 	
 	/** Constructs a Person from a {@code JSONObject} instance.
@@ -106,7 +97,12 @@ public class Person extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Person (JSONObject object) throws JSONException {
-		super(object);
+		try {
+			jsonModel = new JSONObject(object.toString());
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
 	}
 	
 	/**
@@ -114,10 +110,11 @@ public class Person extends Model {
 	 * @param json
 	 * @param transl 
 	 */
-	public Person(String json, Map<String, String> transl) 
+	public Person(String json, HashMap<String, String> transl) 
 			throws JSONException {
 		
-		super(json, transl);
+		this(json);
+		translate(transl);
 	}
 	
 	/**
@@ -126,27 +123,28 @@ public class Person extends Model {
 	 * @param transl
 	 * @throws JSONException 
 	 */
-	public Person(JSONObject object, Map<String, String> transl) 
+	public Person(JSONObject object, HashMap<String, String> transl) 
 			throws JSONException {
 		
-		super(object, transl);
+		this(object);
+		translate(transl);
 	}
 
 	/** Returns the name of this person.
 	 * 
-	 * @return the value of the key 'displayName' as a string
+	 * @return the value of the key 'name' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getName() {
 		String ret;
-		ret = optString("displayName");
+		ret = jsonModel.optString("name");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'displayName' doesn't exist.");
+			Log.d(TAG, "key 'name' doesn't exist.");
 		}
 		return ret;
 	}
 	
-	public Request obtainRequest(Person person, int req) {
+	/*public Request obtainRequest(Person person, int req) {
 		return Request.obtain(person, req);
-	}
+	}*/
 }

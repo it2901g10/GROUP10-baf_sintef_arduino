@@ -45,7 +45,7 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 		case OPCODE_SENSOR:
 			sensor(flag);
 			break;
-		case OPCODE_PIN_PULSE:
+		case OPCODE_DATA:
 			pinPulse(flag);
 			break;
 		case OPCODE_PIN_R:
@@ -111,7 +111,7 @@ void ComputerSerial::pinPulse(uint8_t pin) {
 	digitalWrite(pin, HIGH);
 	delay(200);
 	digitalWrite(pin, LOW);
-	ack(OPCODE_PIN_PULSE);
+	ack(OPCODE_DATA);
 }
 
 void ComputerSerial::pinRead(uint8_t pin) {
@@ -139,6 +139,7 @@ void ComputerSerial::attachFunction(uint8_t opcode,
 }
 
 void ComputerSerial::serialEvent(){
+	static long time = millis();
 	static int state = STATE_START;
 	
 	static uint8_t size = 0;
@@ -147,6 +148,11 @@ void ComputerSerial::serialEvent(){
 	static uint8_t content[CONTENT_SIZE];
 	static uint8_t content_counter = 0;
 	
+	if (millis() - time > TIMEOUT && state != STATE_START){
+		state = STATE_START;
+	}
+	time = millis();
+
 	while(Serial.available()){
 		
 		switch (state){

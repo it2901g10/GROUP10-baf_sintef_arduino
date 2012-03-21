@@ -17,12 +17,9 @@ package no.ntnu.osnap.social;
 import android.util.Log;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents a group.
@@ -30,9 +27,11 @@ import java.util.Map;
  */
 public class Group extends Model {
 	
-	public static final Map<String, String> FBMap =
+	private JSONObject jsonModel;
+	
+	public static final HashMap<String, String> Facebook =
 	new HashMap<String, String>() {{
-		put("name","title");
+		put("name", "title");
 		//put("","");
 	}};
 	
@@ -46,7 +45,9 @@ public class Group extends Model {
 	/**
 	 * Constructs an empty Group.
 	 */
-	public Group () {;}
+	public Group () {
+		jsonModel = new JSONObject();
+	}
 	
 	/** Constructs a Group from a source JSON text string.
 	 * 
@@ -54,7 +55,12 @@ public class Group extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Group(String json) throws JSONException {
-		super(json);
+		try {
+			jsonModel = new JSONObject(json);
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
 	}
 	
 	/** Constructs a Group from a {@code JSONObject} instance.
@@ -63,7 +69,12 @@ public class Group extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Group(JSONObject object) throws JSONException {
-		super(object);
+		try {
+			jsonModel = new JSONObject(object.toString());
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+			throw(ex);
+		}
 	}
 	
 	/**
@@ -72,10 +83,10 @@ public class Group extends Model {
 	 * @param transl
 	 * @throws JSONException 
 	 */
-	public Group (String json, Map<String, String> transl)
+	public Group (String json, HashMap<String, String> transl)
 			throws JSONException {
-		super(json, transl);
-		
+		this(json);
+		translate(transl);		
 	}
 	
 	/**
@@ -84,22 +95,23 @@ public class Group extends Model {
 	 * @param transl
 	 * @throws JSONException 
 	 */
-	public Group (JSONObject object, Map<String, String> transl)
+	public Group (JSONObject object, HashMap<String, String> transl)
 			throws JSONException {
-		super(object, transl);
+		this(object);
+		translate(transl);
 		
 	}
 	
-	/** Returns the name of this group.
+	/** Returns the title of this group.
 	 * 
 	 * @return the value of the key 'title' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getTitle() {
 		String ret;
-		ret = optString("title");
+		ret = jsonModel.optString("title");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'title' doesn't exist.");
+			Log.d(TAG, "key 'title' doesn't exist.");
 		}
 		return ret;
 	}
@@ -112,9 +124,9 @@ public class Group extends Model {
 	 */
 	public String getDescription() {
 		String ret;
-		ret = optString("description");
+		ret = jsonModel.optString("description");
 		if (ret.equals("")) {
-			Log.d(APP_TAG, "key 'description' doesn't exist.");
+			Log.d(TAG, "key 'description' doesn't exist.");
 		}
 		return ret;
 	}
