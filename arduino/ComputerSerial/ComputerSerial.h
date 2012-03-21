@@ -34,7 +34,7 @@ class ComputerSerial{
 		STATE_FLAG,
 		STATE_CONTENT
 	};
-	
+
 	void commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, uint8_t content[]);
 	void ack(uint8_t opcode);
 	void ack(uint8_t opcode, uint8_t content[], uint8_t contentSize);
@@ -44,36 +44,36 @@ class ComputerSerial{
 	void pinPulse(uint8_t pin);
 	void pinRead(uint8_t pin);
 	void pinWrite(uint8_t pin, uint8_t value);
+	void getDeviceInfo();
 	void reset();
-	
-	
-	
+
 	unsigned int bytesReceived;
-	
+
 public:
 	ComputerSerial();
 	static void* placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
 	void serialEvent();
 	void begin(int baud);
-	void attachFunction(uint8_t opcode, 
+	void attachFunction(uint8_t opcode,
 		void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
-	
+
 	unsigned int getBytesReceived();
-	
+
 	// Enum for protocol OPCodes
 	typedef enum {
-		OPCODE_PING, 	// 0
-		OPCODE_TEXT, 	// 1
-		OPCODE_SENSOR, 	// 2
-		OPCODE_DATA, 	// 3
-		OPCODE_PIN_R, 	// 4
-		OPCODE_PIN_W, 	// 5
+		OPCODE_PING, 	            // 0
+		OPCODE_TEXT, 	            // 1
+		OPCODE_SENSOR, 	            // 2
+		OPCODE_DATA, 	            // 3
+		OPCODE_PIN_R, 	            // 4
+		OPCODE_PIN_W, 	            // 5
+		OPCODE_DEVICE_INFO,         // 6
 		OPCODE_RESPONSE = 0xFE,
 		OPCODE_RESET = 0xFF
 	};
 
-private: 
-	static const uint8_t NUM_OPCODES = 6;
+private:
+	static const uint8_t NUM_OPCODES = 7;
 	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
 };
 

@@ -23,12 +23,12 @@ void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t conte
 }
 
 ComputerSerial::ComputerSerial(){
-	
+
 }
 
 void ComputerSerial::begin(int baud){
 	Serial.begin(baud);
-	
+
 	for (int i = 0; i < NUM_OPCODES; ++i){
 		attachFunction(i, &ComputerSerial::placeHolder);
 	}
@@ -54,11 +54,27 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 		case OPCODE_PIN_W:
 			pinWrite(flag, content[0]);
 			break;
+        case OPCODE_DEVICE_INFO:
+            getDeviceInfo();
+            break;
 		case OPCODE_RESET:
 			break;
 		default:
 			break;
 	}
+}
+
+void ComputerSerial::getDeviceInfo(){
+    //send string representation of device info
+	char *rawData = (char*) functions[OPCODE_DEVICE_INFO](OPCODE_DEVICE_INFO, 0, 0);
+
+    //convert char array to string to make life easier
+    String deviceInfo = String(*rawData);
+	char response[deviceInfo.length()];
+	deviceInfo.toCharArray(response, deviceInfo.length());
+
+    //send response back
+	ack(OPCODE_DEVICE_INFO, (uint8_t*)response, deviceInfo.length());
 }
 
 void ComputerSerial::ack(uint8_t opcode){
@@ -133,7 +149,7 @@ void ComputerSerial::reset() {
 	// Reset arduino
 }
 
-void ComputerSerial::attachFunction(uint8_t opcode, 
+void ComputerSerial::attachFunction(uint8_t opcode,
 	void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize)){
 		functions[opcode] = handler;
 }
@@ -141,20 +157,20 @@ void ComputerSerial::attachFunction(uint8_t opcode,
 void ComputerSerial::serialEvent(){
 	static long time = millis();
 	static int state = STATE_START;
-	
+
 	static uint8_t size = 0;
 	static uint8_t opcode = 0;
 	static uint8_t flag = 0;
 	static uint8_t content[CONTENT_SIZE];
 	static uint8_t content_counter = 0;
-	
+
 	if (millis() - time > TIMEOUT && state != STATE_START){
 		state = STATE_START;
 	}
 	time = millis();
 
 	while(Serial.available()){
-		
+
 		switch (state){
 			case STATE_START:
 				if (Serial.read() == START_BYTE){
@@ -183,7 +199,7 @@ void ComputerSerial::serialEvent(){
 					commandHandler(size, opcode, flag, content);
 					content_counter = 0;
 					state = STATE_START;
-				} 
+				}
 				break;
 			default:
 				break;

@@ -36,12 +36,17 @@ void* buttons(byte flag, byte content[], byte contentSize){
 	*status = analogRead(flag < 6 ? flag : 0);
 	return status;
 }
+void* deviceInfo(byte flag, byte content[], byte contentSize){
+        byte response[] = "<VERSION=1.0.1><OS=LINUX http:linux.net><OS=WINDOWS windows.net><SERVICE=TEXT><SERVICE=SENSOR><SERVICE=LCD>";
+	return &response;
+}
 
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	comp.attachFunction(comp.OPCODE_TEXT, &text);
 	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
+	comp.attachFunction(comp.OPCODE_DEVICE_INFO, &deviceInfo);
 	
   	pinMode(13, OUTPUT);
 	

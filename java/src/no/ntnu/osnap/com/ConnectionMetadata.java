@@ -51,7 +51,7 @@ public class ConnectionMetadata {
 	 * @param applicationDownloadLink a list of download links mapped to specific platforms
 	 * @param services an arbitrary list of Services this device supports
 	 */
-	public ConnectionMetadata(String deviceName, String deviceAddress, HashMap<Platform, URI> applicationDownloadLink, Service ... services) {
+	public ConnectionMetadata(String deviceName, String deviceAddress, HashMap<Platform, URI> applicationDownloadLink, Service[] services) {
 		this.name = deviceName;
 		this.applicationDownloadLinks = applicationDownloadLink;
 
