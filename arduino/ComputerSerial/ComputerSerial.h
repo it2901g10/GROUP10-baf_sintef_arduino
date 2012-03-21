@@ -23,6 +23,7 @@
 #define NULL_BYTE (byte)0x00
 
 #define CONTENT_SIZE 250
+#define TIMEOUT 2000
 
 class ComputerSerial{
 	// SerialEvent state enum
@@ -64,7 +65,7 @@ public:
 		OPCODE_PING, 	// 0
 		OPCODE_TEXT, 	// 1
 		OPCODE_SENSOR, 	// 2
-		OPCODE_PIN_PULSE, 	// 3
+		OPCODE_DATA, 	// 3
 		OPCODE_PIN_R, 	// 4
 		OPCODE_PIN_W, 	// 5
 		OPCODE_RESPONSE = 0xFE,

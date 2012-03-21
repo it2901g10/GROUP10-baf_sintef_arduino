@@ -1,21 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package no.ntnu.osnap.com.testing;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeoutException;
 import no.ntnu.osnap.com.deprecated.ComLayer;
 
-/**
- *
- * @author anders
- */
 public class ProtocolTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TimeoutException {
         ComLayer arduino = new ComLayer();
 		arduino.setDaemon(true);
 		arduino.start();

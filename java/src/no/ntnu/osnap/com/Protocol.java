@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
 public abstract class Protocol extends Thread {
-public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
@@ -23,9 +22,10 @@ public abstract class Protocol implements Runnable {
 	private LinkedList<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 
-	public boolean running;
+	private boolean running;
     
-	protected static final int PING_TIMEOUT = 2000;
+	protected static final int TIMEOUT = 2000;
+	protected static final int MAX_CONTENT_SIZE = 250;
 	
     public static final byte OPCODE_PING = 0;
     public static final byte OPCODE_TEXT = 1;
@@ -57,6 +57,10 @@ public abstract class Protocol implements Runnable {
 	
     public abstract ConnectionMetadata getConnectionData();
 	
+	public void stopThread(){
+		running = false;
+	}
+	
 	@Override
 	public void run(){
 		while (running){
@@ -66,6 +70,8 @@ public abstract class Protocol implements Runnable {
 						pendingInstructions.wait(1000);
 					} catch (InterruptedException ex) {
 					}
+					
+					if (!running) return; // Thread is stopped
 				}
 			}
 			
@@ -114,8 +120,8 @@ public abstract class Protocol implements Runnable {
 		
 		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > PING_TIMEOUT)
-				throw new TimeoutException("Ping timed out");
+			if (System.currentTimeMillis() - time > TIMEOUT)
+				throw new TimeoutException("Timeout");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {
@@ -125,11 +131,11 @@ public abstract class Protocol implements Runnable {
         ackProcessingComplete();
     }
     
-	public final void print(String text){
+	public final void print(String text) throws TimeoutException{
 		print(text, false);
 	}
 	
-	public final void print(String text, boolean blocking){
+	public final void print(String text, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_TEXT, (byte)0, text.getBytes());
 		if (!blocking){
@@ -149,7 +155,10 @@ public abstract class Protocol implements Runnable {
 			}
 			release();
 			
+			long time = System.currentTimeMillis();
 			while (waitingForAck != null) {
+				if (System.currentTimeMillis() - time > TIMEOUT)
+					throw new TimeoutException("Timeout");
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ex) {
@@ -162,7 +171,7 @@ public abstract class Protocol implements Runnable {
 		}
 	}
 
-    public final int sensor(int sensor) {
+    public final int sensor(int sensor) throws TimeoutException {
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_SENSOR, (byte)sensor, new byte[1]);
 		
@@ -178,7 +187,10 @@ public abstract class Protocol implements Runnable {
 
         release();
 		
+		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
+			if (System.currentTimeMillis() - time > TIMEOUT)
+				throw new TimeoutException("Timeout");
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
@@ -202,51 +214,85 @@ public abstract class Protocol implements Runnable {
         return (short) value;
     }
 
-    public final void data(int pin, byte[] data) {
+    public final void data(int pin, byte[] data) throws TimeoutException {
 		data(pin, data, false);
     }
 	
-	public final void data(int pin, byte[] data, boolean blocking){
+	public final void data(int pin, byte[] data, boolean blocking) throws TimeoutException{
 		ArrayList<ProtocolInstruction> newInstructions = new ArrayList<ProtocolInstruction>();
 		
 		ProtocolInstruction tempInstruction;
-		ArrayList<Byte> tempBytes = new ArrayList<Byte>();
-		for (int i = 0; i < data.length; ++i){
-			tempBytes.add(data[i]);
+		
+		if (data.length > MAX_CONTENT_SIZE){
+			byte[] tempBytes = new byte[MAX_CONTENT_SIZE];
+			
+			int restSize = 0;
+			
+			for (int i = 0; i < data.length; ++i){
+				
+				tempBytes[i % MAX_CONTENT_SIZE] = data[i];
+				if (i % MAX_CONTENT_SIZE == 0){
+					newInstructions.add(
+						new ProtocolInstruction(OPCODE_DATA, (byte)1, tempBytes)
+						);
+					
+					if (data.length - i < MAX_CONTENT_SIZE){
+						restSize = data.length - i;
+					}
+				}
+			}
+			
+			byte[] restBytes = new byte[restSize];
+			for (int i = 0; i < restSize; ++i){
+				restBytes[i] = tempBytes[i];
+			}
+			newInstructions.add(
+				new ProtocolInstruction(OPCODE_DATA, (byte)0, restBytes)
+				);
+		}
+		else {
+			newInstructions.add(
+				new ProtocolInstruction(OPCODE_DATA, (byte)0, data)
+				);
 		}
 		
-		
-		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_DATA, (byte)pin, new byte[1]);
-		
 		if (!blocking){
-			queueInstruction(newInstruction);
+			for (ProtocolInstruction instr : newInstructions){
+				queueInstruction(instr);
+			}
 		}
 		else {
 
 			lock();
+			
+			for (ProtocolInstruction newInstruction : newInstructions){
 
-			waitingForAck = OPCODE_DATA;
+				waitingForAck = OPCODE_DATA;
 
-			try {
-				sendBytes(newInstruction.getInstructionBytes());
-			} catch (IOException ex) {
-				System.out.println("Send fail");
-			}
-			release();
-
-			while (waitingForAck != null) {
 				try {
-					Thread.sleep(10);
-				} catch (InterruptedException ex) {
+					sendBytes(newInstruction.getInstructionBytes());
+				} catch (IOException ex) {
+					System.out.println("Send fail");
 				}
-			}
 
-			ackProcessingComplete();
+				long time = System.currentTimeMillis();
+				while (waitingForAck != null) {
+					if (System.currentTimeMillis() - time > TIMEOUT)
+						throw new TimeoutException("Timeout");
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException ex) {
+					}
+				}
+
+				ackProcessingComplete();
+			}
+			
+			release();
 		}
 	}
 
-    public final boolean read(int pin) {
+    public final boolean read(int pin) throws TimeoutException {
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_PIN_R, (byte)pin, new byte[1]);
 		
@@ -261,7 +307,10 @@ public abstract class Protocol implements Runnable {
         }
         release();
 		
+		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
+			if (System.currentTimeMillis() - time > TIMEOUT)
+				throw new TimeoutException("Timeout");
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {
@@ -276,11 +325,11 @@ public abstract class Protocol implements Runnable {
         return content[0] > 0 ? true : false;
     }
 
-    public final void write(int pin, boolean value) {
+    public final void write(int pin, boolean value) throws TimeoutException {
 		write(pin, value, false);
     }
 	
-	public final void write(int pin, boolean value, boolean blocking){
+	public final void write(int pin, boolean value, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
 
@@ -298,8 +347,11 @@ public abstract class Protocol implements Runnable {
 				System.out.println("Send fail");
 			}
 			release();
-
+			
+			long time = System.currentTimeMillis();
 			while (waitingForAck != null) {
+				if (System.currentTimeMillis() - time > TIMEOUT)
+					throw new TimeoutException("Timeout");
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ex) {

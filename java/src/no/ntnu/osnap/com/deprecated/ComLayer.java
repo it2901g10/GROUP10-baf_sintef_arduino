@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import no.ntnu.osnap.com.ConnectionMetadata;
 import no.ntnu.osnap.com.Protocol;
 
 public class ComLayer extends Protocol implements SerialPortEventListener {
@@ -31,6 +32,11 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
      * Default bits per second for COM port.
      */
     private static final int DATA_RATE = 9600;
+
+	@Override
+	public ConnectionMetadata getConnectionData() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
     
     /*
      *  0 = scanning
