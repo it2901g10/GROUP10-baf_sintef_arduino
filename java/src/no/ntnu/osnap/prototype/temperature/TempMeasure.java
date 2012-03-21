@@ -151,11 +151,11 @@ public class TempMeasure extends Activity implements ConnectionListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        try {
-//            blueTooth.disconnect();
-//        } catch (IOException ex) {
-//            Log.d("lol", "didn't destroy bluetooth");
-//        }
+        try {
+            blueTooth.disconnect();
+        } catch (IOException ex) {
+            Log.d("lol", "didn't destroy bluetooth");
+        }
     }
 
     @Override
