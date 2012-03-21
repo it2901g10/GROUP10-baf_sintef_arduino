@@ -41,7 +41,7 @@ class ComputerSerial{
 	void ping();
 	void text(uint8_t size, uint8_t flag, uint8_t content[]);
 	void sensor(uint8_t number);
-	void pinPulse(uint8_t pin);
+	void data(uint8_t pin);
 	void pinRead(uint8_t pin);
 	void pinWrite(uint8_t pin, uint8_t value);
 	void reset();

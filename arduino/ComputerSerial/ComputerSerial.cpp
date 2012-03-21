@@ -46,7 +46,7 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 			sensor(flag);
 			break;
 		case OPCODE_DATA:
-			pinPulse(flag);
+			data(flag);
 			break;
 		case OPCODE_PIN_R:
 			pinRead(flag);
@@ -105,7 +105,7 @@ void ComputerSerial::sensor(uint8_t number) {
 	free(status);
 }
 
-void ComputerSerial::pinPulse(uint8_t pin) {
+void ComputerSerial::data(uint8_t pin) {
 	// Toggle pin(pin)
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, HIGH);
