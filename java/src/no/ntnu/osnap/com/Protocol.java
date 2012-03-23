@@ -1,5 +1,6 @@
 /*
-* Copyright 2012 NTNU
+* Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn 
+* Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *   you may not use this file except in compliance with the License.
