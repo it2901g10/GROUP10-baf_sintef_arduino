@@ -37,7 +37,10 @@ void* buttons(byte flag, byte content[], byte contentSize){
 	return status;
 }
 void* deviceInfo(byte flag, byte content[], byte contentSize){
-        byte response[] = "<VERSION=1.0.1><OS=LINUX http:linux.net><OS=WINDOWS windows.net><SERVICE=TEXT><SERVICE=SENSOR><SERVICE=LCD>";
+        byte response[] = "{NAME:\"Anders Arduino Module\", VERSION:\"1.2.0\","
+         "SERVICES:[\"SERVICE_LED_LAMP\", \"SERVICE_LCD_SCREEN\", \"SERVICE_RGB_LAMP\"],"
+         "LINKS:[{\"DEFAULT\":\"No download link\"}]}";
+         
 	return &response;
 }
 

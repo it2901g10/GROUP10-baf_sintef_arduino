@@ -20,16 +20,8 @@ package no.ntnu.osnap.com;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.TimeoutException;
 
-import no.ntnu.osnap.com.ConnectionMetadata.Platform;
-import no.ntnu.osnap.com.ConnectionMetadata.Service;
-import no.ntnu.osnap.com.ConnectionMetadata.DefaultServices;
-import no.ntnu.osnap.com.ConnectionMetadata.DefaultPlatforms;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -333,43 +325,13 @@ public class BluetoothConnection extends Protocol {
 	public ConnectionMetadata getConnectionData() {
 		if(super.connectionMetadata == null) 
 		{
-			HashMap<Platform, URI> downloadLinks = new HashMap<Platform, URI>();
-			ArrayList<Service> services = new ArrayList<Service>();
-			
+			JSONObject object;
 			try {
-				String rawData = super.getDeviceInfo();
-				String lines[] = rawData.split("<");
-				for(String line : lines){
-					
-					//Remove ending
-					if(!line.endsWith(">")) {
-						Log.w(getClass().getName(), "ConnectionMetadata malformed format: " + line + "(should end with >)");
-						continue;
-					}					
-					line = line.substring(0, line.length()-1);
-					
-					if(line.startsWith("VERSION=")) {
-						line = line.substring(7);
-						//TODO: unused
-					}
-					else if(line.startsWith("OS=")) {
-						line = line.substring(3);
-						Platform platform = DefaultPlatforms.valueOf(line);		//get platform identifier
-						URI link;												//get download link
-						
-						try { downloadLinks.put(platform, new URI(line)); } 
-						catch (URISyntaxException e) { Log.w("", "Error parsing URI: " + e); continue; }
-								
-					}
-					else if(line.startsWith("SERVICE=")) {
-						line = line.substring(8);
-						services.add(DefaultServices.valueOf(line));
-					}
-				}
-				
-			} catch (TimeoutException e) {}
-			
-			super.connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), downloadLinks, (Service[])services.toArray());
+				object = new JSONObject(super.getDeviceInfo());
+				super.connectionMetadata = new ConnectionMetadata(object);
+			} catch (Exception e) {
+				Log.e(getClass().getName(), "Oh no! Failed to get connection data correctly: " + e);
+			}
 		}
 		
 		return super.connectionMetadata;
