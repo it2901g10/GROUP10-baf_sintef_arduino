@@ -11,12 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package no.ntnu.osnap.social;
 
 import android.util.Log;
+
 import java.util.HashMap;
-//import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,17 +26,10 @@ import org.json.JSONObject;
  */
 public class Person extends Model {
 	
-	private JSONObject jsonModel;
-	
-	/*
-	 * OpenSocial	|	FB
-	 * displayName		name
-	 * aboutMe			bio
-	 */
-	public static final HashMap<String, String> OpenSocial = 
+	public static final HashMap<String, String> Facebook = 
 	new HashMap<String, String> () {{
-		put("displayName", "name");
-		put("aboutMe", "bio");
+		put("name", "displayName");
+		put("bio", "aboutMe");
 	}};
 	
 	public static enum REQUEST {
@@ -51,7 +43,7 @@ public class Person extends Model {
 		 */
 		GET_FRIENDS,
 		/**
-		 * Retrieves the public messages sent by the user.
+		 * Retrieves the messages posted by the user.
 		 */
 		GET_MESSAGES,
 		/**
@@ -60,22 +52,21 @@ public class Person extends Model {
 		GET_GROUPS,
 		/**
 		 * Retrieves the user home page.
+		 * This is actually the Facebook wall.
 		 */
-		//GET_HOME,
+		GET_HOME,
 		/**
 		 * Retrieves the notifications received by the user.
 		 */
 		GET_NOTIFICATIONS,
 		
+		
 		SEND_STATUS,
 		SEND_MESSAGE,
-		//SEND_COMMENT,
 		SEND_PHOTO,
 	};
 	
-	public Person() {
-		jsonModel = new JSONObject();
-	}
+	public Person() {;}
 	
 	/** Constructs a Person from a source JSON text string.
 	 * 
@@ -83,12 +74,7 @@ public class Person extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Person(String json) throws JSONException {
-		try {
-			jsonModel = new JSONObject(json);
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(json);
 	}
 	
 	/** Constructs a Person from a {@code JSONObject} instance.
@@ -97,54 +83,48 @@ public class Person extends Model {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Person (JSONObject object) throws JSONException {
-		try {
-			jsonModel = new JSONObject(object.toString());
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(object);
 	}
 	
 	/**
+	 * Constructs a Person from a source JSON text string,
+	 * performing a translation.
 	 * 
-	 * @param json
-	 * @param transl 
+	 * @param json a JSON string, starting with { and ending with }.
+	 * @param transl a translation table for key names.
+	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Person(String json, HashMap<String, String> transl) 
 			throws JSONException {
 		
-		this(json);
-		translate(transl);
+		super(json, transl);
 	}
 	
 	/**
+	 * Constructs a Person from a JSONObject,
+	 * performing a translation.
 	 * 
-	 * @param json
-	 * @param transl
-	 * @throws JSONException 
+	 * @param object a JSONObject
+	 * @param transl a translation table for key names.
+	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Person(JSONObject object, HashMap<String, String> transl) 
 			throws JSONException {
 		
-		this(object);
-		translate(transl);
+		super(object, transl);
 	}
 
 	/** Returns the name of this person.
 	 * 
-	 * @return the value of the key 'name' as a string
+	 * @return the value of the key 'displayName' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getName() {
 		String ret;
-		ret = jsonModel.optString("name");
+		ret = jsonModel.optString("displayName");
 		if (ret.equals("")) {
-			Log.d(TAG, "key 'name' doesn't exist.");
+			Log.d(TAG, "key 'displayName' doesn't exist.");
 		}
 		return ret;
 	}
-	
-	/*public Request obtainRequest(Person person, int req) {
-		return Request.obtain(person, req);
-	}*/
 }

@@ -14,8 +14,10 @@
 package no.ntnu.osnap.social;
 
 import android.util.Log;
-import java.util.*;
-import org.json.JSONArray;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -35,7 +37,7 @@ public class Model implements Iterable {
 	/**
 	 * Holds the JSON representation of the model
 	 */
-	private JSONObject jsonModel;
+	protected JSONObject jsonModel;
 
 	/**
 	 * Constructs an empty Model.
@@ -52,12 +54,7 @@ public class Model implements Iterable {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Model(String json) throws JSONException {
-		try {
-			jsonModel = new JSONObject(json);
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		jsonModel = new JSONObject(json);
 	}
 	
 	/**
@@ -67,12 +64,7 @@ public class Model implements Iterable {
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Model(JSONObject object) throws JSONException {
-		try {
-			jsonModel = new JSONObject(object.toString());
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		jsonModel = new JSONObject(object.toString());
 	}
 
 	/**
@@ -104,6 +96,8 @@ public class Model implements Iterable {
 		this(object.toString());
 		translate(transl);
 	}
+	
+	
 
 	/**
 	 * Gets the ID of this object.
@@ -135,7 +129,7 @@ public class Model implements Iterable {
 		return ret;
 	}
 	
-	protected void translate(Map<String, String> transl) {
+	public void translate(Map<String, String> transl) {
 
 		String key, val;
 		Set<Map.Entry<String, String>> fields = transl.entrySet();
@@ -152,33 +146,53 @@ public class Model implements Iterable {
 		} catch (JSONException ex) {
 			Log.d(TAG, ex.toString());
 		}
+	}	
+	
+	/*public static <T extends Model> ArrayList<T> makeArrayList(String response,
+			HashMap<String, String> transl) throws JSONException {
+		
+		T entry;
+		ArrayList<T> list = new ArrayList();
+		JSONObject json = new JSONObject(response);
+		JSONArray jsonArray = json.getJSONArray("data");
+		for (int i = 0; i < jsonArray.length(); i++) {
+			//entry = new 
+			//(jsonArray.getString(i), transl);
+			//list.add(entry);
+		}
+		return list;
+	}*/
+	
+	public boolean hasKey(String key) {
+		return jsonModel.has(key);
 	}
-
+	
 	public Iterator iterator() {
 		return jsonModel.keys();
 	}
 	
-	protected static ArrayList<? extends Model> makeArrayList(String response,
-			HashMap<String, String> transl) throws JSONException {
-		
-		ArrayList<? extends Model> list = new ArrayList();
-		JSONObject json = new JSONObject(response);
-		JSONArray jsonArray = json.getJSONArray("data");
-		for (int i = 0; i < jsonArray.length(); i++) {
-			Model m = new Model(jsonArray.getString(i));
-			//list.add((?)m);
-		}
-		return list;
+	public void setField(String key, Object value) throws JSONException {
+		jsonModel.put(key, value);
 	}
-	
-	//public void setField(String key, JSONObject value) {;}
 			
-	public String getStringField(String key) {
-		return jsonModel.optString(key);
+	public Object getField(String key) {
+		return jsonModel.opt(key);
 	}
 	
+	
+	/**
+	 * Returns the string representation of the Model
+	 * in JSON format.
+	 */
 	@Override
 	public String toString() {
 		return jsonModel.toString();
+	}
+	
+	/**
+	 * Returns the JSON representation of the Model.
+	 */
+	public JSONObject toJSONObject() {
+		return jsonModel;
 	}
 }

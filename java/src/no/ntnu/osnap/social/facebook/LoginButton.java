@@ -32,7 +32,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -130,7 +129,7 @@ public class LoginButton extends ImageButton {
         
         public void onAuthSucceed() {
             setImageResource(R.drawable.logout_button);
-            //SessionStore.save(mFb, getContext());
+            SessionStore.save(mFb, getContext());
         }
 
         public void onAuthFail(String error) {
@@ -140,7 +139,7 @@ public class LoginButton extends ImageButton {
         }
         
         public void onLogoutFinish() {
-            //SessionStore.clear(getContext());
+            SessionStore.clear(getContext());
             setImageResource(R.drawable.login_button);
         }
     }

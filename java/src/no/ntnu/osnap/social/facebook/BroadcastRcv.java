@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package no.ntnu.osnap.social.facebook;
 
 import android.os.Bundle;
@@ -22,35 +21,50 @@ import android.content.ComponentName;
 import android.content.BroadcastReceiver;
 
 /**
+ * Handles the incoming connection broadcasts from Prototype applications.
  *
- * @author lemrey
+ * @author Emanuele 'lemrey' Di Santo
  */
 public class BroadcastRcv extends BroadcastReceiver {
-	
+
 	private final String TAG = "Broadcast-Rcv";
 
 	@Override
-	public void onReceive(Context c, Intent intent) {
+	public void onReceive(Context context, Intent intent) {
+
+		Log.d(TAG, "Broadcast received: " + intent.getAction());
+
+		try {
+			SessionStore.restore(FB.getInstance(), context);
+			Log.d(TAG, "this a test: " + FB.getInstance().request("me"));
+		} catch (Exception ex) {
+			Log.d(TAG, ex.toString());
+		}
 		
-		Log.d(TAG, "Broadcast received");
+		if (intent.getAction().equals("android.intent.action.SOCIAL")
+				&& FB.getInstance().isSessionValid()) {
+			
+			Log.d(TAG, "Replying");
+			
+
+			Bundle bundle = intent.getExtras();
+
+			// create a new intent with the give action
+			Intent resp = new Intent("android.intent.action.SOCIAL");
+
+			// the intent is to be sent to the class
+			// contained in the 'reply' field
+			resp.setComponent((ComponentName) bundle.get("replyTo"));
+
+			// the social service is return in a field
+			// called 'socialService'
+			ComponentName cn = new ComponentName(context, FacebookService.class);
+			resp.putExtra("socialService", cn);
+
+			// answer the broadcast
+			context.startService(resp);
+		}
 		
-		Bundle bundle = intent.getExtras();
-		
-		//create a new intent with the give action
-		Intent resp = new Intent("android.intent.action.SOCIAL");
-		
-		/* the intent is to be sent to the class
-		 * contained in the 'reply' field
-		 */
-		resp.setComponent((ComponentName)bundle.get("reply"));
-		
-		/* the social service is return in a field
-		 * called 'socialService'
-		 */
-		ComponentName cn = new ComponentName(c, FacebookService.class);
-		resp.putExtra("socialService", cn);
-		
-		//answer the broadcast
-		c.startService(resp);
+		// otherwise start the activity for result?
 	}
 }

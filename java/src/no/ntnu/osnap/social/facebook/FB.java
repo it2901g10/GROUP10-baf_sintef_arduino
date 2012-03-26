@@ -1,6 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package no.ntnu.osnap.social.facebook;
 
@@ -8,8 +17,10 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 
 /**
- *
- * @author lemrey
+ * A singleton class used to realize the communication
+ * between the Facebook service and application.
+ * 
+ * @author Emanuele 'lemrey' Di Santo
  */
 public class FB {
 	
@@ -19,7 +30,7 @@ public class FB {
 	private static final AsyncFacebookRunner mAsyncRunner = new
 			AsyncFacebookRunner(mFacebook);
 	
-	public static Facebook getIstance() {
+	public static Facebook getInstance() {
 		return mFacebook;
 	}
 	

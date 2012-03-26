@@ -5,6 +5,8 @@
 package no.ntnu.osnap.social;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import org.json.JSONException;
 
@@ -12,9 +14,9 @@ import org.json.JSONException;
  *
  * @author lemrey
  */
-public class Request {
+public class Request implements Parcelable {
 	
-	private final String APP_TAG = "SocialLib";
+	private final String TAG = "SocialLib";
 	
 	private Bundle bundle;
 	
@@ -46,17 +48,26 @@ public class Request {
 		return bundle.getString("network");
 	}
 	
-	public Model getModel() {
-		Model m = null;
+	public <T extends Model> T getModel() {
+		T m = null;
 		try {
-			m = new Model (bundle.getString("model"));
+			m = (T) new Model (bundle.getString("model"));
 		} catch (JSONException ex) {
-			Log.d(APP_TAG, ex.toString());
+			Log.d(TAG, ex.toString());
 		}
 		return m;
 	}
 	
 	public final Bundle getBundle() {
 		return bundle;
+	}
+
+	public int describeContents() {
+		//throw new UnsupportedOperationException("Not supported yet.");
+		return 0;
+	}
+
+	public void writeToParcel(Parcel arg0, int arg1) {
+		arg0.writeBundle(bundle);
 	}
 }

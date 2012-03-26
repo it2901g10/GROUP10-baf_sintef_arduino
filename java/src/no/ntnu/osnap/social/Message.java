@@ -11,28 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package no.ntnu.osnap.social;
 
 import android.util.Log;
+
 import java.util.HashMap;
 
-//import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-//import java.util.ArrayList;
-//import java.net.URL;
-//import java.net.MalformedURLException;
-
 
 /**
  * Represents a message.
  * @author Emanuele 'lemrey' Di Santo
  */
 public class Message extends Model {
-	
-	private JSONObject jsonModel;
 	
 	public static final HashMap<String, String> Facebook = 
 	new HashMap<String, String> () {{
@@ -42,51 +34,41 @@ public class Message extends Model {
 	/**
 	 * Constructs an empty Message.
 	 */
-	public Message () {
-		jsonModel = new JSONObject();
-	}
+	public Message () {;}
 	
-	/** Constructs a Message from a source JSON text string.
+	/**
+	 * Constructs a Message from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Message (String json) throws JSONException {
-		try {
-			jsonModel = new JSONObject(json);
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(json);
 	}
 	
-	/** Constructs a Message from a {@code JSONObject} instance.
+	/**
+	 * Constructs a Message from a {@code JSONObject} instance.
 	 * 
 	 * @param object a JSONObject
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Message (JSONObject object) throws JSONException {
-		try {
-			jsonModel = new JSONObject(object.toString());
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(object);
 	}
+	
 	
 	public Message (String json, HashMap<String, String> transl)
 			throws JSONException {
-		this(json);
-		translate(transl);
+		super(json, transl);
 	}
 	
 	public Message (JSONObject object, HashMap<String, String> transl)
 			throws JSONException {
-		this(object);
-		translate(transl);
+		super(object, transl);
 	}
 	
-	/** Gets the sender of this post.
+	/**
+	 * Gets the sender of this post.
 	 * 
 	 * @return the value of the key 'from' as a {@code JSONObject}
 	 * or {@code null} if the key doesn't exist.
@@ -102,7 +84,8 @@ public class Message extends Model {
 		return ret;
 	}
 	
-	/** Gets the sender of this post as a Person
+	/**
+	 * Gets the sender of this post as a Person
 	 * 
 	 * @return the value of the key 'from' as a {@link Person}
 	 * or {@code null} if the key doesn't exist.
@@ -118,14 +101,14 @@ public class Message extends Model {
 		return p;
 	}
 	
-	/** Gets the text of this message as a string.
+	/**
+	 * Gets the text of this message as a string.
 	 * 
 	 * @return the value of the key 'message' as a string
 	 * or an empty string if the key doesn't exist.
 	 */
 	public String getText() {
 		String ret = null;
-		//String type = optString("type");
 		ret = jsonModel.optString("message");
 		if (ret.equals("")) {
 			Log.d(TAG, "key 'message' doesn't exist.");

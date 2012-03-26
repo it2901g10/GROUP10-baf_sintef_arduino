@@ -11,23 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package no.ntnu.osnap.social;
 
 import android.util.Log;
 
+import java.util.HashMap;
+
 import org.json.JSONObject;
 import org.json.JSONException;
-
-import java.util.HashMap;
 
 /**
  * Represents a group.
  * @author Emanuele 'lemrey' Di Santo
  */
 public class Group extends Model {
-	
-	private JSONObject jsonModel;
 	
 	public static final HashMap<String, String> Facebook =
 	new HashMap<String, String>() {{
@@ -45,36 +42,26 @@ public class Group extends Model {
 	/**
 	 * Constructs an empty Group.
 	 */
-	public Group () {
-		jsonModel = new JSONObject();
-	}
+	public Group () {;}
 	
-	/** Constructs a Group from a source JSON text string.
+	/**
+	 * Constructs a Group from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
 	public Group(String json) throws JSONException {
-		try {
-			jsonModel = new JSONObject(json);
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(json);
 	}
 	
-	/** Constructs a Group from a {@code JSONObject} instance.
+	/**
+	 * Constructs a Group from a {@code JSONObject} instance.
 	 * 
 	 * @param object a JSONObject
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
 	public Group(JSONObject object) throws JSONException {
-		try {
-			jsonModel = new JSONObject(object.toString());
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-			throw(ex);
-		}
+		super(object);
 	}
 	
 	/**
@@ -102,7 +89,8 @@ public class Group extends Model {
 		
 	}
 	
-	/** Returns the title of this group.
+	/**
+	 * Returns the title of this group.
 	 * 
 	 * @return the value of the key 'title' as a string
 	 * or an empty string if the key doesn't exist.

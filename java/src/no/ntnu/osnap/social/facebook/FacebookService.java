@@ -13,39 +13,33 @@
  */
 package no.ntnu.osnap.social.facebook;
 
-import android.app.Notification;
-import android.app.NotificationManager;
+import no.ntnu.osnap.social.Model;
+import no.ntnu.osnap.social.Person;
+import no.ntnu.osnap.social.Message;
+import no.ntnu.osnap.social.ISocialService;
+
 import android.app.Service;
-
-
-import android.content.Intent;
+import android.util.Log;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
-import com.facebook.android.FacebookError;
-import com.facebook.android.Util;
-import java.io.IOException;
-import java.net.MalformedURLException;
+import android.content.Intent;
+
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-import no.ntnu.osnap.social.ISocialService;
-import no.ntnu.osnap.social.Person;
-import no.ntnu.osnap.social.Message;
-import no.ntnu.osnap.social.Model;
 
 /**
- *
- * @author lemrey
+ * Implements the Social interface methods.
+ * Contains the FB specific code needed to answer Social requests.
+ * 
+ * @author Emanuele 'lemrey' Di Santo
  */
 public class FacebookService extends Service {
 
 	private final String TAG = "Facebook-Service";
-	private NotificationManager mNM;
 	
 	private final ISocialService.Stub mBinder = new ISocialService.Stub() {
 
@@ -84,56 +78,57 @@ public class FacebookService extends Service {
 
 		String[] ret = null;
 		
-		Log.d(TAG, "handlePerson(): " + json); 
+		Log.d(TAG, "handlePerson():");// + json); 
+		
+		if (json == null) {
+			json = "me";
+		}
 
 		try {
-
 			if (!json.equals("")) {
 				Log.d(TAG, "person has ID");
 				person = new Person(json);
 				id = person.getID();
 			} else {
-				Log.d(TAG, "person is self");
+				Log.d(TAG, "person is 'me'");
 				id = "me";
 			}
 
 			switch (code) {
 				case 0: {
-					buf = FB.getIstance().request(id);
+					buf = FB.getInstance().request(id);
 					ret = new String[1];
 					ret[0] = buf;
 				}
 				break;
 				case 1: {
 					Log.d(TAG, "requesting: " + id + "/friends"); 
-					buf = FB.getIstance().request(id + "/friends");
-					
-					/*ArrayList<Person> list = (ArrayList<Person>)
-							Model.makeArrayList(buf, null);
-					
-					for (int i = 0; i < list.size(); i++) {
-						Log.d(TAG, "arraylist<person> :" + list.get(i).getName());
-					}*/
-					
-					Log.d(TAG, "fetched: " + buf); 
+					buf = FB.getInstance().request(id + "/friends");
+					//Log.d(TAG, "fetched: " + buf); 
 					jsonArray = new JSONObject(buf).getJSONArray("data");
 					ret = new String[jsonArray.length()];
 					for (int i = 0; i < jsonArray.length(); i++) {
 						jsonObj = jsonArray.getJSONObject(i);
 						ret[i] = jsonObj.toString();
-					}
+					}	
 				}
 				break;
 				case 2: {
 					Log.d(TAG, "requesting: " + id + "/posts"); 
-					buf = FB.getIstance().request(id + "/posts");
-					Log.d(TAG, "fetched: " + buf); 
+					buf = FB.getInstance().request(id + "/posts");
+					//Log.d(TAG, "fetched: " + buf); 
 					jsonArray = new JSONObject(buf).getJSONArray("data");
 					ret = new String[jsonArray.length()];
 					for (int i = 0; i < jsonArray.length(); i++) {
 						jsonObj = jsonArray.getJSONObject(i);
 						ret[i] = jsonObj.toString();
 					}
+				} break;
+				case 10: {
+					Log.d(TAG, "requesting: make a post");
+					Bundle param = new Bundle();
+					param.putString("message", "aah");
+					FB.getInstance().request("me/feed", param, "POST");
 				}
 				break;
 			}
@@ -161,7 +156,7 @@ public class FacebookService extends Service {
 				case 0:
 					break;
 				case 1: {
-					buf = FB.getIstance().request(id);
+					buf = FB.getInstance().request(id);
 					Log.d(TAG, "fetched: " + buf); 
 					ret = new String[1];
 					ret[0] = buf;
@@ -177,14 +172,21 @@ public class FacebookService extends Service {
 
 	@Override
 	public void onCreate() {
-		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		//Notification notification = new Notification()
-
+		//mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d(TAG, "onBind received.");
+		
+		Log.d(TAG, "onBind()");
+		
+		// we return our remote interface implementaton
 		return mBinder;
+	}
+	
+	@Override
+	public boolean onUnbind(Intent intent) {
+		Log.d(TAG, "onUnbind()");
+		return true;
 	}
 }

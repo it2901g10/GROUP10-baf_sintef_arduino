@@ -27,40 +27,44 @@ import no.ntnu.osnap.social.facebook.SessionEvents.LogoutListener;
 public class FacebookActivity extends Activity {
 
 	private final String TAG = "Facebook-Activity";
+	
 	private TextView mText;
 	private LoginButton mLoginButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
 		mText = (TextView) findViewById(R.id.txt);
 		mLoginButton = (LoginButton) findViewById(R.id.login);
 
-		//setup callbacks for login/logout events
+		// try to restore previous sessions
+		SessionStore.restore(FB.getInstance(), this);
+		
+		
+		// setup callbacks for login/logout events
 		SessionEvents.addAuthListener(new SampleAuthListener());
 		SessionEvents.addLogoutListener(new SampleLogoutListener());
 
-		//init the facebook button
-		mLoginButton.init(this, FB.getIstance(),
-				new String[]{"read_stream", "user_groups"});
+		// init the facebook button
+		mLoginButton.init(this, FB.getInstance(),
+				new String[]{"publish_stream", "read_stream", "user_groups"});
 
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		FB.getIstance().authorizeCallback(requestCode, resultCode, data);
+		FB.getInstance().authorizeCallback(requestCode, resultCode, data);
 	}
 
-	/*
-	 * this class implements callback functions for authentication events
-	 */
+	// here we implement callback functions for authentication events
 	private class SampleAuthListener implements AuthListener {
 
 		public void onAuthSucceed() {
 			mText.setText("User logged in!");
-			startService(new Intent(getBaseContext(), FacebookService.class));
+			//startService(new Intent(getBaseContext(), FacebookService.class));
 		}
 
 		public void onAuthFail(String error) {
@@ -68,9 +72,8 @@ public class FacebookActivity extends Activity {
 		}
 	}
 
-	/*
-	 * this class implements callback functions for logout events
-	 */
+	
+	// here we implement callback functions for logout events
 	private class SampleLogoutListener implements LogoutListener {
 
 		public void onLogoutBegin() {
