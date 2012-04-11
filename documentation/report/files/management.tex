@@ -6,7 +6,7 @@ will affect planning and many other aspects of the teamwork. The following secti
 which development processes we have considered using and the reasons behind our final choice.
 
 \subsection{Waterfall}
-The Waterfall model is a strict top-down design process. It features detailed planning, design and
+The Waterfall model (figure \ref{fig:designmodel-waterfall}) is a strict top-down design process. It features detailed planning, design and
 documentation before design. This model is useful when going back and changing requirements is
 costly or impossible. This does however require that all needed features and requirements are known
 early on. The model was originally used for hardware design and when the first software projects 
@@ -17,23 +17,23 @@ The Waterfall model works best for expensive projects where problem prediction a
 is vital before implementation is started.
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.30]{img/designmodel-waterwall} \caption{The Waterfall model\cite{link:wiki}}
-\label{fig:desigmodel-waterfall}
+\label{fig:designmodel-waterfall}
 \end{figure}
 
 \subsection{Scrum}
 Scrum is an Agile software development process. The Scrum approach uses repetitive iterations (called
- Sprints in the Scrum etymology) to design, implement and refine a product. Each iteration improves,
-fixes and adds new features to the previous iteration. A key feature of Scrum is that the customer
-can change their mind on what they want or need. Scrum focuses on frequent group meetings and
-splitting big tasks into smaller, manageble tasks for small groups of programmers. Because of the
+Sprints in the Scrum etymology) to design, implement and refine a product. Figure \ref{fig:designmodel-scrum} shows
+how the Scrum iterative process works. Each iteration improves, fixes and adds new features to the previous iteration.
+A key feature of Scrum is that the customer can change their mind on what they want or need. Scrum focuses on frequent 
+group meetings and splitting big tasks into smaller, manageble tasks for small groups of programmers. Because of the
 frequent meetings it promotes verbal communication in the group.
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.4]{img/designmodel-scrum} \caption{The Scrum process\cite{link:wiki}}
-\label{fig:desigmodel-scrum}
+\label{fig:designmodel-scrum}
 \end{figure}
 
 \subsection{Extreme Programming (XP)}
-Extreme Programming is a development methodology that is designed for best software quality and
+Extreme Programming (figure \ref{fig:designmodel-xp}) is a development methodology that is designed for best software quality and
 quick responsivness to changing customer requirements. It is also an Agile Development method like
 Scrum and therefore shares certain similarities to that development method. It promotes rapid
 development and allows the customer to change his/her mind or request new features throughout
@@ -44,11 +44,11 @@ overall design specification. Extreme programming is best suited for small proje
 where the customer is not entierly sure what he or she wants.
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.75]{img/designmodel-xp} \caption{Extreme Programming\cite{link:xp}}
-\label{fig:desigmodel-xp}
+\label{fig:designmodel-xp}
 \end{figure}
 
 \subsection{Agile Unified Process}
-The AUP (short for Agile Unified Process) offers a simple and easy to understand approach for software
+The AUP (short for Agile Unified Process) shown in figure \ref{fig:designmodel-aup} offers a simple and easy to understand approach for software
 development. It is a simplified version of the Rational Unified Process. Key features are simplicity, 
 customization and focus on the task on hand instead of everything that may happen. It features
 several internal development iterations before producing a customer release. AUP focuses on quality
@@ -56,19 +56,19 @@ insurance and works best for projects that is going to be used by a large public
 product is important.
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.65]{img/designmodel-aup} \caption{AUP development iterations\cite{link:wiki}}
-\label{fig:desigmodel-aupl}
+\label{fig:designmodel-aup}
 \end{figure}
 
 \subsection{Spiral Model}
-The Spiral development methodology combines the advantages of both the top-down approach from 
-Waterfall and the bottom-up concept of prototyping. It does this by using an iterative development
+The Spiral development methodology (figure \ref{fig:designmodel-spiral}) combines the advantages of both the top-down approach 
+from Waterfall and the bottom-up concept of prototyping. It does this by using an iterative development
 approach and by controlling it through the systematic Waterfall model. A strong advantage of the Spiral lifecycle is that it
 allows new features and requests to be integrated as soon as they come avalible or known. Other key 
 features of the model is risk analysis, strict system design specifications and prototyping. The Spiral model
  is best suited for large, expensive and complicated projects.
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.85]{img/designmodel-spiral} \caption{The Spiral model \cite{link:spiral}}
-\label{fig:desigmodel-spiral}
+\label{fig:designmodel-spiral}
 \end{figure}
 
 \subsection{Conclusions}
@@ -121,7 +121,7 @@ In the end we continued to use Scrum after making some changes to the process it
 \newpage
 \section{Project management tools}
 
-To help us in using Scrum we chose an online tool called ScrumDo (www.scrumdo.com).
+To help us in using Scrum we chose an online tool called ScrumDo (figure \ref{fig:mgmt-scrumdo}).
 This tool has features for most if not all parts of the Scrum process. Using this tool
 consistently will be our main method of maintaining and separating packages from
 the WBS (Work Breakdown Structure). In the context of ScrumDo and
@@ -130,7 +130,7 @@ accordingly from \char`\"{}ToDo\char`\"{} over to \char`\"{}In progress\char`\"{
 and eventually to \char`\"{}Done'' areas.
 	
 \begin{figure}[h!]
-\centering \includegraphics{img/mgmt-scrumdo} \caption{The Scrum Board in ScrumDo}
+\centering \includegraphics{img/mgmt-scrumdo} \caption{A screen capture of the Scrum Board in ScrumDo \cite{link:scrumdo}}
 \label{fig:mgmt-scrumdo}
 \end{figure}
 
@@ -319,11 +319,11 @@ We estimate 20 hours work per person each week. With a group of 7 members this m
 \subsection{Gannt Diagram}
 
 \begin{figure}[h]
-\centering \includegraphics[angle=270, width=1\textwidth, trim=0mm 0mm 47.5cm 0mm, clip]{img/mgmt-gantt.pdf} \caption{Gantt Diagram - part 1}
+\centering \includegraphics[angle=270, width=1\textwidth, trim=0mm 0mm 47.5cm 0mm, clip]{img/mgmt-gantt.pdf} \caption{Gannt Diagram - part 1}
 \label{fig:mgmt-gantt-1}
 \end{figure}
 
 \begin{figure}[h]
-\centering \includegraphics[angle=270, width=1\textwidth, trim=45.5cm 0mm 0mm 0mm, clip]{img/mgmt-gantt.pdf} \caption{Gantt Diagram - part 2}
+\centering \includegraphics[angle=270, width=1\textwidth, trim=45.5cm 0mm 0mm 0mm, clip]{img/mgmt-gantt.pdf} \caption{Gannt Diagram - part 2}
 \label{fig:mgmt-gantt-2}
 \end{figure}
