@@ -111,27 +111,26 @@ The T-Shirt application requests the list of friends from Facebook whose age is 
 
 \subsection{The Social library}
 This library provides abstractions for many common concepts found in different
-social networks like Facebook, OpenSocial.. in order to give the developers the possibility
-to use these concepts seamlessly between these networks and extend them to possibily support others.
+social networks like Facebook or OpenSocial. This is done so that the developers have the possibility
+to use these concepts seamlessly between any network and extend them to possibily support others.
 It also defines and implements a sort of 'protocol' to allow Android applications and/or services
 to exchange social data. This mechanism is based on Android Intent's API.
 
 \subsubsection{First approach}
 Our first design approach consisted in a library that would handle the connection to social networks
-such as Facebook, Twitter, LinkedIn and so on, allowing the developers to write full-fledged
+such as Facebook, Twitter, LinkedIn, etc. This would  allow the developers to write full-fledged
 social 'multi-network' clients. It would also provide abstractions for many common concepts
 found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
 The difference in the new approach is that while the Social library will still provide
 abstractions for common concepts found in social networks, it will now focus rather than handling
-the connection to the social networks, on estabilishing a communication interface (using Android's Intent mechanism)
+the connection to the social networks. This is done by estabilishing a communication interface (using Android's Intent mechanism)
 between Social applications and the Android-Arduino applications to allow the requesting and forwarding of social data.
 
-This revised approach was made necessary after the first meetings with the customer
-as we misunderstood the project scope and went on to solve a very ambitious and unneeded task.
-The new design also accomodated very well the overall system design. Some of the code and documentation we produced
-for the previous design was re-used, but some could not.
+This revised approach was made necessary after the first meetings with the customer as we misunderstood the project scope 
+and went on to solve a very ambitious and unneeded task. The new design also accomodated very well the overall system design. 
+Some of the code and documentation we produced for the previous design was re-used, but some could not.
 
 \todo{
 	a class diagram maybe?
@@ -350,7 +349,7 @@ The Java code is again divided into packaged libraries as described below.
 \item{no.ntnu.osnap.com}\newline
 Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such as
 Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication methods. The
-user can easily add new communication types by extending an abstract class.pdf
+user can easily add new communication types by extending an abstract class.
 \item{no.ntnu.osnap.com.testing}\newline
 Test units and sample programs for the ComLib. These are simple test applications that are run on the Android to test if the ComLib is communication correctly using the specified
 protocol.
