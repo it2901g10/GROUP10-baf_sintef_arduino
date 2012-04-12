@@ -420,7 +420,7 @@ public abstract class Protocol extends Thread {
         if (currentCommand.byteReceived(data)) {
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-				System.out.println("Ack received for: " + waitingForAck);
+				//System.out.println("Ack received for: " + waitingForAck);
                 byte tempAck = waitingForAck;
                 
 				boolean hadAckProcessor = false;
