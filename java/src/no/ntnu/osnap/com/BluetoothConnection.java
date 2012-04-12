@@ -1,13 +1,29 @@
+/*
+* Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn 
+* Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
 package no.ntnu.osnap.com;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import no.ntnu.osnap.com.ConnectionMetadata.DefaultServices;
+import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -149,7 +165,7 @@ public class BluetoothConnection extends Protocol {
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
      * active connection (STATE_CONNECTING to STATE_DISCONNECTED)
      */
-	public synchronized void connect(ConnectionListener listener) {
+	public synchronized void connect() {
 		
 		//Don't try to connect more than once
 		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
@@ -219,13 +235,12 @@ public class BluetoothConnection extends Protocol {
 		//Close socket only if we are connected or trying to connect
 		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
 			setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			if(socket != null)
-			{
+			if(socket != null) {
 				socket.close();
 				input = null;
 				output = null;
 				socket = null;
-				super.running = false;
+				super.stopThread();
 			}
 			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
@@ -309,7 +324,15 @@ public class BluetoothConnection extends Protocol {
 	@Override
 	public ConnectionMetadata getConnectionData() {
 		if(super.connectionMetadata == null) 
-			super.connectionMetadata = new ConnectionMetadata(device.getName(), device.getAddress(), null, null); //TODO: fix this
+		{
+			JSONObject object;
+			try {
+				object = new JSONObject(super.getDeviceInfo());
+				super.connectionMetadata = new ConnectionMetadata(object);
+			} catch (Exception e) {
+				Log.e(getClass().getName(), "Oh no! Failed to get connection data correctly: " + e);
+			}
+		}
 		
 		return super.connectionMetadata;
 	}

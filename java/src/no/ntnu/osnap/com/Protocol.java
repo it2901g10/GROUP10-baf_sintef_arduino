@@ -1,3 +1,20 @@
+/*
+* Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn 
+* Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
+*
+*   Licensed under the Apache License, Version 2.0 (the "License");
+*   you may not use this file except in compliance with the License.
+*   You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*   Unless required by applicable law or agreed to in writing, software
+*   distributed under the License is distributed on an "AS IS" BASIS,
+*   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*   See the License for the specific language governing permissions and
+*   limitations under the License.
+*/
+
 package no.ntnu.osnap.com;
 
 import java.io.IOException;
@@ -9,7 +26,7 @@ public abstract class Protocol extends Thread {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.0.2";
+	public final static String LIBRARY_VERSION = "1.2.0";
 	
 	/**
 	 * The unique metadata package for this connection
@@ -26,26 +43,43 @@ public abstract class Protocol extends Thread {
     
 	protected static final int TIMEOUT = 2000;
 	protected static final int MAX_CONTENT_SIZE = 250;
-	
-    public static final byte OPCODE_PING = 0;
-    public static final byte OPCODE_TEXT = 1;
-    public static final byte OPCODE_SENSOR = 2;
-    public static final byte OPCODE_DATA = 3;
-    public static final byte OPCODE_PIN_R = 4;
-    public static final byte OPCODE_PIN_W = 5;
-    public static final byte OPCODE_RESPONSE = (byte) 0xFE;
-    public static final byte OPCODE_RESET = (byte) 0xFF;
+
+	//Package private enumeration
+    enum OpCode {
+    	PING,			//0
+    	TEXT,			//1
+    	SENSOR,			//2
+    	DATA,			//3
+    	PIN_R,			//4
+    	PIN_W,			//5
+    	DEVICE_INFO,	//6
+    	RESPONSE(0xFE),	//254
+    	RESET(0xFF);	//255
+    	
+    	//Read only value
+    	public final byte value;
+    	
+    	/** Implicit value constructor */
+    	private OpCode(){
+    		this.value = (byte) this.ordinal();
+    	}
+    	
+    	/** Explicit value constructor */
+    	private OpCode(int value) {
+    		this.value = (byte) value;
+    	}
+    }
     
     private Command currentCommand;
-    private Byte waitingForAck;
+    private OpCode waitingForAck;
     
     private static final byte[] ackProcessors = {
-        OPCODE_SENSOR,
-		OPCODE_PIN_R,
-		OPCODE_PING
+        OpCode.SENSOR.value,
+		OpCode.PIN_R.value,
+		OpCode.PING.value
     };
 	
-	private Byte tempAckProcessor;
+	private OpCode tempAckProcessor;
 
     public Protocol() {
         currentCommand = new Command();
@@ -56,8 +90,50 @@ public abstract class Protocol extends Thread {
     }
 	
     public abstract ConnectionMetadata getConnectionData();
+        
+    /**
+     * Retrieves a single long String of raw unprocessed list of services, platforms and download links supported by the remote device
+     * @return a raw String representation of the device info retrieved from the remote device
+     * @throws TimeoutException if the remote device used longer than Protocol.TIMEOUT milliseconds to respond
+     */
+	protected final String getDeviceInfo() throws TimeoutException {
+		ProtocolInstruction newInstruction = new ProtocolInstruction(OpCode.DEVICE_INFO, (byte)0, new byte[1]);
+		
+		// Blocking methodlock();
+		lock();
+
+		waitingForAck = OpCode.DEVICE_INFO;
+		tempAckProcessor = OpCode.DEVICE_INFO;
+
+		try {
+			sendBytes(newInstruction.getInstructionBytes());
+		} catch (IOException ex) {
+			System.out.println("Send fail");
+			//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
+		}
+		release();
+		
+		//Wait until we get a response or a timeout
+		long time = System.currentTimeMillis();
+		while (waitingForAck != null) {
+			if (System.currentTimeMillis() - time > TIMEOUT)
+				throw new TimeoutException(Thread.currentThread().getStackTrace()[2].getMethodName() + " has timed out");
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {
+			}
+		}
+		
+		tempAckProcessor = null;
+		
+        String response = new String( currentCommand.getContent() );
+
+        ackProcessingComplete();
+
+        return response;
+	}    
 	
-	public void stopThread(){
+	protected void stopThread() {
 		running = false;
 	}
 	
@@ -106,7 +182,7 @@ public abstract class Protocol extends Thread {
         lock();
         
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PING, (byte)0, new byte[1]);
+				new ProtocolInstruction(OpCode.PING, (byte)0, new byte[1]);
 		
         try {
             sendBytes(newInstruction.getInstructionBytes());
@@ -114,7 +190,7 @@ public abstract class Protocol extends Thread {
             System.out.println("Derp send");
         }
         
-        waitingForAck = OPCODE_PING;
+        waitingForAck = OpCode.PING;
         
         release();
 		
@@ -137,7 +213,7 @@ public abstract class Protocol extends Thread {
 	
 	public final void print(String text, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_TEXT, (byte)0, text.getBytes());
+				new ProtocolInstruction(OpCode.TEXT, (byte)0, text.getBytes());
 		if (!blocking){
 			queueInstruction(newInstruction);
 		}
@@ -145,13 +221,14 @@ public abstract class Protocol extends Thread {
 			// Blocking methodlock();
 			lock();
 
-			waitingForAck = OPCODE_TEXT;
-			tempAckProcessor = OPCODE_TEXT;
+			waitingForAck = OpCode.TEXT;
+			tempAckProcessor = OpCode.TEXT;
 
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
 			} catch (IOException ex) {
 				System.out.println("Send fail");
+				//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
 			}
 			release();
 			
@@ -173,11 +250,11 @@ public abstract class Protocol extends Thread {
 
     public final int sensor(int sensor) throws TimeoutException {
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_SENSOR, (byte)sensor, new byte[1]);
+				new ProtocolInstruction(OpCode.SENSOR, (byte)sensor, new byte[1]);
 		
         lock();
 
-        waitingForAck = OPCODE_SENSOR;
+        waitingForAck = OpCode.SENSOR;
 
         try {
             sendBytes(newInstruction.getInstructionBytes());
@@ -221,7 +298,7 @@ public abstract class Protocol extends Thread {
 	public final void data(int pin, byte[] data, boolean blocking) throws TimeoutException{
 		ArrayList<ProtocolInstruction> newInstructions = new ArrayList<ProtocolInstruction>();
 		
-		ProtocolInstruction tempInstruction;
+		//ProtocolInstruction tempInstruction;
 		
 		if (data.length > MAX_CONTENT_SIZE){
 			byte[] tempBytes = new byte[MAX_CONTENT_SIZE];
@@ -233,7 +310,7 @@ public abstract class Protocol extends Thread {
 				tempBytes[i % MAX_CONTENT_SIZE] = data[i];
 				if (i % MAX_CONTENT_SIZE == 0){
 					newInstructions.add(
-						new ProtocolInstruction(OPCODE_DATA, (byte)1, tempBytes)
+						new ProtocolInstruction(OpCode.DATA, (byte)1, tempBytes)
 						);
 					
 					if (data.length - i < MAX_CONTENT_SIZE){
@@ -247,12 +324,12 @@ public abstract class Protocol extends Thread {
 				restBytes[i] = tempBytes[i];
 			}
 			newInstructions.add(
-				new ProtocolInstruction(OPCODE_DATA, (byte)0, restBytes)
+				new ProtocolInstruction(OpCode.DATA, (byte)0, restBytes)
 				);
 		}
 		else {
 			newInstructions.add(
-				new ProtocolInstruction(OPCODE_DATA, (byte)0, data)
+				new ProtocolInstruction(OpCode.DATA, (byte)0, data)
 				);
 		}
 		
@@ -267,7 +344,7 @@ public abstract class Protocol extends Thread {
 			
 			for (ProtocolInstruction newInstruction : newInstructions){
 
-				waitingForAck = OPCODE_DATA;
+				waitingForAck = OpCode.DATA;
 
 				try {
 					sendBytes(newInstruction.getInstructionBytes());
@@ -294,11 +371,11 @@ public abstract class Protocol extends Thread {
 
     public final boolean read(int pin) throws TimeoutException {
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PIN_R, (byte)pin, new byte[1]);
+				new ProtocolInstruction(OpCode.PIN_R, (byte)pin, new byte[1]);
 		
         lock();
 
-        waitingForAck = OPCODE_PIN_R;
+        waitingForAck = OpCode.PIN_R;
 
         try {
             sendBytes(newInstruction.getInstructionBytes());
@@ -331,7 +408,7 @@ public abstract class Protocol extends Thread {
 	
 	public final void write(int pin, boolean value, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OPCODE_PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
+				new ProtocolInstruction(OpCode.PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
 
 		if (!blocking){
 			queueInstruction(newInstruction);
@@ -339,7 +416,7 @@ public abstract class Protocol extends Thread {
 		else {
 			lock();
 
-			waitingForAck = OPCODE_PIN_W;
+			waitingForAck = OpCode.PIN_W;
 
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
@@ -418,10 +495,11 @@ public abstract class Protocol extends Thread {
     
     protected final void byteReceived(byte data) {
         if (currentCommand.byteReceived(data)) {
+        	
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-				//System.out.println("Ack received for: " + waitingForAck);
-                byte tempAck = waitingForAck;
+				System.out.println("Ack received for: " + waitingForAck);
+                byte tempAck = waitingForAck.value;
                 
 				boolean hadAckProcessor = false;
 
@@ -434,7 +512,7 @@ public abstract class Protocol extends Thread {
 				}
 				
 				if (!hadAckProcessor){
-					if (tempAckProcessor != null && tempAck == tempAckProcessor){
+					if (tempAckProcessor != null && tempAck == tempAckProcessor.value){
 						ackProcessing();
 					}
 					else {
@@ -518,17 +596,16 @@ public abstract class Protocol extends Thread {
             return false;
         }
 
-        public byte getOpcode() {
+        /*public byte getOpcode() {
             return opcode;
-        }
+        }*/
 
         public byte[] getContent() {
             return content;
         }
 
-        public boolean isAckFor(byte command) {
-            return opcode == Protocol.OPCODE_RESPONSE
-                    && flag == command;
+        public boolean isAckFor(OpCode command) {
+            return opcode == OpCode.RESPONSE.value && flag == command.value;
         }
     }
 

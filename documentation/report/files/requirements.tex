@@ -3,17 +3,30 @@ This chapter describes both the functional and non-functional requirements
 for the various parts of the project.
 
 \section{Functional requirements}
-	
-	\subsection{Social library}
+
+\begin{tabular}{ | l | c | }
+	\hline                        
+	\bf{Requirement} & \bf{Priority} \\
+	\hline
+	F2: ComLib & Very High \\
+	F1: SocialLib & Very High \\
+	F5: T-Shirt Prototype & High \\
+	F4: T-Shirt App & Medium \\
+	F3: Facebook App & Medium \\
+	F6: Temperature Prototype & Low \\
+	F7: LED Matrix Prototype & Low \\
+	\hline  
+\end{tabular}
+
+	\subsection{F1: Social library}
 	\begin{description}
 		\item[Network support:] The library shall support at least two social networks.
 		One is OpenSocial and the other is Facebook.
 		\item[Abstractions:] The library shall provide abstractions for concepts found
 		in social networks.
-		\item[]
 	\end{description}
 	
-	\subsection{Communication library}
+	\subsection{F2: Communication library}
 	\begin{description}
 		\item[Wireless connectivity:] Since the product will target a user-base with
 		no technical background, the customer required all connections between
@@ -27,7 +40,7 @@ for the various parts of the project.
 
 	\newpage
 
-	\subsection{Facebook application}
+	\subsection{F3: Facebook application}
 
 	\begin{description}
 		\item[Login (Authentication):] The application shall handle the authentication with Facebook.
@@ -39,7 +52,7 @@ for the various parts of the project.
 		\item[User input:] Once the user is authenticated, no further user action is required.
 	\end{description}
 
-	\subsection{T-Shirt application}
+	\subsection{F4: T-Shirt application}
 	
 	\begin{description}
 		\item[On and Off:] The user shall be able to turn the application On and Off.
@@ -55,7 +68,7 @@ for the various parts of the project.
 
 	\newpage
 
-	\subsection{T-Shirt prototype}
+	\subsection{F5: T-Shirt prototype}
 
 	\begin{description}
 		\item[Features:] The prototype shall map some social content
@@ -66,7 +79,7 @@ for the various parts of the project.
 		no further user input shall be required.
 	\end{description}
 
-	\subsection{Temperature prototype}
+	\subsection{F6: Temperature prototype}
 	\begin{description}
 		\item[Features:] The prototype shall read the temperature
 		using an Arduino sensor and push it to Facebook.
@@ -75,7 +88,7 @@ for the various parts of the project.
 		\item[]
 	\end{description}
 	
-	\subsection{Image to LED matrix prototype}
+	\subsection{F7: Image to LED matrix prototype}
 	\begin{description}
 		\item[Features:] The prototype shall display an image sent by a Android
 		mobile using some LEDs.
@@ -109,7 +122,8 @@ For the sake of simplicity they will be listed together.
 	documentation is important. Proper documentation or tutorials should describe how
 	the end-user can easily use the libraries without any technical knowledge of how
 	the library works.
-	\item[Licensing:] The library shall be released under the Apache License 2.0.
+	\item[Licensing:] The library shall be released under the Apache License 2.0 \footnote{See 
+           http://www.apache.org/licenses/LICENSE-2.0.html for more information on the Apache 2.0 license}.
 	The customer made clear that all the software developed needs to be released
 	under a permissive, Apache software license. This implies that pre-existing
 	software that will eventually be adopted and incorporated in the project must
