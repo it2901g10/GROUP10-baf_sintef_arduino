@@ -21,7 +21,7 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 \label{fig:design-toplevel}
 \end{figure}
 
-\newpage
+
 \section{System design}
 \label{sec:system-design}
 As the requirements for the product were not set early on by the customer, a lot of effort
@@ -49,7 +49,7 @@ Please note that in this scenario the user is required to actively send data fro
 the social application (which acts as a Facebook client) to the T-Shirt application,
 which is merely capable of receiving. Also, both are implemented as Android applications.
 
-\newpage
+
 
 The figure \ref{fig:design-resp} represents the communication between the applications.
 
@@ -94,7 +94,7 @@ the services and the applications.
 The T-Shirt service is now 'asking' the Social service for a specific content.
 This happens in the background, without user interaction.
 
-\newpage
+
 
 \subsubsection{Sequence Diagram}
 This sequence diagram show in figure \ref{fig:design-sequence} shows a sample communication between the Social and T-Shirt applications.
@@ -106,7 +106,7 @@ The T-Shirt application requests the list of friends from Facebook whose age is 
 \label{fig:design-sequence}
 \end{figure}
 
-\newpage
+
 
 \section{Libraries}
 
@@ -136,7 +136,7 @@ Some of the code and documentation we produced for the previous design was re-us
 	a class diagram maybe?
 }
 
-\newpage
+
 
 \subsection{The Communication library}
 This library consists of a Java library and an Arduino firmware. Both implement the ComLib protocol.
@@ -212,7 +212,7 @@ The following figure illustrates the Arduino automata.
 \label{tbl:instr_struct}
 \end{table}
 
-\newpage
+
 \section{Applications and Services}
 
 \subsection{T-Shirt application}
@@ -252,7 +252,7 @@ For completeness we present the previous application use case in figure \ref{fig
 \end{figure}
 
 
-\newpage
+
 \section{Prototypes}
 \label{sec:prototypes}
 Three different prototypes will be produced for the project. They serve both as a proof of concept and
@@ -298,7 +298,7 @@ and carried in the pocket of the person using the T-Shirt and is connected wirel
 	%\label{fig:testing-TShirt}
 	%\end{figure}
 
-\newpage
+
 	
 \subsection{Prototype 2: Temperature Sensor for Android}
 This prototype will primarily showcase the communication from Arduino to Android using our libraries.
