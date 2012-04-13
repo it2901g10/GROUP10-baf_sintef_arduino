@@ -124,13 +124,12 @@ found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
 The difference in the new approach is that while the Social library will still provide
-abstractions for common concepts found in social networks, it will now focus rather than handling
-the connection to the social networks. This is done by estabilishing a communication interface (using Android's Intent mechanism)
-between Social applications and the Android-Arduino applications to allow the requesting and forwarding of social data.
+abstractions for common concepts found in social networks, but rather than handling
+the connection to the social networks, it will focus on estabilishing a communication interface (using Android's Intent mechanism and inter-process communication) between Social applications and the Android-Arduino applications to allow the requesting and forwarding of social data.
 
-This revised approach was made necessary after the first meetings with the customer as we misunderstood the project scope 
+This revised approach was made necessary after the first meetings with the customer as we misunderstood the project scope, 
 and went on to solve a very ambitious and unneeded task. The new design also accomodated very well the overall system design. 
-Some of the code and documentation we produced for the previous design was re-used, but some could not.
+Some of the code and documentation we produced for the previous design was re-used.
 
 \todo{
 	a class diagram maybe?
