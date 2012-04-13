@@ -23,6 +23,7 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 
 \newpage
 \section{System design}
+\label{sec:system-design}
 As the requirements for the product were not set early on by the customer, a lot of effort
 was put into producing working prototypes to show during the meetings in order to receive
 as much feedback as possible and identify the ideas the customer had in mind.
@@ -216,7 +217,7 @@ The following figure illustrates the Arduino automata.
 
 \subsection{T-Shirt application}
 
-As discussed in chapter 5.2 the T-Shirt application design had to be reviewed after roughly one month.
+As discussed in chapter \ref{sec:system-design} the T-Shirt application design had to be reviewed after roughly one month.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/design-tshirtappusecase2}
@@ -234,7 +235,7 @@ For completeness we present the previous application use case in figure \ref{fig
 
 \subsection{Facebook application}
 
-As discussed in chapter 5.2 the Facebook application design had to be reviewed after roughly one month.
+As discussed in chapter \ref{sec:system-design} the Facebook application design had to be reviewed after roughly one month.
 
 \begin{figure}[h!]
 \centering \includegraphics[scale=0.35]{img/design-socialappusecase2}
@@ -314,28 +315,6 @@ The picture is then sent with an Intent using the Android API, making it easy to
 the bundled picture. For prototyping purposes the wearable product will feature just a few LEDs which our Android
 prototype program will map to certain pixels and then transmit over Bluetooth to the Arduino
 component and this will promptly light the LEDs.
-
-
-\newpage
-
-\section{Architecture diagram}
-\todo{
-	review and remove: expanded and wrote somewhere else.
-}
-The API layer is the social service layer. It uses androids built in Intents and Messenger class to communicate between social
-services and applications. Using these two classes we send JSONObject strings including data wrapped as social concepts such as Person, Group,
-Stream, Message, Activity etc. Multiple apps can use the API layer to send and retrieve this data.
-
-Example:
-The API layer is connected with twitter. Twitter retrieves a new post and the API layer sends out
-a broadcast intent telling a new Message has arrived. The android OS see who are listening to this type of intent and relay
-the message to all connected apps. The Developed app will now connect to the Twitter service to fetch the Message.
-
-The bluetooth protocol in the application is a framework that the developed application includes
-to be able to send and recive raw data from the arduino board. It includes handshake and
-confirmation commands that is similar to tcp.
-
-The arduino board includes a wrapper around the input/output of the firmware to connect to our protocol.
 
 \section{Package Structure}
 The system can be divided into smaller sections. This section describes some of the structures
