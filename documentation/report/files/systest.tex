@@ -41,3 +41,144 @@ before they are tested together.
 \section{System testing}
 This involves butting the components from integration testing together to form a complete system that 
 can be tested. Preferably each module will be added incrementally, to easier spot if any modules produce errors.
+
+\section{Functional requirement testing}
+Since the assignment given is a combination of "Proof of concept" and research project, the test are made in mind to support a run of the system and are not made to check for edge cases and more specific use.
+
+The unit tests is made to see if we have fulfilled the functional requirements from packages F1-F7.
+
+\section{Testing order}
+Since some of the packages are connected, we need to test them in order.
+
+Testing of hardware packages F5-F7 involves checking added components (sound, light, vibration, etc) and confirm that they are functional. Software that is connected to hardware (F3, F4) is tested with the relevant packages so we have shown a proof of concept.
+
+Packages SocialLib F1 is tested together with F3 and F4 as the social protocol between the applications. Package ComLib F2 is a part of all test that includes a wireless connection from cell phone to Arduino board.
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F5 T-shirt Prototype. \\ 
+\hline Purpose: & Test that all components connected to Lillipad Board works. \\ 
+\hline Context: & The t-shirt has all the components sewed together. \\ 
+\hline Precondition: & The Arduino is connected to PC with USB, all components are connected. \\ 
+\hline
+Steps: & 1: Power on Arduino board.\\ 
+  & 2: Send signal to vibrator. \\ 
+  & 3: Correct text is displayed on LCD. \\ 
+  & 4: Send text to LCD display. \\
+  & 5: Send sound to speaker.\\
+  \hline
+  Expected result: & 1: LED lights up.\\ 
+    & 2: Vibrator works. \\ 
+    & 3: Correct text is displayed on LCD. \\ 
+    & 4: Correct sound coming from speaker. \\
+  \hline
+Actual Result: &  result \\
+  \hline
+\end{tabular}
+\caption{Test F5}
+\label{tbl:f5test}
+\end{table}
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F6 Temperature prototype. \\ 
+\hline Purpose: & Test temperature prototype. \\ 
+\hline Precondition: & The Arduino is connected to PC with USB. \\ 
+\hline
+Steps: & 1: Power on Arduino board.\\ 
+  & 2: Press button. \\ 
+  \hline
+  Expected result: & Temperature is displayed.\\ 
+  \hline
+Actual Result: & received bacon \\
+  \hline
+\end{tabular}
+\caption{Test F6}
+\label{tbl:f6test}
+\end{table}
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F7 LED Matrix. \\ 
+\hline Purpose: & Test LED Matrix prototype. \\ 
+\hline Precondition: & The Arduino is connected to PC with USB. \\ 
+\hline
+Steps: & 1: Power on Arduino board.\\ 
+  & 2: Send sample data to board \\ 
+  \hline
+  Expected result: & Correct LED light up according to sample data.\\ 
+  \hline
+Actual Result: & result \\
+  \hline
+\end{tabular}
+\caption{Test F7}
+\label{tbl:f7test}
+\end{table}
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F7 Led Matrix/F2 ComLib. \\ 
+\hline Purpose: & Test pushing data to Arduino board from cell phone. \\ 
+\hline Context: & Cell phone app has a simple "Send data" button. \\ 
+\hline Precondition: & Cell phone is on and Arduino board is powered. \\ 
+\hline
+Steps: & 1: Pair cell phone with Arduino board using Android OS settings.\\ 
+  & 2: Start application on cell phone. \\ 
+  & 3: Initiate connection to Arduino board. \\ 
+  & 4: Press send data to transfer a sample to Arduino board.\\
+  \hline
+  Expected result: & 1: Data is pushed to from cell phone to Arduino board.\\ 
+    & 2: Correct LED lights up. \\ 
+  \hline
+Actual Result: &  result \\
+  \hline
+\end{tabular}
+\caption{Test F7/F2}
+\label{tbl:f7f2test}
+\end{table}
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F1 Social Lib/F3 Facebook App/F4 T-shirt App/F5 T-shirt prototype. \\ 
+\hline Purpose: & Test social lib as a library to send social messages between app and push them to T-shirt.  \\ 
+\hline Context: & End to end Test from a social service to Arduino board. \\ 
+\hline Precondition: & The two applications are installed and the T-shirt is on and paired with cell phone. \\ 
+\hline
+Steps: & 1: Start Facebook app.\\ 
+  & 2: Log in \\ 
+  & 3: Start t-shirt app. \\ 
+  & 4: Set up rules to define what to send to t-shirt. \\
+  & 5: Connect to t-shirt. \\
+  & 6: Return to cell phone desktop. \\
+  & 7: Send a sample Facebook message on PC. \\
+  \hline
+  Expected result: & Depending on set rule, the Facebook message should be forwarded from the Facebook App, to the t-shirt app and pushed to the t-shirt and enable the correct LCD/LED/Vibrator/Speaker. \\ 
+  \hline
+Actual Result: &  result \\
+  \hline
+\end{tabular}
+\caption{Test F1/F3/F4/F5}
+\label{tbl:f1f3f4f5test}
+\end{table}
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: & F6 Temperature/F1 Social Lib/F2 ComLib. \\ 
+\hline Purpose: & Test pushing data from Arduino board to Social Service.  \\ 
+\hline Context: & End to end Test with Facebook App and simple app to retrieve data from Arduino board. \\ 
+\hline Precondition: & The two apps are installed and Arduino board is powered and paired. \\ 
+\hline
+Steps: & 1: Log in with Facebook app.\\ 
+  & 2: Start the sample app. \\ 
+  & 3: Press button on Arduino board to send temperature. \\ 
+
+  \hline
+  Expected result: & Temperature is posted on Facebook wall. \\ 
+  \hline
+Actual Result: &  result \\
+  \hline
+\end{tabular}
+\caption{Test F6/F1/F2}
+\label{tbl:f6f1f2test}
+\end{table}
+
