@@ -1,0 +1,31 @@
+PROJECT 10 Open Source Network Arduino Platform(oSNAP)
+
+
+SUMMARY STATUS REPORT
+Week 11
+
+
+1 Introduction
+
+
+2 Progress summary
+
+This week we decided on the approach for social library. We saw too many limitations with the broad concepts and uniting of various social networks. This lead us and the customer to pursue a way to make concepts as small as possible. Prototypes are on hold because hardware has not arrived.
+
+
+Open:
+
+Social Library
+Prototypes
+
+Closed:
+
+Social report planning
+
+
+4 Planned work for next period
+
+Implementation of social lib, prototypes
+
+5 Updated risks analysis
+
