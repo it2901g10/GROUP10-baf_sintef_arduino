@@ -1,0 +1,166 @@
+Participants: Everyone present everyone except Asbjorn who have notified he would be gone.
+
+
+Meeting started at 14.15
+
+Agenda
+Present how we have understood the task to the customer and get feedback on that.
+Get more information about what Mr. Babak wants us to do, and how it should be done.
+
+Additional Information
+Mr. Farshchian wants us to make a couple of simple prototypes, then a big one that will show that our API support more than one social media. This will include using two different social apps the Android phone, for example Facebook and Shindig.
+
+
+He also wants the API to support communication from the Arduino to Android, for example temp reading or you can push a button and poke a predefined person.
+
+We dont have to use the Open Social java classes, but we should look into the concepts of it and do something similar.
+Open Social concepts:
+1.  User
+2.  Group
+3.  Post
+4.  Stream; user stream and group stream.
+
+Would be nice if the communication library could support other ways of communication than just Bluetooth. There should also be a way to pair the Android app with the Arduino by using MAC address.
+
+
+Gui/Settings in the t-shirt app.
+
+
+To do for next meeting
+Think about how the WBS can be translated to stories, then to tasks for each sprint.
+
+To do for next meeting with the customer
+To do Monday:
+Talk with Simone about the shopping list, find out what is already available for us.
+Check out battery drain
+Notes from Henrik:
+Two simple prototype
+one more advanced prototype
+
+
+Intents library
+Class intents
+Stream(timeline)
+Group
+                
+GroupStream
+Post
+User                
+
+Request Intents
+Callbacks
+Documentation for intents in Android style
+
+Communication Library
+C Wrapper
+Find and connect module
+
+Two Social apps
+
+
+Look at battery drain
+
+near field communication?
+
+Marked integration into last years group project
+
+Notes from Bjornar
+Meeting started @ 14.15
+
+Everyone except Asbjorn present. (notified he would be away)
+
+Talk to the customer that we have had some problems understanding what he wants us to do, and that we want to 
+
+make sure that we have understood him correctly before we go from this meeting.
+
+-Johan and Emanuel explaining on the whiteboard
+ -Social apps, communicate with intents with our API then to the android/arduino app, the android/arduino app 
+
+  will communicate with bluetooth through our com-layer.
+ 
+ -What objects that we want to use, defined from the open social standard
+  -Up for discussion: how strictly we should follow the open social standard
+   -Follow the overall concepts that open social is using
+
+
+ -API layer will provide parsing from intents to intents.
+  -The API is a part of the android/arduino app
+  -Use the intent services that are already there, try to specialize the intents for our use
+
+
+ -Someone who made an app store last year, check into it, can upload any files to it. Student project.
+  -UBI home app
+ 
+ -Henrik is asking about how to make requests from for example t-shirt to the social app. 
+  -In the library you will have specific things you can ask about, the t-shirt can send intents, but if it    
+
+
+wants to use our intents, have for example osnap.* infront of it
+
+
+ -Look up how to register the app for showing up in menu when you want to share anything
+
+-Johan explaining about the extended the t-shirt prototype
+ -QR, bluetooth, supporting more than one social network
+ -Extra hw devices that we have thought about, vibration, sound, display, leds
+ -News feed to sound, settings page for the t-shirt app, for what should be doing what on the t-shirt
+  -Disable/enable modules, what goes where.
+ 
+ -How to go the other way?
+  -Temp sensor for example, post temp to facebook.
+  
+ -Think about if you can make the t-shirt app in a visual editor
+  -To custom make your own t-shirt, related to next phase, not priority (qued)
+
+
+ -Have to think about, make a list of specifics of what we want to do.
+  -The t-shirt app, would be cool with more than one thing. Make a couple of simple prototypes, and one big   
+
+
+   one.
+  -Point is to show that we can do more than one thing, proof it's not hard coded.
+
+
+-Anders talking about the bt
+ -How to connect to a specific bt device
+ -Every bt have a mac adress, can be send with the QR code.
+
+
+-Talk with Simone about the shopping list
+
+
+
+
+-Communication library
+-Documentation of the intents, how they work etc.
+ -Currently have two simple apps, one sending and one recieving.
+-Social intents library, t-shirt app, talk with group 11 about fall detection??
+ -Two social apps, social library, communication library, android apps for prototypes, and firmware for the   
+
+
+arduino, documentation for the android action intents, make available on the open source market.
+
+
+-Important to be under Apache license. End user contribution agreement.
+
+
+-Look into the market, we will have to get client, and how it works with QR codes etc.
+
+
+-Communication library, should it be just BT, or do we have to support other wireless communications?
+ -Currently it is transparent, should be possible to implement other kinds of wireless comms later.
+  -Wifi would be nice, for example hotspot, so the t-shirt can be internet available.
+  -Think about it, not critical
+ -NFC tags at the lab, so it would be possible to test it out.
+ 
+-Concepts
+ -User
+ -Post
+ -Stream (news feed/wall)
+ -Group activity streams
+ 
+ -Shindig, folder with open social concepts implemented as java classes
+
+
+-Some kind of management tool, to remove/update etc
+ -Customer want the meeting report agenda.
