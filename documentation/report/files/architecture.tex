@@ -307,19 +307,37 @@ and carried in the pocket of the person using the T-Shirt and is connected wirel
 
 	
 \subsection{Prototype 2: Temperature Sensor for Android}
-This prototype will primarily showcase the communication from Arduino to Android using our libraries.
-A temperature sensor will be connected to an Arduino board and then constantly send its output over bluetooth to a
-an Android application. Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
-prototype with an Android device connected wirelessly through bluetooth to the Arduino board.
+This prototype will primarily showcase the communication from Arduino to Android using our libraries. 
+Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
+prototype with an Android device connected wirelessly through bluetooth to the Arduino board. The 
+Arduino unit can read the ambient temperature and be able to send this info to an Android application,
+ either on demand or at a set interval that can be chosen through settings in the application. 
+In the planning stage of this prototype, a paperprototype (see figure~\ref{fig:prototype2-paper}) was showed to the
+customer. Due to some problems with getting the initial design to work properly, the GUI was revised(see
+figure~\ref{fig:prototype2-gui} ) to make it more user friendly and visually appealing.
 
-\begin{figure}
-	\begin{center}
+\begin{figure}[H]
+	\centering
 	\includegraphics[scale=0.35]{img/design-temperature}
-	\end{center}
 	\caption{Concept drawing of the temperature application setup.}
 	\label{fig:design-temperature}
 \end{figure}
 
+\begin{figure}[H]
+\centering 
+\includegraphics[width=1.0\textwidth]{img/prototype2-paper.png}
+\caption{Paperprototype for the temperature sensor.}
+\label{fig:prototype2-paper}
+\end{figure}
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.3\textwidth]{img/prototype2-gui.png}
+\caption{Final GUI design for the temperature prototype.}
+\label{fig:prototype2-gui}
+\end{figure}
+
+	
 \subsection{Prototype 3: Wearable Pictures}
 This prototype was first planned to be LED lights (Figure \ref{fig:design-ledmatrix}) showing what mood you had on MySpace. Red LED lights would be angry,
 green would be happy and so on. We discovered that MySpace had removed this feature from their pages, even if it was
@@ -335,7 +353,7 @@ component and this will promptly light the LEDs.
 	\begin{center}
 	\includegraphics[scale=0.35]{img/design-ledmatrix}
 	\end{center}
-	\caption{Concept drawing of the temperature application setup.}
+	\caption{Concept matrix of LED to show simple image.}
 	\label{fig:design-ledmatrix}
 \end{figure}
 
