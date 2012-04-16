@@ -141,14 +141,19 @@ was re-used, but some could not.
 
 
 \subsection{The Communication library}
-This library consists of a Java library and an Arduino firmware. Both implement the ComLib protocol.
-The Java library provides a set of classes that allow to easily connect to Arduino devices that run the Communication library
-Arduino firmware. The library also implements a mechanism to manage Arduino's firmware, allowing the device to support
-different hardware configurations. Wait, Really?
+This library consists of a Java library (implemented on Android) and an Arduino firmware (figure \ref{fig:comlib-diagram}). 
+Both implement the ComLib protocol. The Java library provides a set of classes that allow to easily connect to Arduino 
+devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
+services the remote device supports and any software download links associated with the remote device. A service might
+be a sensor, a lamp, display screen while download links are represented as an URI link. All this meta information is stored
+on in the firmware on the remote device as raw text using the JSON format. This metadata can also be stored an retrieved
+in a QR code or anything else that can store plain text.
 
-\todo{
-	a class diagram maybe?
-}
+\begin{figure}[h!]
+	\centering \includegraphics[scale=0.4]{img/comlib-diagram.png}
+	\caption{Diagram for the Communication Library design}
+	\label{fig:comlib-diagram}
+\end{figure}
 
 \subsubsection{The ComLib Protocol}
 The protocol is a basic set of rules that define how devices can communicate to the Arduino.
@@ -302,7 +307,8 @@ and carried in the pocket of the person using the T-Shirt and is connected wirel
 \subsection{Prototype 2: Temperature Sensor for Android}
 This prototype will primarily showcase the communication from Arduino to Android using our libraries.
 A temperature sensor will be connected to an Arduino board and then constantly send its output over bluetooth to a
-an Android application.
+an Android application. Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
+prototype with an Android device connected wirelessly through bluetooth to the Arduino board.
 
 \begin{figure}
 	\begin{center}
@@ -332,9 +338,8 @@ The Java code is again divided into packaged libraries as described below.
 \subsection{Java Code}
 \begin{itemize}
 	\item \textbf{no.ntnu.osnap.com}\newline
-		Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such as
-		Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication methods. The
-		user can easily add new communication types by extending an abstract class.
+		Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such 			as Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication 				methods. The user can easily add new communication types by extending an abstract class. The ComLib additionaly defines a standard of storing and retrieving metadata
+		of services and download URI links from the remote device using JSON.
 	\item \textbf{no.ntnu.osnap.com.testing}\newline
 		Test units and sample programs for the ComLib. These are simple test applications that are run on the Android to test if the ComLib is communication correctly using the specified
 		protocol.
