@@ -12,5 +12,8 @@ $(report) : $(tex) $(texs) $(imgs)
 	makeglossaries $(basename $<)
 	pdflatex $<
 
+once:
+	pdflatex report.tex
+
 clean :
 	rm $(report)
