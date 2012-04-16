@@ -311,14 +311,14 @@ prototype with an Android device connected wirelessly through bluetooth to the A
 
 \begin{figure}
 	\begin{center}
-	\includegraphics[scale=0.4]{img/design-temperature}
+	\includegraphics[scale=0.35]{img/design-temperature}
 	\end{center}
 	\caption{Concept drawing of the temperature application setup.}
 	\label{fig:design-temperature}
 \end{figure}
 
 \subsection{Prototype 3: Wearable Pictures}
-This prototype was first planned to be LED lights showing what mood you had on MySpace. Red LED lights would be angry,
+This prototype was first planned to be LED lights (Figure \ref{fig:design-ledmatrix}) showing what mood you had on MySpace. Red LED lights would be angry,
 green would be happy and so on. We discovered that MySpace had removed this feature from their pages, even if it was
 still supported by the API. It would be a fools errand to pursue something you could not test properly
 in a real world situation, so we changed the concept of this prototype. It ended up to be a sort of wearable fashion.
@@ -328,7 +328,15 @@ the bundled picture. For prototyping purposes the wearable product will feature 
 prototype program will map to certain pixels and then transmit over Bluetooth to the Arduino
 component and this will promptly light the LEDs.
 
-\section{Package structure}
+\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.35]{img/design-ledmatrix}
+	\end{center}
+	\caption{Concept drawing of the temperature application setup.}
+	\label{fig:design-ledmatrix}
+\end{figure}
+
+\section{Package Structure}
 The system can be divided into smaller sections. This section describes some of the structures
 we have divided the system into. The most obvious distinction is between the Java code runs
 on the Android platform and the C code which is executed by the Arduino platform.
