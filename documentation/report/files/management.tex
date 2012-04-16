@@ -141,7 +141,7 @@ the WBS (Work Breakdown Structure). In the context of ScrumDo and
 Scrum these low level work packages are called stories and are moved
 accordingly from "ToDo" over to "In progress"
 and eventually to "Done" areas.
-	
+
 \begin{figure}[h!]
 \centering \includegraphics{img/mgmt-scrumdo} \caption{A screen capture of the Scrum Board in ScrumDo \cite{link:scrumdo}}
 \label{fig:mgmt-scrumdo}
@@ -153,7 +153,7 @@ Various software tools were used for this project.
 These include:\newline
 \begin{itemize}
 	\item \textbf{IDE for Coding:} \newline
-	NetBeans and Eclipse for Java development. SublimeText amd Arduino for embedded C development.
+	NetBeans\cite{link:netbeans} and Eclipse\cite{link:eclipse} for Java development. SublimeText\cite{link:sublimetext}, and other plain text editors, and Arduino\cite{link:arduinodev} for embedded C development.
 
 	\item \textbf{Collabaration tools:} \newline
 	For our code repository we decided to use GIT\cite{link:git}. GIT is a fast, scalable, distributed revision control system 
@@ -161,22 +161,22 @@ These include:\newline
 	several team members had experience with GIT through other projects which was a significant factor for 
 	this choice.
 
-	We used Skype for instant message communication.
+	We used Skype\cite{link:skype} for instant message communication.
 
 	\item \textbf{Libraries and external software:} \newline
-	 Facebook Android SDK, Android SDK, RXTX
+	 Facebook Android SDK\cite{link:facebooksdk}, Android SDK\cite{link:androidsdk}, RXTX\cite{link:rxtx}.
 
 	\item \textbf{\LaTeX{} and Google Documents:} \newline
-	Used for producing documentation. Google Documents for realtime documentation collaboration.
+	Used for producing documentation. Google Documents\cite{link:googledocs} for realtime documentation collaboration.
 
 	\item \textbf{Google Drawing:} \newline
-	Google Drawing was used to generate the various figures and graphics used throughout the documentation.
+	Google Drawing\cite{link:googledocs} was used to generate the various figures and graphics used throughout the documentation.
 
 	\item \textbf{Google SketchUp:} \newline
-	Used to create the concept illustrations for the prototype ideas.
+	Used to create the concept illustrations for the prototype ideas.\cite{link:googlesketchup}
 
 	\item \textbf{Microsoft Visio:} \newline
-	Used to create various charts and diagrams throughout the documentation. 
+	Used to create various charts and diagrams throughout the documentation.\cite{link:visio}
 
 \end{itemize}
 
@@ -194,25 +194,23 @@ A table with weighted risks and relative mitigation and remedial actions follows
 
 \item \textbf{Dropouts}\newline
 The risk of people dropping the course or otherwise not being able to complete it as part
-of the group. This can be caused by sickness as well.
+of the group. This can be caused by illness as well.
 
 \item \textbf{Arduino hardware}\newline
 Our handed out Arduino equipment can fail, due to malfunctioning or wrong usage.
 There is also the possibility that some of the hardware can be lost while we work with it at home.
 
 \item \textbf{Deadlines}\newline
-Throughout the course there is multiple deadlines that must be met. Failure to meet
+Throughout the course there are multiple deadlines that must be met. Failure to meet
 these limits will have huge impacts on the grading and could possibly fail the group.
 
 \item \textbf{Choosing wrong frameworks}\newline
-We will necessarily have to build parts of our software around existing open source
-frameworks to limit effort required by the task. If at a later point we have severe limitations
-on our possibilities due to these frameworks the product could result poorer in features than
-we originally planned. The impact can be negligible if other solutions are found.
+We will have to build parts of our software around existing open source frameworks to limit effort required by the task. If at a later point we have severe limitations
+on our possibilities due to the chosen frameworks, the product could result in being not as feature complete as we'd originally planned The impact can be negligible if other solutions are found.
 
 \item \textbf{Design problems}\newline
-It could happen that the system design is late on schedule and delays other parts of the project
-including testing and documentation. Also during development features have to be constrained due to problems
+The system design could cause delays in other parts of the project
+including testing and documentation. Also during development, features have to be constrained due to problems
 or resource limitations. This could cause the final product to not satisfy the customer.
 If we can find work-arounds and compromises, then the problem will not have a big impact on the process.
 
@@ -233,23 +231,29 @@ for a lot of concepts.
 
 \textbf{Description} & \textbf{Likelihood} & \textbf{Impact} & \textbf{Risk} & \textbf{Mitigation} & \textbf{Remedial Action}\\ \hline
 
-Evolving requirements	& 7 & 8 & 8 & Specify a set of requirements that both the customer and the devolopers agree on.
-				& Meetings with the customer to agree on revisions in the requirements \\ \hline
+Evolving requirements	& 7 & 8 & 8
+			& Specify a set of requirements that both the customer and the devolopers agree on.
+			& Meetings with the customer to agree on revisions in the requirements \\ \hline
 
-Missing hardware	& 7 & 6 & 7 & Have control over who has what and keep an inventory list.
-				& Get new hardware if possible. We also have multiple backup Arduino modules ready. \\ \hline
+Missing hardware	& 7 & 6 & 7
+			& Have control over who has what and keep an inventory list.
+			& Get new hardware if possible. We also have multiple backup Arduino modules ready. \\ \hline
 
-API Trouble		& 6 & 5 & 6 & Limit the scope to documented open source APIs.
-				& Investigate alternative solutions. Limit impact on productivity. \\ \hline
+API Trouble		& 6 & 5 & 6
+			& Limit the scope to documented open source APIs.
+			& Investigate alternative solutions. Limit impact on productivity. \\ \hline
 
-Illness 		& 5 & 4 & 5 & Keep contagious sicknesses at home.
-				& If the sickness is prolonged work tasks must be re-arranged appropriately. \\ \hline
+Low product quality	& 4 & 7 & 6
+			& Thorough test plans and QA. Avoid late features implementation.
+			&  Workaround problems at critical junctions in the process.\\ \hline
+			
+Illness 		& 5 & 4 & 5
+			& Keep contagious illnesses at home.
+			& If the illnesses is prolonged work tasks must be re-arranged appropriately. \\ \hline
 
-Low product quality	& 3 & 6 & 5 & Thorough test plans and QA. Avoid late features implementation.
-				&  Workaround problems at critical junctions in the process.\\ \hline
-
-Arduino Malfun.		& 2 & 3 & 3 & Treat hardware properly. Do not eat or drink nearby.
-				&  Get new hardware if possible. Have backup modules ready. \\ \hline
+Arduino Malfun.		& 2 & 3 & 3
+			& Treat hardware properly. Do not eat or drink nearby.
+			& Get new hardware if possible. Have backup modules ready. \\ \hline
 
 %Wireless Connect.		& Low & High & Med & Get it working & Switch to cable connection \\ \hline
 
