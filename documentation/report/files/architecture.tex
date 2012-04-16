@@ -8,12 +8,13 @@ and documents the various approaches taken into consideration.
 
 The system consists of:
 \begin{description}
-	\item[Libraries:] Social library, Communication Library
+	\item[Libraries:] Social library, Communication library
 	\item[Applications:] T-Shirt application, other applications
 	\item[Prototypes:] T-Shirt prototype, other prototypes
 \end{description}
 
-The figure \ref{fig:design-toplevel} illustrates the overall system architecture, demonstration 3 Applications that use only the communication library, only the social service library, or both.
+The figure \ref{fig:design-toplevel} illustrates the overall system architecture, demonstration 3 Applications that use only the communication library, only the social service library, or both. Note that in the figure there is no connecion between all the applications and the oSNAP SocialLib. This is intentional because some of the prototypes we will develop will only
+use parts of the entire oSNAP library. This is to show that our library is modular and you can use only parts of it and it still works.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.35]{img/design-toplevel.png}
@@ -124,18 +125,19 @@ social 'multi-network' clients. It would also provide abstractions for many comm
 found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
-The difference in the new approach is that while the Social library will still provide
-abstractions for common concepts found in social networks, but rather than handling
-the connection to the social networks, it will focus on estabilishing a communication interface (using Android's Intent mechanism and inter-process communication) between Social applications and the Android-Arduino applications to allow the requesting and forwarding of social data.
-
-This revised approach was made necessary after the first meetings with the customer as we misunderstood the project scope, 
-and went on to solve a very ambitious and unneeded task. The new design also accomodated very well the overall system design. 
-Some of the code and documentation we produced for the previous design was re-used.
+The big difference in the new approach is that the Social library won't provide any means
+of connecting to social networks. Instead it will focus on estabilishing a communication interface,
+using Android's Intent mechanism and inter-process communication, between Social applications and
+the Android-Arduino applications to allow the requesting and forwarding of social data.
+It will still provide abstractions for common concepts found in social networks.
+This revised approach was made necessary after the first meetings with the customer as we misunderstood
+the project scope, and went on to solve a very ambitious and unneeded task. The new design also accomodated
+very well the overall system design. Some of the code and documentation we produced for the previous design
+was re-used, but some could not.
 
 \todo{
 	a class diagram maybe?
 }
-
 
 
 \subsection{The Communication library}
@@ -178,7 +180,7 @@ information in the "Content" field. An overview of the current instructions in t
 		Reset & 0xFF & N/A & N/A & Resets the arduino \\
 		\hline
 	\end{tabular}
-	\caption{Overview of the protocol's instructions}
+	\caption{Overview of protocol's instructions}
 	\label{tbl:opcodes}
 \end{table}
 

@@ -1,36 +1,29 @@
 \section{Problem Description}
-Social networking sites such as Facebook and Twitter have normally been accessed  via a web browser. Lately mobile versions have become popular, and allow access to context data such as location of users. We foresee a much bigger popularity of mobile and pervasive interfaces to social media in the coming years. 
+Social networking sites such as Facebook and Twitter have normally been accessed  via a web browser.
+Lately mobile versions have become popular, and allow access to context data such as location of
+users. We foresee a much bigger popularity of mobile and pervasive interfaces to social media in
+the coming years.
 
-Arduino\cite{link:arduino} is a platform that allows software to be written in order to construct hardware 
-prototypes. In this task the students will develop an Arduino-based interface to Facebook. The information from 
-Facebook will be made available on Arduino displays and the user can interact with Facebook through Arduino sensors and actuators.
+Arduino\cite{link:arduino} is a platform that allows software to be written in order to construct
+hardware prototypes. In this task the students will develop an Arduino-based interface to Facebook.
+The information from Facebook will be made available on Arduino displays and the user can interact
+with Facebook through Arduino sensors and actuators.
 
 In case Facebook data access shows to be difficult, the students will use Shindig\cite{link:shinding} which 
 is an open source implementation of OpenSocial APIs. The service specification is developed in the European project 
 SOCIETIES in collaboration with European partners. The students are however expected to innovate and come up 
 with new concepts, user interfaces, and service organization
 
-\subsection{OpenSocial and Shinding}
-Through this document the term {\em OpenSocial}\cite{link:opensocial} will be repitively used. OpenSocial is a software develepoment API that provides
-one interface to multiple social networks like Orkut, MySpace and LinkedIn. Note that the popular social network Facebook does not use
-or support OpenSocial and uses it's own custom properitory API. OpenSocial also provides some abstract models that are common
-and shared between different social networks like the concept of a Person, Friend, Group or a Newsfeed. Another thing that
-made OpenSocial attractive to use in our project is that it (as it's name implies) is completely open source.
-
-Shindig is an OpenSocial container that provides services to make development easier using developing apps for OpenSocial. There are some pitfalls
-for using OpenSocial however. One of these is that it does not support Facebook. In addition it also does not provide all the services we might require
-for our project (like the Wall concept or Images). The OpenSocial Java binding seems in addition rather poorly updated, out of date and not properly
-maintained by the developers.
-
 \section{The context}
 In the past few years, social networks have become more and more popular, continuously increasing their userbase.
-The project task was to design and develop an open source Android\cite{link:android} framework for allowing quick and flexible
-development of wireless Tangible User Interfaces (T.U.I.) for social networks using Arduino.
+The project task was to design and develop an open source Android\cite{link:android} framework for allowing quick
+and flexible development of wireless Tangible User Interfaces (T.U.I.) for social networks using Arduino.
 The product has served both as a proof-of-concept and as a starting point for future software projects.
 
 \section{The customer}
 Our customer was SINTEF, represented by Mr. Babak A. Farshchian.
-Headquartered in Trondheim, Norway, SINTEF is the largest independent research organisation in Scandinavia.
+
+Headquartered in Trondheim, Norway, SINTEF is the largest independent research organisation in Scandinavia \cite{link:sintef}.
 Every year, SINTEF supports research and development for approximate 2,000 Norwegian and overseas
 companies via its research and development activity.
 
@@ -73,3 +66,19 @@ Third year Informatics student at NTNU. Experince with programming in Java, C an
 Previously worked with electronics and have basic knowledge about AVR microcontrollers through
 own projects.
 \end{itemize}
+
+\section{Definitions}
+
+Here we introduce a list of the terms used in this document with a short explanation of their meaning.
+
+\begin{description}
+\item[Product] The projects final libraries. 
+\item[Prototype] Refers to one or more of the prototypes we make to showcase the libraries.
+\item[Facebook] Facebook is the biggest social network. It is also the network our libraries primarily focus on.
+\item[OpenSocial] OpenSocial is an open source standard API. It's aim is to provide a common runtime environment for web applications within different social networks.
+It is supported by Orkut, MySpace, LinkedIn and many more. Facebook and Twitter does not support
+OpenSocial and they both have their own custom propietary APIs.
+\item[Apache] A software foundation focused on open source and community driven software.
+\item[Shindig] Shindig is Apache's implementation of the OpenSocial standard.
+\item[Arduino] Arduino is a tool for making computers that can sense and control more of the physical world than your desktop computer. It's an open-source physical computing platform based on a simple microcontroller board, and a development environment for writing software for the board. \cite{link:arduino}
+\end{description}
