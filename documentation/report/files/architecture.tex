@@ -96,7 +96,7 @@ This happens in the background, without user interaction.
 
 
 
-\subsubsection{Sequence Diagram}
+\subsubsection{Sequence diagram}
 This sequence diagram show in figure \ref{fig:design-sequence} shows a sample communication between the Social and T-Shirt applications.
 The T-Shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
 
@@ -110,7 +110,7 @@ The T-Shirt application requests the list of friends from Facebook whose age is 
 
 \section{Libraries}
 
-\subsection{The Social library}
+\subsection{The social library}
 This library provides abstractions for many common concepts found in different
 social networks like Facebook or OpenSocial. This is done so that the developers have the possibility
 to use these concepts seamlessly between any network and extend them to possibily support others.
@@ -139,7 +139,7 @@ was re-used, but some could not.
 }
 
 
-\subsection{The Communication library}
+\subsection{The communication library}
 This library consists of a Java library (implemented on Android) and an Arduino firmware (figure \ref{fig:comlib-diagram}). 
 Both implement the ComLib protocol. The Java library provides a set of classes that allow to easily connect to Arduino 
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
@@ -154,7 +154,7 @@ in a QR code or anything else that can store plain text.
 	\label{fig:comlib-diagram}
 \end{figure}
 
-\subsubsection{The ComLib Protocol}
+\subsubsection{The ComLib protocol}
 The protocol is a basic set of rules that define how devices can communicate to the Arduino.
 The ComLib protocol itself was designed by us, and has seen much changes in terms of which instructions were to be included,
 and how the communication was to be executed. With the current design the Arduino cannot initiate the communication,
@@ -328,13 +328,13 @@ the bundled picture. For prototyping purposes the wearable product will feature 
 prototype program will map to certain pixels and then transmit over Bluetooth to the Arduino
 component and this will promptly light the LEDs.
 
-\section{Package Structure}
+\section{Package structure}
 The system can be divided into smaller sections. This section describes some of the structures
 we have divided the system into. The most obvious distinction is between the Java code runs
 on the Android platform and the C code which is executed by the Arduino platform.
 The Java code is again divided into packaged libraries as described below.
 
-\subsection{Java Code}
+\subsection{Java code}
 \begin{itemize}
 	\item \textbf{no.ntnu.osnap.com}\newline
 		Communication Library contains every class to establish a connection with a remote device using a general
