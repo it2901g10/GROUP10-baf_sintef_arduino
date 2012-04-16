@@ -5,18 +5,17 @@ software development, but they all suggest that testing has to be performed cont
 during the development process. This is of particular importance to our process since
 it follows an iterative approach. Testing should be planned in the early stages of each
 iteration for each testable unit that is going to be implemented and performed as soon as
-the iteration is complete. As the system evolves so does the testing. It should be more comprehensive and cover each module and the
-system itself as a whole.
+it is complete. As the system evolves so does the testing. It should be more comprehensive
+and cover each module and the system itself as a whole.
 
 \section{Customer feedback}
 Customer feedback was an important part of the testing approach for our project.
 Working prototypes and/or documentation were produced for each meeting with the customer
 in order to test the features implemented in the prototypes, receive a general acceptance
 on our iteration goals and plan the next iteration. Receiving a constant feedback from the
-user was very important as especially the 'social' part of the project didn't really have a
-specific set of requirements from the beginning, so acquiring feedback from the customer allowed
-us to understand the most common use case scenarios and from those obtain a set of requirements used
-to design the system.
+user was very important as the project didn't really have a specific set of requirements from
+the beginning, so acquiring feedback from the customer allowed us to understand the most common
+use case scenarios and from those obtain a set of requirements used to design the system.
 
 \section{Unit testing}
 This involves testing small portions, like methods and functions, of the code, making sure they work 
@@ -25,55 +24,60 @@ code to make sure that it still works as expected, this means that unit tests ha
 large portions of the API.
 
 \section{User interface testing}
-For the prototypes we made some applications that will run on an Android phone. To make sure our 
+To run the prototypes we made some applications that will run on an Android phone. To make sure our 
 prototypes are understandable and easy to use, we have used group members that have not been 
 involved in the process of making the UI, as test candidates. It might not be the ideal way of testing 
 an UI, but in the given timeframe of this project it was the easiest and fastest way of doing it.
 
 \section{Integration testing}
-After each module of the API has been Unit tested, they will be put together to form bigger components 
+After each module has been unit tested, they will be put together to form bigger components 
 of the working system. This is to make sure that the smaller modules will work correctly when placed 
-into bigger components. 
-
-In our case this will be to run tests on ComLib and SocialLib making sure they work individually, 
-before they are tested together.
+into bigger components. In our case this will be to run tests on the Communication and Social libraries
+making sure they work individually, before they are tested together.
 
 \section{System testing}
-This involves butting the components from integration testing together to form a complete system that 
-can be tested. Preferably each module will be added incrementally, to easier spot if any modules produce errors.
+This involves putting the components from integration testing together to form a complete system that 
+can be tested. Preferably each module will be added incrementally, to easily spot if any modules produce errors.
 
 \section{Functional requirement testing}
-Since the assignment given is a combination of "Proof of concept" and research project, the test are made in mind to support a run of the system and are not made to check for edge cases and more specific use.
+Since the project is a combination of proof-of-concept and research project, tests are made
+in mind to support a run of the system and are not made to check for edge
+cases and more specific use.
 
 The unit tests is made to see if we have fulfilled the functional requirements from packages F1-F7.
 
 \section{Testing order}
 Since some of the packages are connected, we need to test them in order.
 
-Testing of hardware packages F5-F7 involves checking added components (sound, light, vibration, etc) and confirm that they are functional. Software that is connected to hardware (F3, F4) is tested with the relevant packages so we have shown a proof of concept.
+Testing of hardware packages F5-F7 involves checking added components (sound, light, vibration, etc)
+and confirm that they are functional. Software that is connected to hardware (F3, F4) is tested
+with the relevant packages so we have shown a proof of concept.
 
-Packages SocialLib F1 is tested together with F3 and F4 as the social protocol between the applications. Package ComLib F2 is a part of all test that includes a wireless connection from cell phone to Arduino board.
+Packages SocialLib F1 is tested together with F3 and F4 as the social protocol between the applications.
+Package ComLib F2 is a part of all test that includes a wireless connection from cell phone to Arduino board.
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: & F5 T-shirt Prototype. \\ 
-\hline Purpose: & Test that all components connected to Lillipad Board works. \\ 
-\hline Context: & The t-shirt has all the components sewed together. \\ 
+\hline Test ID: & F5 T-shirt prototype. \\ 
+\hline Purpose: & Test that all components connected to Lilypad board work. \\ 
+\hline Context: & The t-shirt has all the components sewed on. \\ 
 \hline Precondition: & The Arduino is connected to PC with USB, all components are connected. \\ 
 \hline
-Steps: & 1: Power on Arduino board.\\ 
+Steps:
+  & 1: Power on Arduino board.\\ 
   & 2: Send signal to vibrator. \\ 
+  & 3: Send text to LCD display. \\
+  & 4: Send sound to speaker.\\
+\hline
+Expected result:
+  & 1: LED lights up.\\ 
+  & 2: Vibrator works. \\ 
   & 3: Correct text is displayed on LCD. \\ 
-  & 4: Send text to LCD display. \\
-  & 5: Send sound to speaker.\\
-  \hline
-  Expected result: & 1: LED lights up.\\ 
-    & 2: Vibrator works. \\ 
-    & 3: Correct text is displayed on LCD. \\ 
-    & 4: Correct sound coming from speaker. \\
-  \hline
-Actual Result: &  result \\
-  \hline
+  & 4: Correct sound coming from speaker. \\
+\hline
+Actual Result:
+  & result \\
+\hline
 \end{tabular}
 \caption{Test F5}
 \label{tbl:f5test}
@@ -85,13 +89,16 @@ Actual Result: &  result \\
 \hline Purpose: & Test temperature prototype. \\ 
 \hline Precondition: & The Arduino is connected to PC with USB. \\ 
 \hline
-Steps: & 1: Power on Arduino board.\\ 
+Steps:
+  & 1: Power on Arduino board.\\ 
   & 2: Press button. \\ 
-  \hline
-  Expected result: & Temperature is displayed.\\ 
-  \hline
-Actual Result: & received bacon \\
-  \hline
+\hline
+Expected result:
+  & Temperature is displayed on Arduino's LCD.\\ 
+\hline
+Actual Result:
+  & result \\
+\hline
 \end{tabular}
 \caption{Test F6}
 \label{tbl:f6test}
@@ -99,17 +106,20 @@ Actual Result: & received bacon \\
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: & F7 LED Matrix. \\ 
-\hline Purpose: & Test LED Matrix prototype. \\ 
+\hline Test ID: & F7 LED matrix. \\ 
+\hline Purpose: & Test LED matrix prototype. \\ 
 \hline Precondition: & The Arduino is connected to PC with USB. \\ 
 \hline
-Steps: & 1: Power on Arduino board.\\ 
+Steps:
+  & 1: Power on Arduino board.\\ 
   & 2: Send sample data to board \\ 
-  \hline
-  Expected result: & Correct LED light up according to sample data.\\ 
-  \hline
-Actual Result: & result \\
-  \hline
+\hline
+Expected result:
+  & Correct LED light up according to sample data.\\ 
+\hline
+Actual Result:
+  & result \\
+\hline
 \end{tabular}
 \caption{Test F7}
 \label{tbl:f7test}
@@ -122,16 +132,26 @@ Actual Result: & result \\
 \hline Context: & Cell phone app has a simple "Send data" button. \\ 
 \hline Precondition: & Cell phone is on and Arduino board is powered. \\ 
 \hline
-Steps: & 1: Pair cell phone with Arduino board using Android OS settings.\\ 
-  & 2: Start application on cell phone. \\ 
-  & 3: Initiate connection to Arduino board. \\ 
-  & 4: Press send data to transfer a sample to Arduino board.\\
-  \hline
-  Expected result: & 1: Data is pushed to from cell phone to Arduino board.\\ 
-    & 2: Correct LED lights up. \\ 
-  \hline
+Steps:
+  & 1: Pair cell phone with Arduino board using Android OS.\\ 
+  & 2: Start LED application on cell phone. \\ 
+  & 3: Press 'Choose a picture' button. \\
+  & 4: Browse gallery and select a picture. \\
+  & 5: Press 'Send to LED matrix' button. \\
+\hline
+Alternative steps:
+  & 1: Pair cell phone with Arduino board using Android OS.\\ 
+  & 2: Start LED application on cell phone. \\ 
+  & 3: Press 'Take a picture' button. \\
+  & 4: User takes a picture with the mobile phone. \\
+  & 5: Press 'Send to LED matrix' button. \\
+\hline
+Expected result:
+  & 1: Data is sent to from cell phone to Arduino board.\\ 
+  & 2: Correct LED lights up. \\ 
+\hline
 Actual Result: &  result \\
-  \hline
+\hline
 \end{tabular}
 \caption{Test F7/F2}
 \label{tbl:f7f2test}
@@ -139,23 +159,27 @@ Actual Result: &  result \\
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: & F1 Social Lib/F3 Facebook App/F4 T-shirt App/F5 T-shirt prototype. \\ 
-\hline Purpose: & Test social lib as a library to send social messages between app and push them to T-shirt.  \\ 
+\hline Test ID: & F1 Social Lib./F2 Comm. Lib./F3 Facebook App/F4 T-shirt App/F5 T-shirt prototype. \\ 
+\hline Purpose: & Test both the libraries to send social messages between app and push them to T-shirt.  \\ 
 \hline Context: & End to end Test from a social service to Arduino board. \\ 
 \hline Precondition: & The two applications are installed and the T-shirt is on and paired with cell phone. \\ 
 \hline
-Steps: & 1: Start Facebook app.\\ 
-  & 2: Log in \\ 
+Steps:
+  & 1: Start Facebook application.\\ 
+  & 2: Press 'Log in' button. \\ 
   & 3: Start t-shirt app. \\ 
-  & 4: Set up rules to define what to send to t-shirt. \\
-  & 5: Connect to t-shirt. \\
+  & 4: Select a social network from a list of available social services. \\
+  & 5: Set up rules to define the behavior of the tshirt. \\
   & 6: Return to cell phone desktop. \\
   & 7: Send a sample Facebook message on PC. \\
-  \hline
-  Expected result: & Depending on set rule, the Facebook message should be forwarded from the Facebook App, to the t-shirt app and pushed to the t-shirt and enable the correct LCD/LED/Vibrator/Speaker. \\ 
-  \hline
-Actual Result: &  result \\
-  \hline
+\hline
+Expected result:
+   & Depending on the rules that have been set, the correct text is displayed,
+   or the correct LED lights up.. and so on.\\ 
+\hline
+Actual Result:
+  &  result \\
+\hline
 \end{tabular}
 \caption{Test F1/F3/F4/F5}
 \label{tbl:f1f3f4f5test}
@@ -164,19 +188,23 @@ Actual Result: &  result \\
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
 \hline Test ID: & F6 Temperature/F1 Social Lib/F2 ComLib. \\ 
-\hline Purpose: & Test pushing data from Arduino board to Social Service.  \\ 
-\hline Context: & End to end Test with Facebook App and simple app to retrieve data from Arduino board. \\ 
+\hline Purpose: & Test pushing data from Arduino board to a social network.  \\ 
+\hline Context: & End to end Test with Facebook application and simple app to retrieve data from Arduino board. \\ 
 \hline Precondition: & The two apps are installed and Arduino board is powered and paired. \\ 
 \hline
-Steps: & 1: Log in with Facebook app.\\ 
-  & 2: Start the sample app. \\ 
-  & 3: Press button on Arduino board to send temperature. \\ 
-
-  \hline
-  Expected result: & Temperature is posted on Facebook wall. \\ 
-  \hline
-Actual Result: &  result \\
-  \hline
+Steps:
+  & 1: Start Facebook application. \\
+  & 2: Prestt 'Log in' button\\ 
+  & 3: Start prototype's application. \\ 
+  & 4: Press the 'On' button. \\
+  & 5: Press button on the Arduino board to send temperature. \\ 
+\hline
+Expected result:
+  & Temperature is posted on Facebook wall. \\ 
+\hline
+Actual Result:
+  & result \\
+\hline
 \end{tabular}
 \caption{Test F6/F1/F2}
 \label{tbl:f6f1f2test}

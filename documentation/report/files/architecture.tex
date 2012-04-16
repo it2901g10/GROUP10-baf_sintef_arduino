@@ -51,8 +51,7 @@ the social application (which acts as a Facebook client) to the T-Shirt applicat
 which is merely capable of receiving. Also, both are implemented as Android applications.
 
 
-
-The figure \ref{fig:design-resp} represents the communication between the applications.
+The figure \ref{fig:design-resp} illustrates the communication between the applications.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.35]{img/design-resp.png}
@@ -338,39 +337,23 @@ The Java code is again divided into packaged libraries as described below.
 \subsection{Java Code}
 \begin{itemize}
 	\item \textbf{no.ntnu.osnap.com}\newline
-		Communication Library contains every class to establish a connection with a remote device using a general protocol interface. The actual details of the communication such 			as Bluetooth, cable, WiFi, stream-based or sockets are hidden away from the user. This is to provide a simple and generic interface to all supported communication 				methods. The user can easily add new communication types by extending an abstract class. The ComLib additionaly defines a standard of storing and retrieving metadata
-		of services and download URI links from the remote device using JSON.
+		Communication Library contains every class to establish a connection with a remote device using a general
+		protocol interface. The actual details of the communication such as Bluetooth, cable, WiFi, stream-based or
+		sockets are hidden away from the user. This is to provide a simple and generic interface to all supported
+		communication methods. The user can easily add new communication types by extending an abstract class.
+		The ComLib additionaly defines a standard of storing and retrieving metadata of services and download URI
+		links from the remote device using JSON.
 	\item \textbf{no.ntnu.osnap.com.testing}\newline
-		Test units and sample programs for the ComLib. These are simple test applications that are run on the Android to test if the ComLib is communication correctly using the specified
+		Test units and sample programs for the ComLib. These are simple test applications that are run on
+		the Android to test if the ComLib is communication correctly using the specified
 		protocol.
 	\item \textbf{no.ntnu.osnap.social}\newline
-		Social Library provides an easy to use interface between social networks such as Facebook, Twitter and Myspace and any application or service running on the Android platform.
-		The SocialLib also provides some general data models such as Person, Group or Post which are concepts that are similar between any social network. 
+		Social Library provides an easy to use interface between social services and applications/services
+		running on the Android platform. The SocialLib also provides some general data models such as Person,
+		Group or Message for concepts commonly used in most social networks. 
 	\item \textbf{no.ntnu.osnap.social.testing}  \newline
 		Test units and sample programs for the SocialLib.
 \end{itemize}
 
 \subsection{Arduino C code}
 C source code for the Arduino firmware supporting the ComLib protocol.
-
-
-\section{Use cases}
-\todo{
-	review.
-}
-Use Case:
-We have two actors we are working with. One is the developer creating the application using our framework.
-The other one is the end user with the final product. We are not directly working with the end user as an actor,
-but we still want to make our framework so it is simple for developers to have a product with an easy connection to the arduino board.
-
-Our focus on the actor developer is centered around the software he creates. We do not know, and we don't need to
-know what product he is making. We will work on two parts the developers can implement in their software; it will be the setup and the transfer protocol to arduino and Intents to send and recive updates from social services.
-
-For the end user, we want the setup to connect his phone to the developer to be as easy as possible. The focus will be on
-simplified connection to arduino board, and easy connection to social services from application.
-
-\begin{figure}[hb!]
-\centering \includegraphics[scale=0.40]{img/design-libusecase.png}
-\caption{Library use case}
-\label{fig:design-libusecase}
-\end{figure}
