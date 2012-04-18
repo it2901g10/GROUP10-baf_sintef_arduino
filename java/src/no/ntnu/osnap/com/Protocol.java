@@ -22,11 +22,24 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * This class defines a communication standard with a remote device. The actual
+ * communication method is defined in the subclass that extends the Protocol class.
+ * For example a BluetoothConnection sends data through bluetooth sockets but this
+ * is transparent to the user because communication is done through the Protocol 
+ * standard. This class can be extended to support new communication methods like
+ * InfraRed, NFC or WiFi.
+ */
 public abstract class Protocol extends Thread {
 	/**
 	 * The version number of this ComLib release
 	 */
 	public final static String LIBRARY_VERSION = "1.2.0";
+	
+	/**
+	 * Private mutex flag for atomic methods
+	 */
+	private volatile boolean locked = false;
 	
 	/**
 	 * The unique metadata package for this connection
@@ -41,10 +54,16 @@ public abstract class Protocol extends Thread {
 
 	private boolean running;
     
+	/**
+	 * Number of miliseconds to wait for a response before throwing a TimeoutException
+	 */
 	protected static final int TIMEOUT = 2000;
 	protected static final int MAX_CONTENT_SIZE = 250;
 
-	//Package private enumeration
+	/**
+	 * Package private enumeration for all Commands supported by the Protocol standard
+	 *
+	 */
     enum OpCode {
     	PING,			//0
     	TEXT,			//1
@@ -81,6 +100,9 @@ public abstract class Protocol extends Thread {
 	
 	private OpCode tempAckProcessor;
 
+	/**
+	 * Default constructor called by sub-classes
+	 */
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
@@ -89,6 +111,11 @@ public abstract class Protocol extends Thread {
 		running = true;
     }
 	
+    /**
+     * Retrieves the ConnectionMetadata associated with the remote device. This
+     * is normally stored internally on the remote device. Implementation of this 
+     * method should be defined by the sub-class
+     */
     public abstract ConnectionMetadata getConnectionData();
         
     /**
@@ -178,6 +205,12 @@ public abstract class Protocol extends Thread {
 		}
 	}
 	
+	/**
+	 * Sends a ping to the remote device and returns when it is finished. This
+	 * method is blocking.
+	 * @throws TimeoutException if the remote device used too long time to respond 
+	 * 							(defined in TIMEOUT)
+	 */
     public final void ping() throws TimeoutException {
         lock();
         
@@ -207,10 +240,23 @@ public abstract class Protocol extends Thread {
         ackProcessingComplete();
     }
     
+    /**
+     * Same as calling print(text, false)
+     * @see public final void print(String text, boolean blocking) throws TimeoutException
+     */
 	public final void print(String text) throws TimeoutException{
 		print(text, false);
 	}
 	
+    /**
+     * Sends a String to the remote device. How the String is handled or what is done
+     * with the String is application defined by the remote device. The usual thing
+     * is to print the text on a display.
+     * @param text Which String to send to the remote device
+     * @param blocking TRUE if the method should block until a response or timeout happens.
+     * 				   FALSE if the method should return immediately and send the String asynchronously
+     * @throws TimeoutException if the remote device used too long time to receive the String
+     */
 	public final void print(String text, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OpCode.TEXT, (byte)0, text.getBytes());
@@ -248,6 +294,16 @@ public abstract class Protocol extends Thread {
 		}
 	}
 
+	/**
+	 * Requests the value of the specified sensor on the remote device. This method is blocking
+	 * until a Timeout happens. What kind of Sensor the remote device supports and how they are
+	 * implemented (and what integer value each sensor represents) is defined on the remote device
+	 * firmware.
+	 * @param sensor which pin to get the value from
+	 * @return the value of the specified sensor
+	 * @throws TimeoutException if the remote device used too long time to respond
+	 * @see The ConnectionMetadata class to retrieve services such as sensor types the remote device supports
+	 */
     public final int sensor(int sensor) throws TimeoutException {
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OpCode.SENSOR, (byte)sensor, new byte[1]);
@@ -284,18 +340,33 @@ public abstract class Protocol extends Thread {
         return sensorValue;
     }
 
-    public short toUnsigned(byte value) {
+    /**
+     * Helper function to convert a signed byte to an unsigned byte (represented using a signed short in Java)
+     */
+    private short toUnsigned(byte value) {
         if (value < 0) {
             return (short) ((short) value & (short) 0xFF);
         }
         return (short) value;
     }
 
-    public final void data(int pin, byte[] data) throws TimeoutException {
-		data(pin, data, false);
+    /**
+     * Same as data(data, false)
+     * @see public final void data(int pin, byte[] data) throws TimeoutException
+     */
+    public final void data(byte[] data) throws TimeoutException {
+		data(data, false);
     }
 	
-	public final void data(int pin, byte[] data, boolean blocking) throws TimeoutException{
+    /**
+     * Sends raw data expressed as a byte array to the remote device to the specified pint
+     * @param pin
+     * @param data array of bytes to send
+     * @param blocking determines if method should wait until a Timeout happens or should return
+     * immediately and send data asynchronously.
+     * @throws TimeoutException
+     */
+	public final void data(byte[] data, boolean blocking) throws TimeoutException{
 		ArrayList<ProtocolInstruction> newInstructions = new ArrayList<ProtocolInstruction>();
 		
 		//ProtocolInstruction tempInstruction;
@@ -369,6 +440,13 @@ public abstract class Protocol extends Thread {
 		}
 	}
 
+	/**
+	 * Requests the value of the specified pin on the remote device. This method is blocking
+	 * until a Timeout happens.
+	 * @param sensor which pin to get the value from
+	 * @return the value of the specified pin
+	 * @throws TimeoutException if the remote device used too long time to respond
+	 */
     public final boolean read(int pin) throws TimeoutException {
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OpCode.PIN_R, (byte)pin, new byte[1]);
@@ -402,10 +480,21 @@ public abstract class Protocol extends Thread {
         return content[0] > 0 ? true : false;
     }
 
+    /**
+     * Same as write(pin, value, false)
+     * @see public final void write(int pin, boolean value) throws TimeoutException
+     */
     public final void write(int pin, boolean value) throws TimeoutException {
 		write(pin, value, false);
     }
 	
+    /**
+     * Set the specified pin on the remote device to HIGH (true) or LOW (false)
+     * @param pin which pin to change
+     * @param value true if the pin is to be set HIGH or false if it is LOW
+     * @param blocking determines if this method should wait until success or Timeout happens
+     * @throws TimeoutException if the remote device used too long to respond
+     */
 	public final void write(int pin, boolean value, boolean blocking) throws TimeoutException{
 		ProtocolInstruction newInstruction =
 				new ProtocolInstruction(OpCode.PIN_W, (byte)pin, new byte[] {value ? (byte)1 : (byte)0});
@@ -439,8 +528,10 @@ public abstract class Protocol extends Thread {
 		}
 	}
 	
-    private volatile boolean locked = false;
-
+    /**
+     * Internal mutex lock to prevent multiple threads from sending or reading data
+     * through the protocol at the same time.
+     */
     private synchronized void lock() {
         while (locked) {
             try {
@@ -466,6 +557,9 @@ public abstract class Protocol extends Thread {
 		}
     }
 
+    /**
+     * Releases a previously Locked protocol
+     */
     private synchronized void release() {
         if (!locked) {
             throw new IllegalStateException("Already released");
@@ -493,6 +587,11 @@ public abstract class Protocol extends Thread {
         processingAck = false;
     }
     
+    /**
+     * Called by sub-classes whenever they receive new data. The data is then processed
+     * internally as defined by the protocol standard.
+     * @param data a single byte received from the remote device
+     */
     protected final void byteReceived(byte data) {
         if (currentCommand.byteReceived(data)) {
         	
@@ -527,14 +626,30 @@ public abstract class Protocol extends Thread {
         }
     }
 
+    /**
+     * Same as byteReceived except that it processes multiple bytes
+     * @param data array of bytes received from the remote device
+     */
     protected final void bytesReceived(byte[] data) {
         for (byte item : data) {
             byteReceived(item);
         }
     }
 
+    /**
+     * Sends data to the remote device. The specifics of this method is implemented
+     * by the subclass that inherits Protocol (could be through a Socket or a 
+     * ByteStream for example)
+     * @param data array of bytes to send to the remote
+     * @throws IOException if there was a problem sending the data
+     */
     protected abstract void sendBytes(byte[] data) throws IOException;
 
+    /**
+     * The Protocol mechanic is handled internally by a state machine to process
+     * commands and data. This enum defines the different states the protocol class
+     * can enter
+     */
     private enum State {
         STATE_START,
         STATE_SIZE,
@@ -544,6 +659,9 @@ public abstract class Protocol extends Thread {
         STATE_DONE
     }
     
+    /**
+     * Private helper class to process comands
+     */
     private class Command {
 
         private final byte START_BYTE = (byte) 0xFF;
