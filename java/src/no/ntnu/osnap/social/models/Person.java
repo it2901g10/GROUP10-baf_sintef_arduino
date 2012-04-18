@@ -11,8 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.social;
+package no.ntnu.osnap.social.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import no.ntnu.osnap.social.models.Model;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -24,7 +27,38 @@ import org.json.JSONObject;
  * Represents a person.
  * @author Emanuele 'lemrey' Di Santo
  */
-public class Person extends Model {
+public class Person extends Model implements Parcelable {
+	
+	
+	public static final Parcelable.Creator<Person> CREATOR =
+			new Parcelable.Creator<Person>() {
+
+				public Person createFromParcel(Parcel in) {
+					return new Person(in);
+				}
+
+				public Person[] newArray(int size) {
+					return new Person[size];
+				}
+			};
+
+	public Person(Parcel in) {
+		try {
+			jsonModel = new JSONObject(in.readString());
+		} catch (Exception ex) {
+			Log.d(TAG, ex.toString());
+		}
+	}
+
+	public void writeToParcel(Parcel arg0, int arg1) {
+		arg0.writeString(jsonModel.toString());
+	}
+
+	public int describeContents() {
+		//throw new UnsupportedOperationException("Not supported yet.");
+		return 0;
+	}
+	
 	
 	public static final HashMap<String, String> Facebook = 
 	new HashMap<String, String> () {{
@@ -66,7 +100,7 @@ public class Person extends Model {
 		SEND_PHOTO,
 	};
 	
-	public Person() {;}
+	public Person() {}
 	
 	/** Constructs a Person from a source JSON text string.
 	 * 
@@ -75,6 +109,7 @@ public class Person extends Model {
 	 */
 	public Person(String json) throws JSONException {
 		super(json);
+		Log.d(TAG, "new Person()");
 	}
 	
 	/** Constructs a Person from a {@code JSONObject} instance.

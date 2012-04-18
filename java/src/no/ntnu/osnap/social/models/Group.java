@@ -11,8 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.social;
+package no.ntnu.osnap.social.models;
 
+import no.ntnu.osnap.social.models.Model;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -29,15 +30,7 @@ public class Group extends Model {
 	public static final HashMap<String, String> Facebook =
 	new HashMap<String, String>() {{
 		put("name", "title");
-		//put("","");
 	}};
-	
-	public static enum REQUEST {
-		GET_FULL,
-		GET_MEMBERS,
-		GET_FEED,
-		POST_MESSAGE
-	};
 	
 	/**
 	 * Constructs an empty Group.

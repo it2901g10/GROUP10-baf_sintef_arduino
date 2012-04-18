@@ -13,180 +13,163 @@
  */
 package no.ntnu.osnap.social.facebook;
 
-import no.ntnu.osnap.social.Model;
-import no.ntnu.osnap.social.Person;
-import no.ntnu.osnap.social.Message;
-import no.ntnu.osnap.social.ISocialService;
-
 import android.app.Service;
-import android.util.Log;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.content.Intent;
+import android.content.*;
+import android.os.*;
 
-import java.util.ArrayList;
+import android.util.Log;
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import no.ntnu.osnap.social.Request;
+import no.ntnu.osnap.social.Response;
+import no.ntnu.osnap.social.SocialService;
+import no.ntnu.osnap.social.models.*;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 
 /**
- * Implements the Social interface methods.
- * Contains the FB specific code needed to answer Social requests.
- * 
+ * Implements
+ *
  * @author Emanuele 'lemrey' Di Santo
  */
-public class FacebookService extends Service {
+public class FacebookService extends SocialService {
 
-	private final String TAG = "Facebook-Service";
-	
-	private final ISocialService.Stub mBinder = new ISocialService.Stub() {
+	private static final String TAG = "Facebook-Service";
 
-		public String[] request(String json, int model_type, int code)
-				throws RemoteException {
+	@Override
+	protected Response handleRequest(Request req) {
 
-			String[] ret = null;
-			Log.d(TAG, "request() received");
+		String buf;
+		Response response = new Response();
 
-			switch (model_type) {
-				case 0:
-					break;
-				case 1: {
-					ret = handlePersonRequest(json, code);
+		switch (req.getRequestCode()) {
+
+			case SELF: {
+
+				Log.d(TAG, "Answering SELF");
+				Person person;
+
+				try {
+					buf = FB.getInstance().request("me");
+					person = new Person(buf, Person.Facebook);
+					response.bundle(person);
+				} catch (Exception ex) {
+					Log.d(TAG, ex.toString());
 				}
-				break;
-				case 2: {
-					ret = handleMessageRequest(json, code);
-				}
-				break;
-				case 3: {
-				}
-				break;
+
 			}
+			break; // Request.SELF
 
-			return ret;
-		}
-	};
+			case PERSON_DATA: {
 
-	public String[] handlePersonRequest(String json, int code) {
+				Log.d(TAG, "Answering PERSON_DATA");
+				Model model;
+				Person person;
 
-		Person person;
-		String buf, id;
-		JSONObject jsonObj;
-		JSONArray jsonArray;
+				if (req.getModel() != null) {
 
-		String[] ret = null;
-		
-		Log.d(TAG, "handlePerson():");// + json); 
-		
-		if (json == null) {
-			json = "me";
-		}
+					model = req.getModel();
 
-		try {
-			if (!json.equals("")) {
-				Log.d(TAG, "person has ID");
-				person = new Person(json);
-				id = person.getID();
-			} else {
-				Log.d(TAG, "person is 'me'");
-				id = "me";
-			}
-
-			switch (code) {
-				case 0: {
-					buf = FB.getInstance().request(id);
-					ret = new String[1];
-					ret[0] = buf;
-				}
-				break;
-				case 1: {
-					Log.d(TAG, "requesting: " + id + "/friends"); 
-					buf = FB.getInstance().request(id + "/friends");
-					//Log.d(TAG, "fetched: " + buf); 
-					jsonArray = new JSONObject(buf).getJSONArray("data");
-					ret = new String[jsonArray.length()];
-					for (int i = 0; i < jsonArray.length(); i++) {
-						jsonObj = jsonArray.getJSONObject(i);
-						ret[i] = jsonObj.toString();
-					}	
-				}
-				break;
-				case 2: {
-					Log.d(TAG, "requesting: " + id + "/posts"); 
-					buf = FB.getInstance().request(id + "/posts");
-					//Log.d(TAG, "fetched: " + buf); 
-					jsonArray = new JSONObject(buf).getJSONArray("data");
-					ret = new String[jsonArray.length()];
-					for (int i = 0; i < jsonArray.length(); i++) {
-						jsonObj = jsonArray.getJSONObject(i);
-						ret[i] = jsonObj.toString();
+					try {
+						buf = FB.getInstance().request(model.getID());
+						person = new Person(buf, Person.Facebook);
+						response.bundle(person);
+					} catch (MalformedURLException ex) {
+						Log.e(TAG, ex.toString());
+					} catch (IOException ex) {
+						Log.e(TAG, ex.toString());
+					} catch (JSONException ex) {
+						Log.e(TAG, ex.toString());
 					}
-				} break;
-				case 10: {
-					Log.d(TAG, "requesting: make a post");
-					Bundle param = new Bundle();
-					param.putString("message", "aah");
-					FB.getInstance().request("me/feed", param, "POST");
 				}
-				break;
 			}
-		} catch (Exception ex) {
-			Log.d(TAG, ex.toString());
-		}
-		return ret;
-	}
+			break;
 
-	public String[] handleMessageRequest(String json, int code) {
+			case FRIENDS: {
 
-		Message msg;
-		String buf, id;
-		JSONObject jsonObj;
-		JSONArray jsonArray;
-		String[] ret = null;
-		
-		Log.d(TAG, "handleMessage(): " + json); 
+				Log.d(TAG, "Answering FRIENDS");
+				Person person;
 
-		try {
-			msg = new Message(json);
-			id = msg.getID();
+				try {
+					buf = FB.getInstance().request("me/friends");
 
-			switch (code) {
-				case 0:
-					break;
-				case 1: {
-					buf = FB.getInstance().request(id);
-					Log.d(TAG, "fetched: " + buf); 
-					ret = new String[1];
-					ret[0] = buf;
+					JSONObject json = new JSONObject(buf);
+					JSONArray array = json.getJSONArray("data");
+					for (int i = 0; i < array.length(); i++) {
+						person = new Person(array.getJSONObject(i),
+								Person.Facebook);
+						response.bundle(person);
+					}
+				} catch (Exception ex) {
+					Log.d(TAG, ex.toString());
 				}
-				break;
 			}
-		} catch (Exception ex) {
-			Log.d(TAG, ex.toString());
+			break; // Request.FRIENDS
+
+			case GROUPS: {
+
+				Log.d(TAG, "Answering GROUPS");
+				Group group;
+
+				try {
+					
+					buf = FB.getInstance().request("me/groups");
+
+					JSONObject json = new JSONObject(buf);
+					JSONArray array = json.getJSONArray("data");
+
+					for (int i = 0; i < array.length(); i++) {
+						group = new Group(array.getJSONObject(i), Group.Facebook);
+						response.bundle(group);
+					}
+				} catch (Exception ex) {
+					Log.d(TAG, ex.toString());
+				}
+
+			}
+			break;
+
+
+			case GROUP_DATA: {
+			}
+			break;
+
+			case GROUP_MEMBERS: {
+			}
+			break;
+
+			case MESSAGES: {
+				Log.d(TAG, "Answering MESSAGES");
+				Post post;
+
+				try {
+					buf = FB.getInstance().request("me/feed");
+
+					JSONObject json = new JSONObject(buf);
+					JSONArray array = json.getJSONArray("data");
+
+					for (int i = 0; i < array.length(); i++) {
+						post = new Post(array.getJSONObject(i), Post.Facebook);
+						response.bundle(post);
+					}
+				} catch (Exception ex) {
+					Log.d(TAG, ex.toString());
+				}
+			}
+			break;
+
+			case NOTIFICATIONS: {
+				Log.d(TAG, "Answering NOTIFICATIONS");
+			}
+			break;
+
 		}
 
-		return ret;
-	}
+		return response;
 
-	@Override
-	public void onCreate() {
-		//mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		
-		Log.d(TAG, "onBind()");
-		
-		// we return our remote interface implementaton
-		return mBinder;
-	}
-	
-	@Override
-	public boolean onUnbind(Intent intent) {
-		Log.d(TAG, "onUnbind()");
-		return true;
 	}
 }

@@ -5,68 +5,71 @@
 package no.ntnu.osnap.social;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.json.JSONException;
+import android.os.Message;
+import android.os.Parcelable;
+import no.ntnu.osnap.social.models.Model;
 
 /**
  *
  * @author lemrey
  */
-public class Response implements Parcelable {
+public class Response<T extends Model> {
+
+	private final static String TAG = "Social-Lib";
 	
-	private Bundle bundle;
-	private String TAG;
-	
+	private Bundle mBundle;
+	private ArrayList<String> mModels;
+	private ArrayList<T> mTModels;
+
+	public static Response fromMessage(Message msg) {
+		Response ret = new Response();
+		ret.mBundle = (Bundle) msg.obj;
+		return ret;
+	}
+
 	public Response() {
-		bundle = new Bundle();
+		mBundle = new Bundle();
+		mModels = new ArrayList<String>();
+		mBundle.putStringArrayList("models", mModels);
+		mTModels = new ArrayList<T>();
+		mBundle.putParcelableArrayList("tmodels", mTModels);
+	}
+
+	public void bundle(String model) {
+		mBundle.getStringArrayList("models").add(model);
 	}
 	
-	public <T extends Model> void bundle(T model) {
-		bundle.putString("model", model.toString());
+	public void bundle(T model) {
+		mBundle.getParcelableArrayList("tmodels").add(model);
 	}
-	
-	public <T extends Model> void bundle(ArrayList<T> modelList) {
-		//bundle.putStringArray("model", );
+
+	public void bundle(ArrayList<String> modelList) {
+		mBundle.putStringArrayList("models", modelList);
 	}
-	
-	public <T extends Model> void bundle(T[] modelArray) {
-		//bundle.putStringArray("model", );
-	}
-	
-	
-	/*public void bundleArray(String[] data) {
-		bundle.putStringArray("model", data)
-	}*/
-	
-	public <T extends Model> T getModel() {
-		T ret = null;
-		try {
-			 ret = (T) new Model(bundle.getString("model"));
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-		}
+
+	public String getModel() {
+		String ret;
+		ret = mBundle.getStringArrayList("models").get(0);
 		return ret;
 	}
 	
-	/*public <T extends Model> T[] getModelArray() {
-		T[] ret = null;
-		try {
-			ret = (T[]) new Model[2];
-		} catch (JSONException ex) {
-			Log.d(TAG, ex.toString());
-		}
-	}*/
-
-	public int describeContents() {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public T getTModel() {
+		return (T) mBundle.getParcelableArrayList("tmodels").get(0);
+	}
+	
+	public ArrayList<T> getTModelArrayList() {
+		return mBundle.getParcelableArrayList("tmodels");
 	}
 
-	public void writeToParcel(Parcel arg0, int arg1) {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public ArrayList<String> getModelArrayList() {
+		ArrayList<String> ret;
+		ret = mBundle.getStringArrayList("models");
+		return ret;
+	}
+
+	public Bundle getBundle() {
+		return mBundle;
 	}
 }

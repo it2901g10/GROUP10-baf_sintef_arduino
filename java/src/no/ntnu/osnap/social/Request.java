@@ -4,70 +4,122 @@
  */
 package no.ntnu.osnap.social;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import no.ntnu.osnap.social.models.Model;
+import android.os.*;
 import android.util.Log;
+import android.os.Message;
+
 import org.json.JSONException;
 
 /**
  *
  * @author lemrey
  */
-public class Request implements Parcelable {
+public class Request {
+
+	private final static String TAG = "Social-Lib";
 	
-	private final String TAG = "SocialLib";
+	public static enum RequestCode {
+		SELF,
+		PERSON_DATA,
+		FRIENDS,
+		GROUPS,
+		GROUP_DATA,
+		GROUP_MEMBERS,
+		GROUP_FEED,
+		MESSAGES,
+		MESSAGE_DATA,
+		POST_MESSAGE,
+		NOTIFICATIONS,
+		NOTIFICATION_DATA
+	}
 	
-	private Bundle bundle;
+	private Bundle mBundle;
 	
-	public static Request obtain(Model model, int code) {
+	private Request() {
+		mBundle = new Bundle();
+	}
+	
+	public static Request fromMessage(Message msg) {
 		
-		Bundle b = new Bundle();
+		Bundle bundle;
+		Request ret = new Request();
+			
+		bundle = (Bundle)msg.obj;
+		
+		if (bundle != null) {			
+			ret.mBundle = bundle;
+		} else {
+			Log.e(TAG, "fromMessage(): null bundle");
+		}
+		
+		return ret;
+	}
+	
+	public static Request obtain(RequestCode reqCode) {
+		return obtain(reqCode, (Model)null);
+	}
+	
+	public static Request obtain(RequestCode reqCode, Bundle param) {
+		return obtain(reqCode, null, param);
+	}
+
+	public static Request obtain(RequestCode reqCode, Model model) {
+
+		Bundle bundle = new Bundle();
 		Request request = new Request();
+
+		bundle.putString("request-code", reqCode.name());
 		
-		b.putInt("req-id", 0);
-		b.putInt("request-code", code);
-		b.putString("network", model.getNetwork());
-		b.putString("model-class", "");
-		b.putString("model", model.toString());
-		
-		request.bundle = b;
-		
+		if (model != null)
+			bundle.putString("model", model.toString());
+
+		request.mBundle = bundle;
+
 		return request;
 	}
 	
-	public int getReqID() {
-		return bundle.getInt("req-id");
+	public static Request obtain(RequestCode reqCode, Model model, Bundle params) {
+		
+		Bundle bundle = new Bundle();
+		Request request = new Request();
+
+		bundle.putString("request-code", reqCode.name());
+		
+		if (model != null)
+			bundle.putString("model", model.toString());
+		
+		bundle.putBundle("params", params);
+
+		request.mBundle = bundle;
+
+		return request;
 	}
-	
-	public int getRequestCode() {
-		return bundle.getInt("request-code");
+
+	public RequestCode getRequestCode() {
+		String buf = mBundle.getString("request-code");
+		return RequestCode.valueOf(buf);
 	}
-	
+
 	public String getNetwork() {
-		return bundle.getString("network");
+		return mBundle.getString("network");
 	}
-	
-	public <T extends Model> T getModel() {
-		T m = null;
+
+	public Model getModel() {
+		Model ret = null;
 		try {
-			m = (T) new Model (bundle.getString("model"));
+			ret = new Model((mBundle.getString("model")));
 		} catch (JSONException ex) {
 			Log.d(TAG, ex.toString());
 		}
-		return m;
+		return ret;
 	}
+
 	
+	public Bundle getParams() {
+		return mBundle.getBundle("params");
+	}
 	public final Bundle getBundle() {
-		return bundle;
-	}
-
-	public int describeContents() {
-		//throw new UnsupportedOperationException("Not supported yet.");
-		return 0;
-	}
-
-	public void writeToParcel(Parcel arg0, int arg1) {
-		arg0.writeBundle(bundle);
+		return mBundle;
 	}
 }

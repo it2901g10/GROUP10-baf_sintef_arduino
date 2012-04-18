@@ -11,8 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.social;
+package no.ntnu.osnap.social.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.Map;
@@ -27,21 +29,19 @@ import org.json.JSONException;
  *
  * @author Emanuele 'lemrey' Di Santo
  */
-public class Model implements Iterable {
-	
+public class Model implements Iterable, Parcelable {
+
 	/**
 	 * Used for logging purposes
 	 */
-	protected final String TAG = "SocialLib";
-	
+	protected static final String TAG = "SocialLib";
 	/**
 	 * Holds the JSON representation of the model
 	 */
 	protected JSONObject jsonModel;
 
 	/**
-	 * Constructs an empty Model.
-	 * An empty Model has no fields.
+	 * Constructs an empty Model. An empty Model has no fields.
 	 */
 	public Model() {
 		jsonModel = new JSONObject();
@@ -56,7 +56,7 @@ public class Model implements Iterable {
 	public Model(String json) throws JSONException {
 		jsonModel = new JSONObject(json);
 	}
-	
+
 	/**
 	 * Constructs a Model from a JSONObject.
 	 *
@@ -67,9 +67,13 @@ public class Model implements Iterable {
 		jsonModel = new JSONObject(object.toString());
 	}
 
+	public Model(Model m) throws JSONException {
+		this(m.toJSONObject());
+	}
+
 	/**
-	 * Constructs a Model from a source JSON text string
-	 * performing a translation.
+	 * Constructs a Model from a source JSON text string performing a
+	 * translation.
 	 *
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @param transl a translation table for key names.
@@ -77,14 +81,13 @@ public class Model implements Iterable {
 	 */
 	public Model(String json, Map<String, String> transl)
 			throws JSONException {
-		
+
 		this(json);
 		translate(transl);
 	}
 
 	/**
-	 * Constructs a Model from a JSONObject
-	 * performing a translation.
+	 * Constructs a Model from a JSONObject performing a translation.
 	 *
 	 * @param object a JSONObject instance
 	 * @param transl a translation table for key names.
@@ -96,14 +99,12 @@ public class Model implements Iterable {
 		this(object.toString());
 		translate(transl);
 	}
-	
-	
 
 	/**
 	 * Gets the ID of this object.
 	 *
-	 * @return the value of the key 'id' as a string or
-	 * an empty string if the key doesn't exist.
+	 * @return the value of the key 'id' as a string or an empty string if the
+	 * key doesn't exist.
 	 */
 	public String getID() {
 		String ret;
@@ -128,7 +129,7 @@ public class Model implements Iterable {
 		}
 		return ret;
 	}
-	
+
 	public void translate(Map<String, String> transl) {
 
 		String key, val;
@@ -146,53 +147,79 @@ public class Model implements Iterable {
 		} catch (JSONException ex) {
 			Log.d(TAG, ex.toString());
 		}
-	}	
-	
-	/*public static <T extends Model> ArrayList<T> makeArrayList(String response,
-			HashMap<String, String> transl) throws JSONException {
-		
-		T entry;
-		ArrayList<T> list = new ArrayList();
-		JSONObject json = new JSONObject(response);
-		JSONArray jsonArray = json.getJSONArray("data");
-		for (int i = 0; i < jsonArray.length(); i++) {
-			//entry = new 
-			//(jsonArray.getString(i), transl);
-			//list.add(entry);
-		}
-		return list;
-	}*/
-	
+	}
+
+	/*
+	 * public static <T extends Model> ArrayList<T> makeArrayList(String
+	 * response, HashMap<String, String> transl) throws JSONException {
+	 *
+	 * T entry; ArrayList<T> list = new ArrayList(); JSONObject json = new
+	 * JSONObject(response); JSONArray jsonArray = json.getJSONArray("data");
+	 * for (int i = 0; i < jsonArray.length(); i++) { //entry = new
+	 * //(jsonArray.getString(i), transl); //list.add(entry); } return list;
+	}
+	 */
 	public boolean hasKey(String key) {
 		return jsonModel.has(key);
 	}
-	
+
 	public Iterator iterator() {
 		return jsonModel.keys();
 	}
-	
-	public void setField(String key, Object value) throws JSONException {
-		jsonModel.put(key, value);
+
+	public void setField(String key, Object value) {
+		try {
+			jsonModel.put(key, value);
+		} catch (JSONException ex) {
+			Log.d(TAG, ex.toString());
+		}
 	}
-			
+
 	public Object getField(String key) {
 		return jsonModel.opt(key);
 	}
-	
-	
+
 	/**
-	 * Returns the string representation of the Model
-	 * in JSON format.
+	 * Returns the string representation of the Model in JSON format.
 	 */
 	@Override
 	public String toString() {
+		//Log.d(TAG, "Model toString() " + jsonModel.toString());
 		return jsonModel.toString();
 	}
-	
+
 	/**
 	 * Returns the JSON representation of the Model.
 	 */
 	public JSONObject toJSONObject() {
 		return jsonModel;
+	}
+	public static final Parcelable.Creator<Model> CREATOR =
+			new Parcelable.Creator<Model>() {
+
+				public Model createFromParcel(Parcel in) {
+					return new Model(in);
+				}
+
+				public Model[] newArray(int size) {
+					return new Model[size];
+				}
+			};
+
+	public Model(Parcel in) {
+		try {
+			jsonModel = new JSONObject(in.readString());
+		} catch (Exception ex) {
+			Log.d(TAG, ex.toString());
+		}
+	}
+
+	public void writeToParcel(Parcel arg0, int arg1) {
+		arg0.writeString(jsonModel.toString());
+	}
+
+	public int describeContents() {
+		//throw new UnsupportedOperationException("Not supported yet.");
+		return 0;
 	}
 }

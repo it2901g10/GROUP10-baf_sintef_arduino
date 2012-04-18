@@ -41,8 +41,10 @@ public class FacebookActivity extends Activity {
 		mLoginButton = (LoginButton) findViewById(R.id.login);
 
 		// try to restore previous sessions
-		SessionStore.restore(FB.getInstance(), this);
-		
+		if (SessionStore.restore(FB.getInstance(), this)) {
+			mText.setText("You are logged in.");
+			startService(new Intent(getBaseContext(), FacebookService.class));
+		}
 		
 		// setup callbacks for login/logout events
 		SessionEvents.addAuthListener(new SampleAuthListener());
@@ -64,7 +66,7 @@ public class FacebookActivity extends Activity {
 
 		public void onAuthSucceed() {
 			mText.setText("User logged in!");
-			//startService(new Intent(getBaseContext(), FacebookService.class));
+			startService(new Intent(getBaseContext(), FacebookService.class));
 		}
 
 		public void onAuthFail(String error) {

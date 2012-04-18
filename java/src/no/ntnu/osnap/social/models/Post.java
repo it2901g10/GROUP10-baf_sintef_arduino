@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.social;
+package no.ntnu.osnap.social.models;
 
 import android.util.Log;
 
@@ -24,7 +24,7 @@ import org.json.JSONObject;
  * Represents a message.
  * @author Emanuele 'lemrey' Di Santo
  */
-public class Message extends Model {
+public class Post extends Model {
 	
 	public static final HashMap<String, String> Facebook = 
 	new HashMap<String, String> () {{
@@ -32,37 +32,37 @@ public class Message extends Model {
 	}};
 	
 	/**
-	 * Constructs an empty Message.
+	 * Constructs an empty Post.
 	 */
-	public Message () {;}
+	public Post () {;}
 	
 	/**
-	 * Constructs a Message from a source JSON text string.
+	 * Constructs a Post from a source JSON text string.
 	 * 
 	 * @param json a JSON string, starting with { and ending with }.
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */
-	public Message (String json) throws JSONException {
+	public Post (String json) throws JSONException {
 		super(json);
 	}
 	
 	/**
-	 * Constructs a Message from a {@code JSONObject} instance.
+	 * Constructs a Post from a {@code JSONObject} instance.
 	 * 
 	 * @param object a JSONObject
 	 * @throws JSONException if there's a syntax error or duplicated key.
 	 */	
-	public Message (JSONObject object) throws JSONException {
+	public Post (JSONObject object) throws JSONException {
 		super(object);
 	}
 	
 	
-	public Message (String json, HashMap<String, String> transl)
+	public Post (String json, HashMap<String, String> transl)
 			throws JSONException {
 		super(json, transl);
 	}
 	
-	public Message (JSONObject object, HashMap<String, String> transl)
+	public Post (JSONObject object, HashMap<String, String> transl)
 			throws JSONException {
 		super(object, transl);
 	}
