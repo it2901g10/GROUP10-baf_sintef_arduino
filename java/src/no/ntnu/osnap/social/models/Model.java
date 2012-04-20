@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 /**
- * A generic class for all social objects.
+ * oSNAP generic class for all social objects.
  *
  * @author Emanuele 'lemrey' Di Santo
  */
@@ -33,12 +33,14 @@ public class Model implements Iterable, Parcelable {
 
 	/**
 	 * Used for logging purposes
+	 *
 	 */
-	protected static final String TAG = "SocialLib";
+	protected static final String TAG = "Social-Lib";
 	/**
 	 * Holds the JSON representation of the model
+	 *
 	 */
-	protected JSONObject jsonModel;
+	private JSONObject jsonModel;
 
 	/**
 	 * Constructs an empty Model. An empty Model has no fields.
@@ -51,33 +53,19 @@ public class Model implements Iterable, Parcelable {
 	 * Constructs a Model from a source JSON text string.
 	 *
 	 * @param json a JSON string, starting with { and ending with }.
-	 * @throws JSONException if there's a syntax error or duplicated key.
+	 * @throws JSONException if there's a syntax error or duplicated field.
 	 */
 	public Model(String json) throws JSONException {
 		jsonModel = new JSONObject(json);
 	}
 
 	/**
-	 * Constructs a Model from a JSONObject.
-	 *
-	 * @param object a JSONObject instance
-	 * @throws JSONException if there's a syntax error or duplicated key.
-	 */
-	public Model(JSONObject object) throws JSONException {
-		jsonModel = new JSONObject(object.toString());
-	}
-
-	public Model(Model m) throws JSONException {
-		this(m.toJSONObject());
-	}
-
-	/**
-	 * Constructs a Model from a source JSON text string performing a
+	 * Constructs a Model from a source JSON text string performing a field name
 	 * translation.
 	 *
 	 * @param json a JSON string, starting with { and ending with }.
-	 * @param transl a translation table for key names.
-	 * @throws JSONException if there's a syntax error or duplicated key.
+	 * @param transl a translation table for field names.
+	 * @throws JSONException if there's a syntax error or duplicated field.
 	 */
 	public Model(String json, Map<String, String> transl)
 			throws JSONException {
@@ -87,49 +75,10 @@ public class Model implements Iterable, Parcelable {
 	}
 
 	/**
-	 * Constructs a Model from a JSONObject performing a translation.
+	 * Translates field names.
 	 *
-	 * @param object a JSONObject instance
-	 * @param transl a translation table for key names.
-	 * @throws JSONException if there's a syntax error or duplicated key.
+	 * @param transl
 	 */
-	public Model(JSONObject object, Map<String, String> transl)
-			throws JSONException {
-
-		this(object.toString());
-		translate(transl);
-	}
-
-	/**
-	 * Gets the ID of this object.
-	 *
-	 * @return the value of the key 'id' as a string or an empty string if the
-	 * key doesn't exist.
-	 */
-	public String getID() {
-		String ret;
-		ret = jsonModel.optString("id");
-		if (ret.equals("")) {
-			Log.d(TAG, "key 'id' doesn't exist.");
-		}
-		return ret;
-	}
-
-	/**
-	 * Gets the network this object belongs to.
-	 *
-	 * @return the value of the key 'osnap:network' as a string or an empty
-	 * string if the key doesn't exist.
-	 */
-	public String getNetwork() {
-		String ret;
-		ret = jsonModel.optString("osnap:network");
-		if (ret.equals("")) {
-			Log.d(TAG, "key 'osnap:network' doesn't exist.");
-		}
-		return ret;
-	}
-
 	public void translate(Map<String, String> transl) {
 
 		String key, val;
@@ -149,42 +98,60 @@ public class Model implements Iterable, Parcelable {
 		}
 	}
 
-	/*
-	 * public static <T extends Model> ArrayList<T> makeArrayList(String
-	 * response, HashMap<String, String> transl) throws JSONException {
-	 *
-	 * T entry; ArrayList<T> list = new ArrayList(); JSONObject json = new
-	 * JSONObject(response); JSONArray jsonArray = json.getJSONArray("data");
-	 * for (int i = 0; i < jsonArray.length(); i++) { //entry = new
-	 * //(jsonArray.getString(i), transl); //list.add(entry); } return list;
-	}
+	/**
+	 * Returns an iterator over field names.
 	 */
-	public boolean hasKey(String key) {
-		return jsonModel.has(key);
-	}
-
 	public Iterator iterator() {
 		return jsonModel.keys();
 	}
 
-	public void setField(String key, Object value) {
+	/**
+	 * Returns {@code true} if a value is associated with the specified field
+	 * name, {@code false} otherwise.
+	 *
+	 * @param fieldName name of field to look up
+	 */
+	public boolean hasField(String fieldName) {
+		return jsonModel.has(fieldName);
+	}
+
+	/**
+	 * Sets the value of the specified field to the passed Object.
+	 *
+	 * @param fieldName name of field to set
+	 * @param value object to associate with passed field name
+	 */
+	public void setField(String fieldName, Object value) {
 		try {
-			jsonModel.put(key, value);
+			jsonModel.put(fieldName, value);
 		} catch (JSONException ex) {
 			Log.d(TAG, ex.toString());
 		}
 	}
 
-	public Object getField(String key) {
-		return jsonModel.opt(key);
+	/**
+	 * Returns the value of the specified field as an Object.
+	 *
+	 * @param fieldName name of field whose value is to be returned
+	 */
+	public Object getField(String fieldName) {
+		return jsonModel.opt(fieldName);
 	}
 
 	/**
-	 * Returns the string representation of the Model in JSON format.
+	 * Returns the value of the specified field as a {@link String}.
+	 *
+	 * @param fieldName name of field whose value is to be returned
+	 */
+	public String getStringField(String fieldName) {
+		return jsonModel.optString(fieldName);
+	}
+
+	/**
+	 * Returns the string representation of this Model in JSON format.
 	 */
 	@Override
 	public String toString() {
-		//Log.d(TAG, "Model toString() " + jsonModel.toString());
 		return jsonModel.toString();
 	}
 
@@ -194,6 +161,39 @@ public class Model implements Iterable, Parcelable {
 	public JSONObject toJSONObject() {
 		return jsonModel;
 	}
+
+	/**
+	 * Gets the ID of this model.
+	 *
+	 * @return the value of the field 'id' as a {@link String} or an empty
+	 * {@link String} if no value is associated with such field.
+	 */
+	public String getID() {
+		String ret;
+		ret = jsonModel.optString("id");
+		if (ret.equals("")) {
+			Log.d(TAG, "field 'id' doesn't exist.");
+		}
+		return ret;
+	}
+
+	/**
+	 * Gets the name of the network this object belongs to.
+	 *
+	 * @return the value of the field 'osnap:network' as a {@link String} or an
+	 * empty {@link String} if no value is associated with such field.
+	 */
+	public String getNetwork() {
+		String ret;
+		ret = jsonModel.optString("osnap:network");
+		if (ret.equals("")) {
+			Log.d(TAG, "field 'osnap:network' doesn't exist.");
+		}
+		return ret;
+	}
+	
+	// Parcelable interface-related code follows
+	
 	public static final Parcelable.Creator<Model> CREATOR =
 			new Parcelable.Creator<Model>() {
 
@@ -219,7 +219,6 @@ public class Model implements Iterable, Parcelable {
 	}
 
 	public int describeContents() {
-		//throw new UnsupportedOperationException("Not supported yet.");
 		return 0;
 	}
 }

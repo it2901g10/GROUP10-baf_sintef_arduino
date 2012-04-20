@@ -5,23 +5,28 @@
 package no.ntnu.osnap.social;
 
 import android.os.Bundle;
-import android.util.Log;
 import java.util.ArrayList;
 import android.os.Message;
 import android.os.Parcelable;
 import no.ntnu.osnap.social.models.Model;
 
 /**
- *
- * @author lemrey
+ * oSNAP class representing a SocialService response.
+ * 
+ * @author Emanuele 'lemrey' Di Santo
  */
-public class Response<T extends Model> {
+public class Response {
 
 	private final static String TAG = "Social-Lib";
 	
+	public enum Status {
+		COMPLETED,
+		NOT_SUPPORTED,
+		ERROR
+	};
+	
 	private Bundle mBundle;
-	private ArrayList<String> mModels;
-	private ArrayList<T> mTModels;
+	private ArrayList<? extends Model> mModels;
 
 	public static Response fromMessage(Message msg) {
 		Response ret = new Response();
@@ -29,44 +34,50 @@ public class Response<T extends Model> {
 		return ret;
 	}
 
-	public Response() {
+	/**
+	 * Constructs a response.
+	 * The status of the response is set to {@code Status.COMPLETED}.
+	 */
+	public <T extends Model> Response() {
 		mBundle = new Bundle();
-		mModels = new ArrayList<String>();
-		mBundle.putStringArrayList("models", mModels);
-		mTModels = new ArrayList<T>();
-		mBundle.putParcelableArrayList("tmodels", mTModels);
-	}
-
-	public void bundle(String model) {
-		mBundle.getStringArrayList("models").add(model);
+		mModels = new ArrayList<T>();
+		mBundle.putParcelableArrayList("models", mModels);
+		mBundle.putString("status", Status.COMPLETED.name());
 	}
 	
-	public void bundle(T model) {
-		mBundle.getParcelableArrayList("tmodels").add(model);
-	}
-
-	public void bundle(ArrayList<String> modelList) {
-		mBundle.putStringArrayList("models", modelList);
-	}
-
-	public String getModel() {
-		String ret;
-		ret = mBundle.getStringArrayList("models").get(0);
-		return ret;
+	public <T extends Model> void bundle(T model) {
+		mBundle.getParcelableArrayList("models").add(model);
 	}
 	
-	public T getTModel() {
-		return (T) mBundle.getParcelableArrayList("tmodels").get(0);
+	public Status getStatus() {
+		return Status.valueOf(mBundle.getString("status"));
 	}
 	
-	public ArrayList<T> getTModelArrayList() {
-		return mBundle.getParcelableArrayList("tmodels");
+	/**
+	 * Sets the status of this response.
+	 * If not set otherwise, the status of any response is
+	 * {@code Status.COMPLETED}. Other status should be specified when
+	 * appropriate.
+	 * @param status the status to be set
+	 */
+	public void setStatus(Status status) {
+		mBundle.putString("status", status.name());
 	}
-
-	public ArrayList<String> getModelArrayList() {
-		ArrayList<String> ret;
-		ret = mBundle.getStringArrayList("models");
-		return ret;
+	
+	/**
+	 * Extracts the Model bundled with the response.
+	 * @return 
+	 */
+	public <T extends Model> T getModel() {
+		return (T) mBundle.getParcelableArrayList("models").get(0);
+	}
+	
+	/**
+	 * Extracts the Models bundled with the response.
+	 * @return an list of all the models bundled.
+	 */
+	public <T extends Model> ArrayList<T> getModelArrayList() {
+		return mBundle.getParcelableArrayList("models");
 	}
 
 	public Bundle getBundle() {

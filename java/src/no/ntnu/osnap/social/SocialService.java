@@ -19,27 +19,35 @@ import android.os.*;
 
 import android.util.Log;
 
-
 /**
- * Implements
+ * oSNAP class representing a Social service, which is an Android service which
+ * replies prototype's requests. To use it, extend it and implement
+ * {@link #handleRequest(Request)} and {@link #handlePostRequest(Request)}.
+ * SocialService will receive requests from prototypes and call these methods
+ * to obtain a {@link Response} to send back.
  *
  * @author Emanuele 'lemrey' Di Santo
  */
 public class SocialService extends Service {
 
 	/**
-	 * Use for logging purposes.
+	 * Used for logging purposes.
 	 */
 	private static final String TAG = "Social-Service";
+	
+	/**
+	 * The SocialService name, which is sent to Prototypes.
+	 */	
+	protected String mName = "Social-Service";
 	
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-	
+
 	/**
-	 * When binding to the service, we return an interface to our messenger for
-	 * sending messages to the service.
+	 * Called by the system when the service is first started. Subclasses must
+	 * call the superclass implementation if overriding this method.
 	 */
 	@Override
 	public void onCreate() {
@@ -49,11 +57,28 @@ public class SocialService extends Service {
 				new IntentFilter("android.intent.action.SOCIAL"));
 	}
 
+	/**
+	 * When binding to the service, we return an interface to our messenger for
+	 * sending messages to the service.
+	 */
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mMessenger.getBinder();
 	}
 
+	/**
+	 * Sets the Social service name, which is used by prototypes to identify the
+	 * service.
+	 *
+	 * @param name the name to publish to prototypes
+	 */
+	public void setServiceName(String name) {
+		mName = name;
+	}
+
+	/**
+	 * Holds the logic to handle incoming {@link Message} from Prototypes.
+	 */
 	private class IncomingHandler extends Handler {
 
 		@Override
@@ -97,43 +122,55 @@ public class SocialService extends Service {
 		}
 	}
 
+	/**
+	 * This method is invoked by the SocialService to handle incoming requests
+	 * to fetch data from the social network.
+	 *
+	 * @param req the {@link Request} to be carried out
+	 * @return a {@link Response} containing the data requested
+	 */
 	protected Response handleRequest(Request req) {
 		return null;
 	}
-	
+
+	/**
+	 * Called by the SocialService implementation to handle incoming requests
+	 * to send data to the social network.
+	 * @param req the {@link Request} to be carried out
+	 * @return a {@link Response}
+	 */
 	protected Response handlePostRequest(Request req) {
 		return null;
 	}
 
+	/**
+	 * Receives and replies discovery broadcasts sent by Prototypes.
+	 */
 	private class BroadcastRcv extends BroadcastReceiver {
 
+		// used for logging purposes
 		private final String TAG = "Broadcast-Rcv";
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			//Log.d(TAG, "Broadcast received");
-
-			if (intent.getAction().equals("android.intent.action.SOCIAL")
-					/*&& FB.getInstance().isSessionValid()*/ ) {
+			if (intent.getAction().equals("android.intent.action.SOCIAL")) {
 
 				Log.d(TAG, "Discovered");
-				Bundle bundle;
+				Bundle bundle = new Bundle();
 				Bundle extras = intent.getExtras();
-
 				Messenger messenger = extras.getParcelable("replyTo");
 
 				try {
-
-					bundle = new Bundle();
-			
-					bundle.putString("name",
-							SocialService.this.getClass().getSimpleName());
-					
+					/*
+					 * craft a Message object containg our Messenger and service
+					 * name and send it back to the Messenger bundled with the
+					 * broadcast
+					 */
+					bundle.putString("name", mName);
 					Message msg = Message.obtain(null, 0, bundle);
 					msg.replyTo = SocialService.this.mMessenger;
 					messenger.send(msg);
-
 				} catch (RemoteException ex) {
 					Log.d(TAG, ex.toString());
 				}

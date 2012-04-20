@@ -12,8 +12,9 @@ import android.os.Message;
 import org.json.JSONException;
 
 /**
- *
- * @author lemrey
+ * oSNAP class representing a request to fetch or send data to a social
+ * network.
+ * @author Emanuele 'lemrey' Di Santo
  */
 public class Request {
 
@@ -40,6 +41,11 @@ public class Request {
 		mBundle = new Bundle();
 	}
 	
+	/**
+	 * Constructs a {@link Request} from an incoming {@link Message}.
+	 * @param msg the message
+	 * @return 
+	 */
 	public static Request fromMessage(Message msg) {
 		
 		Bundle bundle;
@@ -79,6 +85,14 @@ public class Request {
 		return request;
 	}
 	
+	/**
+	 * Constructs a request.
+	 * 
+	 * @param reqCode the request code
+	 * @param model
+	 * @param params parameters of the request to be sent to the social service
+	 * @return 
+	 */
 	public static Request obtain(RequestCode reqCode, Model model, Bundle params) {
 		
 		Bundle bundle = new Bundle();
@@ -96,6 +110,10 @@ public class Request {
 		return request;
 	}
 
+	/**
+	 * Returns the {@link RequestCode} of this request.
+	 * @return 
+	 */
 	public RequestCode getRequestCode() {
 		String buf = mBundle.getString("request-code");
 		return RequestCode.valueOf(buf);
@@ -115,10 +133,18 @@ public class Request {
 		return ret;
 	}
 
-	
+	/**
+	 * Returns the parameters associated with this request as a {@link Bundle}.
+	 * @return 
+	 */
 	public Bundle getParams() {
 		return mBundle.getBundle("params");
 	}
+	
+	/**
+	 * Returns the representation of the request as a {@link Bundle}.
+	 * @return 
+	 */
 	public final Bundle getBundle() {
 		return mBundle;
 	}
