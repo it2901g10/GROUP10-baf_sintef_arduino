@@ -6,6 +6,8 @@
 	#include <LiquidCrystal.h>
 #elif LCD==1
 	#include <DogLcd.h>
+#elif LCD==2
+	#include <LiquidCrystal.h>
 #endif
 
 #include <ComputerSerial.h>
@@ -14,6 +16,8 @@
 	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 #elif LCD==1
 	DogLcd lcd(12, 11, 9, 10);
+#elif LCD==2
+	LiquidCrystal lcd(12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2);
 #endif
 
 ComputerSerial comp;
@@ -59,6 +63,8 @@ void setup(){
 	lcd.begin(DOG_LCD_M163);
 	lcd.setCursor(0, 2);
 	lcd.print("Bytes: ");
+#elif LCD==2
+	lcd.begin(LCD_COLUMNS, LCD_LINES);
 #endif
 	
 #ifdef LCD

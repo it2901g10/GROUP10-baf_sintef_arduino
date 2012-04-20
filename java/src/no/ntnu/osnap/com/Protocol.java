@@ -1,6 +1,6 @@
 /*
-* Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn 
-* Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
+* Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjï¿½rn 
+* Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjï¿½rnar Hï¿½kenstad Wold
 *
 *   Licensed under the Apache License, Version 2.0 (the "License");
 *   you may not use this file except in compliance with the License.
@@ -20,6 +20,9 @@ package no.ntnu.osnap.com;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -49,7 +52,7 @@ public abstract class Protocol extends Thread {
 	 */
 	protected ConnectionMetadata connectionMetadata;
 	
-	private LinkedList<ProtocolInstruction> pendingInstructions;
+	private BlockingQueue<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 
 	private boolean running;
@@ -106,7 +109,7 @@ public abstract class Protocol extends Thread {
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
-		pendingInstructions = new LinkedList<ProtocolInstruction>();
+		pendingInstructions = new LinkedBlockingQueue<ProtocolInstruction>();
 		tempAckProcessor = null;
 		running = true;
     }
@@ -160,7 +163,7 @@ public abstract class Protocol extends Thread {
         return response;
 	}    
 	
-	protected void stopThread() {
+	public void stopThread() {
 		running = false;
 	}
 	

@@ -47,7 +47,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
         ACTIVE
     }
     
-    private ConnectionState state = ConnectionState.ACTIVE;
+    private ConnectionState state = ConnectionState.SCANNING;
     
     private final byte[] ack = {(byte)0xFF, (byte)0x04, (byte)0x00, (byte)0xFF, (byte)0x00};
     //public final byte[] text = {(byte)0x04, (byte)0x01, (byte)0xFF, "H".getBytes()[0]};
@@ -105,6 +105,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
 			
 			try {
 				ping();
+				state = ConnectionState.ACTIVE;
 				break;
 			} catch (TimeoutException e) {
 				System.out.println("Ping timeout");
@@ -142,38 +143,18 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
      */
     @Override
     public void serialEvent(SerialPortEvent oEvent) {
-        if (state == ConnectionState.ACTIVE) {
-            if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-                try {
-                    while (input.available() > 0) {
-                        byte chunk[] = new byte[1];
-                        input.read(chunk, 0, 1);
-                        
-                        byteReceived(chunk[0]);
-                    }
-                } catch (Exception e) {
-                    System.err.println(e.toString());
-                }
-            }
-        } 
-        else {
-            if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-                try {
-                    while (input.available() > 0) {
-                        byte[] response = new byte[1];
-                        input.read(response, 0, 1);
-                        if (lastByte == (byte)0x00 && response[0] == (byte)0xFF){
-                            state = ConnectionState.ACTIVE;
-                        }
-                        
-                        lastByte = response[0];
-                    }
-                } catch (Exception e) {
-                    System.err.println(e.toString());
-                }
-            }
-        }
-        // Ignore all the other eventTypes, but you should consider the other ones.
+		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+			try {
+				while (input.available() > 0) {
+					byte chunk[] = new byte[1];
+					input.read(chunk, 0, 1);
+
+					byteReceived(chunk[0]);
+				}
+			} catch (Exception e) {
+				System.err.println(e.toString());
+			}
+		}
     }
     
     @Override
