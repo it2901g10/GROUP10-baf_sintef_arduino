@@ -1,2 +1,1 @@
-
-java files for the social library and android applications.
+Java files for the [social library](https://github.com/it2901g10/GROUP10-baf_sintef_arduino/wiki/SocialLib), [communication library](https://github.com/it2901g10/GROUP10-baf_sintef_arduino/wiki/ComLib) and android applications.

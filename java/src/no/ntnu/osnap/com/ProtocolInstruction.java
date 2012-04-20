@@ -19,6 +19,9 @@ package no.ntnu.osnap.com;
 import no.ntnu.osnap.com.Protocol.OpCode;
 
 
+/**
+ * Used internally by the Protocol standard for each communication Packet
+ */
 public class ProtocolInstruction {
 	private static final byte START_BYTE = (byte)0xFF;
 	

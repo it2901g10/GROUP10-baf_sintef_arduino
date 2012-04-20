@@ -1,5 +1,3 @@
-
-
 The whole project encompasses different libraries, prototypes and applications.
 This chapter describes the design of each part of the product in detail,
 and documents the various approaches taken into consideration.
@@ -15,7 +13,7 @@ The system consists of:
 
 The figure \ref{fig:design-toplevel} illustrates the overall system architecture, demonstration 3 Applications
 that use only the communication library, only the social service library, or both. Note that in the figure there is no
-connecion between all the applications and the oSNAP SocialLib. This is intentional because some of the prototypes we
+connection between all the applications and the oSNAP SocialLib. This is intentional because some of the prototypes we
 will develop will only use parts of the entire oSNAP library. This is to show that our library is modular and you can use
 only parts of it and it still works.
 
@@ -128,12 +126,12 @@ found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
 The big difference in the new approach is that the Social library won't provide any means
-of connecting to social networks. Instead it will focus on estabilishing a communication interface,
+of connecting to social networks. Instead it will focus on establishing a communication interface,
 using Android's Intent mechanism and inter-process communication, between Social applications and
 the Android-Arduino applications to allow the requesting and forwarding of social data.
 It will still provide abstractions for common concepts found in social networks.
 This revised approach was made necessary after the first meetings with the customer as we misunderstood
-the project scope, and went on to solve a very ambitious and unneeded task. The new design also accomodated
+the project scope, and went on to solve a very ambitious and unneeded task. The new design also accommodated
 very well the overall system design. Some of the code and documentation we produced for the previous design
 was re-used, but some could not.
 
@@ -148,7 +146,7 @@ Both implement the ComLib protocol. The Java library provides a set of classes t
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
 services the remote device supports and any software download links associated with the remote device. A service might
 be a sensor, a lamp, display screen while download links are represented as an URI link. All this meta information is stored
-on in the firmware on the remote device as raw text using the JSON format. This metadata can also be stored an retrieved
+on in the firmware on the remote device as raw text using the JSON format. This meta-data can also be stored an retrieved
 in a QR code or anything else that can store plain text.
 
 \begin{figure}[h!]
@@ -266,11 +264,11 @@ For completeness we present the previous application use case in figure \ref{fig
 \label{sec:prototypes}
 Three different prototypes will be produced for the project. They serve both as a proof of concept and
 to test that the library works. Each of the prototypes should be different to show that the library can be
-used to quickly prototype Arduino Tangible User Interfaces. One of the protoypes, the T-Shirt, is significantly
+used to quickly prototype Arduino Tangible User Interfaces. One of the prototypes, the T-Shirt, is significantly
 bigger and more complex than the other two. The T-Shirt is the main prototype of the project; the purpose of the other two
 is just to show that the libraries can be use for other applications and in different contexts.
 
-\subsection{The social T-Shirt}
+\subsection{Prototype 1: The social T-Shirt}
 	
 \begin{figure}
 	\begin{center}
@@ -295,7 +293,7 @@ The shirt features different tangible interfaces (see figure \ref{fig:design-TSh
 Any of these can be mapped to a fair deal of concepts found in social network.
 So a "Poke" from Facebook could become a vibration on the T-Shirt. When someone "Likes" your post a small sound effect
 could be played, a LED blinking on status updates from Twitter, etc. The T-Shirt is connected to the social networks
-throu a wireless connection to the Android mobile. Specifically, the mobile Android is connected to the internet
+throu a wireless connection to the Android mobile. Specifically, the mobile Android is connected to the Internet
 and carried in the pocket of the person using the T-Shirt and is connected wirelessly with the Arduino Lilypad through Bluetooth.
 	
 	%\begin{figure}[h!]
@@ -309,10 +307,10 @@ and carried in the pocket of the person using the T-Shirt and is connected wirel
 \subsection{Prototype 2: Temperature Sensor for Android}
 This prototype will primarily showcase the communication from Arduino to Android using our libraries. 
 Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
-prototype with an Android device connected wirelessly through bluetooth to the Arduino board. The 
+prototype with an Android device connected wirelessy through bluetooth to the Arduino board. The 
 Arduino unit can read the ambient temperature and be able to send this info to an Android application,
  either on demand or at a set interval that can be chosen through settings in the application. 
-In the planning stage of this prototype, a paperprototype (see figure~\ref{fig:prototype2-paper}) was showed to the
+In the planning stage of this prototype, a paper prototype (see figure~\ref{fig:prototype2-paper}) was showed to the
 customer. Due to some problems with getting the initial design to work properly, the GUI was revised(see
 figure~\ref{fig:prototype2-gui} ) to make it more user friendly and visually appealing.
 
@@ -370,7 +368,7 @@ The Java code is again divided into packaged libraries as described below.
 		protocol interface. The actual details of the communication such as Bluetooth, cable, WiFi, stream-based or
 		sockets are hidden away from the user. This is to provide a simple and generic interface to all supported
 		communication methods. The user can easily add new communication types by extending an abstract class.
-		The ComLib additionaly defines a standard of storing and retrieving metadata of services and download URI
+		The ComLib additionally defines a standard of storing and retrieving meta-data of services and download URI
 		links from the remote device using JSON.
 	\item \textbf{no.ntnu.osnap.com.testing}\newline
 		Test units and sample programs for the ComLib. These are simple test applications that are run on
@@ -385,5 +383,5 @@ The Java code is again divided into packaged libraries as described below.
 \end{itemize}
 
 \subsection{Arduino C code}
-All the arduino code is in one class, and there is therefore no package structure to speak of. The class consists of a header file and a source file. This is then to be included in arduino projects that want to use our protocol for communication.
+All the Arduino code is in one class, and there is therefore no package structure to speak of. The class consists of a header file and a source file. This is then to be included in Arduino projects that want to use our protocol for communication.
 
