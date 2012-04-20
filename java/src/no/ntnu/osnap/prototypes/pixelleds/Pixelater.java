@@ -2,6 +2,7 @@ package no.ntnu.osnap.prototypes.pixelleds;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 /**
  *
@@ -16,12 +17,12 @@ public class Pixelater {
 
     public static Bitmap pixelate(Bitmap img) {
         int newsize = img.getWidth() > img.getHeight() ? img.getWidth() : img.getHeight();
-        newsize = newsize - (newsize % 5);
+        newsize = newsize - (newsize % 3);
         Bitmap newimg = resizeImage(img, newsize, newsize);
         img.recycle();
         Bitmap dest = Bitmap.createBitmap(newsize, newsize, Bitmap.Config.ARGB_8888);
-        int xsize = newsize / 5;
-        int ysize = newsize / 5;
+        int xsize = newsize / 3;
+        int ysize = newsize / 3;
         
         for (int x = 0; x < newimg.getWidth(); x += xsize) {
             for (int y = 0; y < newimg.getHeight(); y += ysize) {
@@ -44,5 +45,37 @@ public class Pixelater {
         }
 
         return dest;
+    }
+            public static byte[] byteMap(Bitmap im){
+        /*making the byte array.
+         * the array is shaped like this:
+         * 3x3 pixels
+         * ABC
+         * DEF
+         * GHI
+         * the array is then { red A, green A, blue A, 
+         *                    rB,gB,bB, rC,gC,bC,
+         *                      rD.etc}
+         * 
+         */
+        im = Pixelater.resizeImage(im, 3, 3);
+        byte[] pixelData = new byte[9*3];
+        int x = 0;
+        for(int i=0; i<3;i++){
+            for (int j = 0; j < 3; j++) {
+                int pre = im.getPixel(i, j);
+                
+                byte r = (byte)Color.red(pre);
+                byte g = (byte)Color.green(pre);
+                byte b = (byte)Color.blue(pre);
+                pixelData[x] = r;
+                x++;
+                pixelData[x] = g;
+                x++;
+                pixelData[x] = b;
+                x++;
+            }
+        }
+        return pixelData;
     }
 }
