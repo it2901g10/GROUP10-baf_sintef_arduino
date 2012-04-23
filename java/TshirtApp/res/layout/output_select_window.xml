@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/os_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+            android:id="@+id/os_labelFilterOptions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Filter Options"
+            android:textSize="16sp"/>
+    <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/os_radioGroupFilter">
+        <RadioButton
+                android:id="@+id/os_radioMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Message"/>
+        <RadioButton
+                android:id="@+id/os_radioSender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sender"/>
+    </RadioGroup>
+    <TextView
+            android:id="@+id/os_labelOutput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Output"
+            android:textSize="16sp"/>
+    <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/os_radioGroupOutput">
+        <RadioButton
+                android:id="@+id/os_radioLED"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="LED"/>
+        <RadioButton
+                android:id="@+id/os_radioLCD"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="LCD Display"
+                android:textSize="16sp"/>
+        <RadioButton
+                android:id="@+id/os_radioVibrator"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Vibrator"/>
+        <RadioButton
+                android:id="@+id/os_radioSpeaker"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Speaker"/>
+    </RadioGroup>
+    <Button
+            android:id="@+id/os_buttonSaveOutput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Save Filter"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"/>
+</LinearLayout>

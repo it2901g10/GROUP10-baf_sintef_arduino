@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/sw_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+    <TextView
+            android:id="@+id/sw_labelConnection"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Connection Status"
+            android:textSize="16sp"
+            />
+    <TextView
+            android:id="@+id/sw_labelConnectionStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Not connected to Arduino"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:gravity="center" />
+    <Button
+            android:id="@+id/sw_buttonConnection"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Connect to Arduino"
+            android:typeface="sans"
+            android:textStyle="bold"
+            />
+    <TextView
+            android:id="@+id/sw_labelSocialServices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="SocialServices"
+            android:textSize="16sp" />
+    <TextView
+            android:id="@+id/sw_labelFoundService"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Social Services found:" />
+    <TextView
+            android:id="@+id/sw_labelFoundServicesList"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="None"
+            android:typeface="sans"
+            android:textStyle="bold" />
+    <Button
+            android:id="@+id/sw_buttonSearchSocialServices"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Search Social Services"
+            android:typeface="sans"
+            android:textStyle="bold" />
+    <TextView
+            android:id="@+id/sw_labelSetRules"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Rules"
+            android:textSize="16sp" />
+    <Button
+            android:id="@+id/sw_buttonSetRules"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Set Rules"
+            android:typeface="sans"
+            android:textStyle="bold" />
+</LinearLayout>
