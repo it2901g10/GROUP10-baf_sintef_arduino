@@ -130,9 +130,11 @@ public class Model implements Iterable, Parcelable {
 	}
 
 	/**
-	 * Returns the value of the specified field as an Object.
+	 * Returns the value of the specified field as an {@link Object}.
 	 *
 	 * @param fieldName name of field whose value is to be returned
+	 * @return the value of the specified field as an {@link Object} or
+	 * {@code null} if no value is associated with such field.
 	 */
 	public Object getField(String fieldName) {
 		return jsonModel.opt(fieldName);
@@ -142,6 +144,8 @@ public class Model implements Iterable, Parcelable {
 	 * Returns the value of the specified field as a {@link String}.
 	 *
 	 * @param fieldName name of field whose value is to be returned
+	 * @return the value of the specified field as a {@link String} or an
+	 * empty {@link String} if no value is associated with such field.
 	 */
 	public String getStringField(String fieldName) {
 		return jsonModel.optString(fieldName);

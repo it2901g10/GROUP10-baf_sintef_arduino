@@ -7,7 +7,6 @@ package no.ntnu.osnap.social;
 import android.os.Bundle;
 import java.util.ArrayList;
 import android.os.Message;
-import android.os.Parcelable;
 import no.ntnu.osnap.social.models.Model;
 
 /**
@@ -20,14 +19,30 @@ public class Response {
 	private final static String TAG = "Social-Lib";
 	
 	public enum Status {
+		/**
+		 * Status indicating that the corresponding {@link Request} was
+		 * correctly processed.
+		 */
 		COMPLETED,
+		/**
+		 * Status indicating that the corresponding {@link Request} is
+		 * not supported by the SocialService.
+		 */
 		NOT_SUPPORTED,
+		/**
+		 * Status indicating an error in the processing of the corresponding
+		 * {@link Request}.
+		 */
 		ERROR
 	};
 	
 	private Bundle mBundle;
 	private ArrayList<? extends Model> mModels;
 
+	/**
+	 * Constructs a Response from a {@link Message}.
+	 * @param msg
+	 */
 	public static Response fromMessage(Message msg) {
 		Response ret = new Response();
 		ret.mBundle = (Bundle) msg.obj;
@@ -35,8 +50,8 @@ public class Response {
 	}
 
 	/**
-	 * Constructs a response.
-	 * The status of the response is set to {@code Status.COMPLETED}.
+	 * Constructs a response. When created, the status of a response is set
+	 * to {@code Status.COMPLETED}.
 	 */
 	public <T extends Model> Response() {
 		mBundle = new Bundle();
@@ -45,10 +60,19 @@ public class Response {
 		mBundle.putString("status", Status.COMPLETED.name());
 	}
 	
+	/**
+	 * Bundles a {@link Model} subclass in the response.
+	 * @param <T> a subclass of {@link Model}
+	 * @param model the model to be bundled
+	 */
 	public <T extends Model> void bundle(T model) {
 		mBundle.getParcelableArrayList("models").add(model);
 	}
 	
+	/**
+	 * Returns the status of this response, which indicates if the corresponding
+	 * request was carried out properly or not.
+	 */
 	public Status getStatus() {
 		return Status.valueOf(mBundle.getString("status"));
 	}
@@ -62,6 +86,22 @@ public class Response {
 	 */
 	public void setStatus(Status status) {
 		mBundle.putString("status", status.name());
+	}
+	
+	public void setNetwork(String network) {
+		mBundle.putString("network", network);
+	}
+	
+	/**
+	 * Returns the network.
+	 * @return 
+	 */
+	public String getNetwork() {
+		String ret = "";
+		if (mBundle.containsKey("network")) {
+			ret = mBundle.getString("network");
+		}
+		return ret;
 	}
 	
 	/**
@@ -80,6 +120,10 @@ public class Response {
 		return mBundle.getParcelableArrayList("models");
 	}
 
+	/**
+	 * 
+	 * @return 
+	 */
 	public Bundle getBundle() {
 		return mBundle;
 	}

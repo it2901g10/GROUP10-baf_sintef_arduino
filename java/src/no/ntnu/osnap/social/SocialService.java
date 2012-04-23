@@ -20,11 +20,11 @@ import android.os.*;
 import android.util.Log;
 
 /**
- * oSNAP class representing a Social service, which is an Android service which
- * replies prototype's requests. To use it, extend it and implement
- * {@link #handleRequest(Request)} and {@link #handlePostRequest(Request)}.
- * SocialService will receive requests from prototypes and call these methods
- * to obtain a {@link Response} to send back.
+ * oSNAP class representing a Social service, which is an Android service that
+ * handles prototypes requests. To use it, extend it and implement
+ * {@link #handleRequest(Request )} and {@link #handlePostRequest(Request )}.
+ * SocialService will invoke these methods to obtain a {@link Response}
+ * to send back.
  *
  * @author Emanuele 'lemrey' Di Santo
  */
@@ -36,7 +36,7 @@ public class SocialService extends Service {
 	private static final String TAG = "Social-Service";
 	
 	/**
-	 * The SocialService name, which is sent to Prototypes.
+	 * The SocialService name, as published to prototypes.
 	 */	
 	protected String mName = "Social-Service";
 	
@@ -70,14 +70,14 @@ public class SocialService extends Service {
 	 * Sets the Social service name, which is used by prototypes to identify the
 	 * service.
 	 *
-	 * @param name the name to publish to prototypes
+	 * @param name the name to be published to prototypes
 	 */
 	public void setServiceName(String name) {
 		mName = name;
 	}
 
 	/**
-	 * Holds the logic to handle incoming {@link Message} from Prototypes.
+	 * Handles incoming messages from prototypes.
 	 */
 	private class IncomingHandler extends Handler {
 
@@ -124,7 +124,10 @@ public class SocialService extends Service {
 
 	/**
 	 * This method is invoked by the SocialService to handle incoming requests
-	 * to fetch data from the social network.
+	 * to fetch data from the social network. This method should return an
+	 * appropriate {@link Response} object to be returned to the Prototype who
+	 * made the request. Only non-{@code null} {@link Response} objects are sent
+	 * back to the Prototype. Only one request is processed at a time.
 	 *
 	 * @param req the {@link Request} to be carried out
 	 * @return a {@link Response} containing the data requested
@@ -144,7 +147,7 @@ public class SocialService extends Service {
 	}
 
 	/**
-	 * Receives and replies discovery broadcasts sent by Prototypes.
+	 * Receives and replies discovery broadcasts sent by prototypes.
 	 */
 	private class BroadcastRcv extends BroadcastReceiver {
 
