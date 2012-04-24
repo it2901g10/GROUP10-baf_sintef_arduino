@@ -18,13 +18,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import com.example.R;
 
 public class ActivityStartWindow extends Activity
 {
 
     TshirtSingleton singleton;
-
+    SocialFinderHandler socialFinder;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -32,6 +33,7 @@ public class ActivityStartWindow extends Activity
         setContentView(R.layout.start_window);
         singleton = TshirtSingleton.getInstance(this);
         setOnClickListeners();
+        socialFinder = new SocialFinderHandler(this, (TextView)findViewById(R.id.sw_labelFoundServicesList));
     }
 
     private void setOnClickListeners() {
@@ -56,8 +58,7 @@ public class ActivityStartWindow extends Activity
         searchSSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] socialServices = singleton.searchSocialServices();
-
+                socialFinder.searchSocialServices();
             }
         });
         

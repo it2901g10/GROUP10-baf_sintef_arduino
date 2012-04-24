@@ -15,6 +15,8 @@ package no.ntnu.osnap.tshirt;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import no.ntnu.osnap.social.models.Message;
+import no.ntnu.osnap.social.models.Model;
 
 public class Filter implements Parcelable {
     String filter, compare, operator;
@@ -60,4 +62,32 @@ public class Filter implements Parcelable {
     public String toString() {
         return filter + " " + operator + " " + compare;
     }
+
+    public boolean isFilterValid(Model model) {
+        
+        if(model instanceof Message) {
+            Message message = (Message) model;
+            if(filter.equals("Message")){
+                return(checkOperator(message.getText()));
+            }
+            if(filter.equals("Sender")){
+                return(checkOperator(message.getSenderAsPerson().getName()));
+            }
+        }
+        return false;
+    }
+    
+    private boolean checkOperator(String string){
+        
+
+        if(operator.equals("==")){
+            return string.equals(compare);
+        }
+        if(operator.equals("!=")){
+            return !string.equals(compare);
+        }
+
+        return false;
+    }
+
 }

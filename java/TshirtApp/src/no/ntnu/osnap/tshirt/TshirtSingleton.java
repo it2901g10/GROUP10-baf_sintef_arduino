@@ -14,6 +14,8 @@
 package no.ntnu.osnap.tshirt;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Messenger;
 import android.widget.Toast;
 
 public class TshirtSingleton{
@@ -41,10 +43,7 @@ public class TshirtSingleton{
 
     public void toggleArduinoConnection() {
         Toast.makeText(context, "toggleArduinoConnection() is not yet implemented", Toast.LENGTH_SHORT).show();
-    }
 
-    public String[] searchSocialServices() {
-        Toast.makeText(context, "searchSocialServices() is not yet implemented", Toast.LENGTH_SHORT).show();
-        return new String[0];
+
     }
 }

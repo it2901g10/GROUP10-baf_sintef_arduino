@@ -16,6 +16,9 @@ package no.ntnu.osnap.tshirt;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import no.ntnu.osnap.social.models.Message;
+import no.ntnu.osnap.social.models.Model;
+
 public class Rule implements Parcelable{
 
     public String name;
@@ -87,6 +90,21 @@ public class Rule implements Parcelable{
 
     public Filter[] getFilters() {
         return filters;
+    }
+
+    public boolean initRuleCheck(Model model){
+        if(model instanceof Message){
+            Message p = (Message)model;
+            for (int i = 0; i < filters.length; i++) {
+                if(filters[i].isFilterValid(model) == false){
+                    L.i("Rule " + name + " filters did not satisfy given model");
+                    return false;
+                }
+            }
+            L.i("Rule " + name + " has passed filters");
+            return true;
+        }
+        return false;
     }
 
     @Override
