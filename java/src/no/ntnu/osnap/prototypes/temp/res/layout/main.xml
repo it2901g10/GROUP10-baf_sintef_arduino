@@ -11,7 +11,7 @@
         android:id="@+id/top"
         android:src="@drawable/background_01"
         android:adjustViewBounds="true"
-        android:layout_width="wrap_content"
+        android:layout_width="480px"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:visibility="invisible"
@@ -36,6 +36,16 @@
         android:layout_below="@id/temperatureShow"
         android:alpha="0.4"
         android:text="@string/text_refresh" />
+        
+    <TextView
+        android:id="@+id/lastupdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/taprefresh"
+        android:layout_marginTop="7dp"
+        android:alpha="0.4"
+        android:text="@string/text_lastupdate" />
         
     <TextView 
         android:id="@+id/temperatureMax"
@@ -72,5 +82,15 @@
          android:layout_marginTop="30dp"
          android:background="@drawable/reset_button"
          android:onClick="onReset"/>
+     
+     <TextView
+        android:id="@+id/lastreset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/resetButton"
+        android:layout_marginTop="7dp"
+        android:alpha="0.4"
+        android:text="@string/text_lastreset" />
 
 </RelativeLayout>

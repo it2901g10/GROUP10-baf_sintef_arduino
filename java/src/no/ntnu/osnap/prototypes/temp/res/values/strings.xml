@@ -12,8 +12,9 @@
     <!-- div text strings -->
     <string name="text_refresh">Tap screen to update</string>
     <string name="text_temp">+88.888</string>
-    <string name="text_max">+00.00</string>
+    <string name="text_max">-99.99</string>
     <string name="text_min">+99.99</string>
-    <string name="text_lastreset">date</string>
+    <string name="text_lastreset">Last reset: never</string>
+    <string name="text_lastupdate">Last updated: never</string>
     <!-- mac addres -->
 </resources>

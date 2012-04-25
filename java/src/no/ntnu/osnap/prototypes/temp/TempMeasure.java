@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import no.ntnu.osnap.com.BluetoothConnection;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.Request;
@@ -42,6 +44,8 @@ public class TempMeasure extends Activity {
     private TextView tempShow;
     private TextView tempMin;
     private TextView tempMax;
+    private TextView lastReset;
+    private TextView lastUpdate;
     private Prototype proto;
     private String facebook;
 
@@ -59,6 +63,8 @@ public class TempMeasure extends Activity {
         tempShow = (TextView) findViewById(R.id.temperatureShow);
         tempMax = (TextView) findViewById(R.id.temperatureMax);
         tempMin = (TextView) findViewById(R.id.temperatureMin);
+        lastReset = (TextView) findViewById(R.id.lastreset);
+        lastUpdate = (TextView) findViewById(R.id.lastupdate);
         
         
         tempShow.setTypeface(tf);
@@ -202,13 +208,25 @@ public class TempMeasure extends Activity {
             tempMeasured = 40.1;
             maxTemp(tempMeasured);
             minTemp(tempMeasured);
-            tempShow.setText("+" + tempMeasured);
+            lastUpdate.setText("Last updated: " + getDate());
+            if (tempMeasured >= 0) {
+                tempShow.setText("+"+tempMeasured);
+            } else tempShow.setText(""+tempMeasured);
+            
         }
     }
     
+    public String getDate() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("EEE d'.' MMM 'at' HH:mm");
+        return format.format(date);
+    }
+        
     public void onReset(View v) throws FileNotFoundException, IOException {
         tempMax.setText(R.string.text_max);
         tempMin.setText(R.string.text_min);
+        lastReset.setText("Last reset: " + getDate());
+        
     }
     
     private double getTemp() {
@@ -217,14 +235,17 @@ public class TempMeasure extends Activity {
         return ((analog0 - analog1) * 5 * 100) / 1024.0;
     }
     
-    private void maxTemp(double temp) {
+    private void maxTemp(double newTemp) {
         tempMaximum = Double.parseDouble(tempMax.getText().toString());
-        if (temp > tempMaximum) tempMax.setText("+"+temp);
+        if (newTemp >= tempMaximum && newTemp >= 0) tempMax.setText("+"+newTemp);
+        else tempMax.setText(""+newTemp);
+        
     }
     
-    private void minTemp(double temp) {
+    private void minTemp(double newTemp) {
         tempMinimum = Double.parseDouble(tempMin.getText().toString());
-        if (temp < tempMinimum) tempMin.setText("+"+temp);
+        if (newTemp <= tempMinimum && newTemp >= 0) tempMin.setText("+"+newTemp);
+        else tempMin.setText(""+newTemp);
     }
     
     //social stuff
