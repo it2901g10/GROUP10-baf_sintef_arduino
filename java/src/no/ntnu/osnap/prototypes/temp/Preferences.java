@@ -1,9 +1,8 @@
-package no.ntnu.osnap.prototypes.temp;
+package no.ntnu.osnap.temp;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import no.ntnu.osnap.temp.R;
 
 public class Preferences extends Activity {
     
