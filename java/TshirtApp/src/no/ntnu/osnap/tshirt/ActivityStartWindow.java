@@ -20,12 +20,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.R;
+import no.ntnu.osnap.social.Prototype;
+import no.ntnu.osnap.social.listeners.ConnectionListener;
+
+import java.util.ArrayList;
 
 public class ActivityStartWindow extends Activity
 {
 
     TshirtSingleton singleton;
-    SocialFinderHandler socialFinder;
+    ArrayList<String> socialServiceList;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -33,7 +37,7 @@ public class ActivityStartWindow extends Activity
         setContentView(R.layout.start_window);
         singleton = TshirtSingleton.getInstance(this);
         setOnClickListeners();
-        socialFinder = new SocialFinderHandler(this, (TextView)findViewById(R.id.sw_labelFoundServicesList));
+        socialServiceList = new ArrayList<String>();
     }
 
     private void setOnClickListeners() {
@@ -56,12 +60,44 @@ public class ActivityStartWindow extends Activity
 
         Button searchSSButton = (Button)findViewById(R.id.sw_buttonSearchSocialServices);
         searchSSButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                socialFinder.searchSocialServices();
+                socialServiceList.clear();
+                updateServiceListView();
+                ConnectionListener listener = new ConnectionListener() {
+                    @Override
+                    public void onConnected(String name) {
+                        L.i("Activity Start window got " + name);
+                        socialServiceList.add(name);
+                        updateServiceListView();
+                    }
+                };
+                Prototype prototype = new Prototype(ActivityStartWindow.this, listener);
+                prototype.discoverServices();
             }
         });
         
+    }
+
+    private void updateServiceListView() {
+        final TextView view = (TextView)findViewById(R.id.sw_labelFoundServicesList);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(socialServiceList.size() == 0){
+                    view.setText("No service found");
+                    return;
+                }
+
+                String services = "";
+                for (int i = 0; i < socialServiceList.size(); i++) {
+                    services += socialServiceList.get(i) + ((i < socialServiceList.size()-1)?"\n":"");
+
+                }
+                view.setText(services);
+            }
+        });
     }
 
 }

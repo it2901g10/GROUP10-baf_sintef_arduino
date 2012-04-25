@@ -27,9 +27,11 @@ public class TshirtSingleton{
     private Context context;
     public RulesDB database;
 
+
     public TshirtSingleton(Context applicationContext) {
         context = applicationContext;
         database = new RulesDB(context);
+
     }
 
     public static TshirtSingleton getInstance(Context context){
