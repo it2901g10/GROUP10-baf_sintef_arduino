@@ -37,7 +37,7 @@ public abstract class Protocol extends Thread {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.2.0";
+	public final static String LIBRARY_VERSION = "1.3.0";
 	
 	/**
 	 * Private mutex flag for atomic methods
