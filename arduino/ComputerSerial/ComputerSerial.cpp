@@ -46,7 +46,7 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 			sensor(flag);
 			break;
 		case OPCODE_DATA:
-			data(flag);
+			data(size, flag, content);
 			break;
 		case OPCODE_PIN_R:
 			pinRead(flag);
@@ -121,12 +121,8 @@ void ComputerSerial::sensor(uint8_t number) {
 	free(status);
 }
 
-void ComputerSerial::data(uint8_t pin) {
-	// Toggle pin(pin)
-	pinMode(pin, OUTPUT);
-	digitalWrite(pin, HIGH);
-	delay(200);
-	digitalWrite(pin, LOW);
+void ComputerSerial::data(uint8_t size, uint8_t flag, uint8_t content[]) {
+	functions[OPCODE_DATA](flag, content, size-3);
 	ack(OPCODE_DATA);
 }
 
