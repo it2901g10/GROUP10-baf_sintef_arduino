@@ -232,8 +232,10 @@ public abstract class Protocol extends Thread {
 		
 		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > TIMEOUT)
+			if (System.currentTimeMillis() - time > TIMEOUT){
+				waitingForAck = null;
 				throw new TimeoutException("Timeout");
+			}
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {
@@ -283,8 +285,10 @@ public abstract class Protocol extends Thread {
 			
 			long time = System.currentTimeMillis();
 			while (waitingForAck != null) {
-				if (System.currentTimeMillis() - time > TIMEOUT)
+				if (System.currentTimeMillis() - time > TIMEOUT){
+					waitingForAck = null;
 					throw new TimeoutException("Timeout");
+				}
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ex) {
@@ -325,8 +329,10 @@ public abstract class Protocol extends Thread {
 		
 		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > TIMEOUT)
+			if (System.currentTimeMillis() - time > TIMEOUT){
+				waitingForAck = null;
 				throw new TimeoutException("Timeout");
+			}
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
@@ -428,8 +434,10 @@ public abstract class Protocol extends Thread {
 
 				long time = System.currentTimeMillis();
 				while (waitingForAck != null) {
-					if (System.currentTimeMillis() - time > TIMEOUT)
+					if (System.currentTimeMillis() - time > TIMEOUT){
+						waitingForAck = null;
 						throw new TimeoutException("Timeout");
+					}
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException ex) {
@@ -467,8 +475,10 @@ public abstract class Protocol extends Thread {
 		
 		long time = System.currentTimeMillis();
 		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > TIMEOUT)
+			if (System.currentTimeMillis() - time > TIMEOUT){
+				waitingForAck = null;
 				throw new TimeoutException("Timeout");
+			}
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {
@@ -519,8 +529,10 @@ public abstract class Protocol extends Thread {
 			
 			long time = System.currentTimeMillis();
 			while (waitingForAck != null) {
-				if (System.currentTimeMillis() - time > TIMEOUT)
+				if (System.currentTimeMillis() - time > TIMEOUT){
+					waitingForAck = null;
 					throw new TimeoutException("Timeout");
+				}
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException ex) {
