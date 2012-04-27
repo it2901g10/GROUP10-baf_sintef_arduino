@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.example"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <application android:label="@string/app_name" >
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityStartWindow"
-                  android:label="@string/app_name">
+      package="no.ntnu.osnap.tshirt">
+    <application>
+        <activity android:name=".ActivityStartWindow" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityOutput"/>
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityFilterEdit"/>
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityStartWindow"/>
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityRulesEdit"/>
-        <activity android:name="no.ntnu.osnap.tshirt.ActivityRulesList"/>
+        <activity android:name=".ActivityOutput"/>
+        <activity android:name=".ActivityFilterEdit"/>
+        <activity android:name=".ActivityRulesEdit"/>
+        <activity android:name=".ActivityRulesList"/>
+        <service android:name=".ServiceDataFetcher"/>
     </application>
 </manifest> 

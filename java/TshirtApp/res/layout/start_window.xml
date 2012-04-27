@@ -80,5 +80,5 @@
             android:padding="5dp"
             android:text="Set Rules"
             android:typeface="sans"
-            android:textStyle="bold" />
+            android:textStyle="bold"  />
 </LinearLayout>
