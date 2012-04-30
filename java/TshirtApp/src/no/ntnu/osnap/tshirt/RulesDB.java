@@ -76,9 +76,9 @@ public class RulesDB {
         public void onOpen(SQLiteDatabase db) {
             super.onOpen(db);
 
-            db.execSQL("DROP TABLE IF EXISTS rules");
-            db.execSQL("DROP TABLE IF EXISTS filters");
-            onCreate(db);
+//            db.execSQL("DROP TABLE IF EXISTS rules");
+//            db.execSQL("DROP TABLE IF EXISTS filters");
+//            onCreate(db);
 
         }
 
@@ -156,6 +156,7 @@ public class RulesDB {
                 list.add(getRule(c));
             }while (c.moveToNext());
         }
+        c.close();
         return list.toArray(new Rule[0]);
     }
     private Rule getRule(Cursor c){
@@ -176,7 +177,7 @@ public class RulesDB {
                 list.add(getFilter(c));
             }while (c.moveToNext());
         }
-
+        c.close();
         return list.toArray(new Filter[0]);
     }
 

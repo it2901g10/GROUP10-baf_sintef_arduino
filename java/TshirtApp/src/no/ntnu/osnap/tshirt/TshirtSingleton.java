@@ -14,8 +14,6 @@
 package no.ntnu.osnap.tshirt;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Messenger;
 import android.widget.Toast;
 
 public class TshirtSingleton{
@@ -28,9 +26,11 @@ public class TshirtSingleton{
     public RulesDB database;
 
 
+
     public TshirtSingleton(Context applicationContext) {
         context = applicationContext;
         database = new RulesDB(context);
+        database.open();
 
     }
 
@@ -45,7 +45,36 @@ public class TshirtSingleton{
 
     public void toggleArduinoConnection() {
         Toast.makeText(context, "toggleArduinoConnection() is not yet implemented", Toast.LENGTH_SHORT).show();
+        connectBT();
 
+    }
+
+    private void connectBT() {
+//        ConnectionListener listener = new ConnectionListener() {
+//            @Override
+//            public void onConnect(BluetoothConnection bluetoothConnection) {
+//            }
+//            @Override
+//            public void onConnecting(BluetoothConnection bluetoothConnection) {
+//            }
+//            @Override
+//            public void onDisconnect(BluetoothConnection bluetoothConnection) {
+//            }
+//        };
+//        con = new BluetoothConnection("00:10:06:29:00:48", context ,listener);
+
+    }
+
+    public void sendToLEDArduino(String string){
+        
+    }
+    public void sendToLCDDiplayArduino(String text){
+        
+    }
+    public void sendToVibratorArduino(String text){
+
+    }
+    public void sendToSpeakerArduino(String text){
 
     }
 }

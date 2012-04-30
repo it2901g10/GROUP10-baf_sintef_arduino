@@ -92,7 +92,7 @@ public class Rule implements Parcelable{
         return filters;
     }
 
-    public boolean initRuleCheck(Model model){
+    public boolean isRuleSatisfied(Model model){
         if(model instanceof Message){
             Message p = (Message)model;
             for (int i = 0; i < filters.length; i++) {

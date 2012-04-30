@@ -16,11 +16,9 @@ package no.ntnu.osnap.tshirt;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import com.example.R;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +42,7 @@ public class ActivityRulesList extends ListActivity{
 
         singleton = TshirtSingleton.getInstance(this);
 
-        singleton.database.open();
+        //singleton.database.open();
         //singleton.database.addNewRule(new Rule("name", "tew", "Ts", null, 3));
         layoutRulesList();
     }

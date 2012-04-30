@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import com.example.R;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
 
@@ -38,6 +37,7 @@ public class ActivityStartWindow extends Activity
         singleton = TshirtSingleton.getInstance(this);
         setOnClickListeners();
         socialServiceList = new ArrayList<String>();
+        startService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
     }
 
     private void setOnClickListeners() {
@@ -69,6 +69,7 @@ public class ActivityStartWindow extends Activity
                     @Override
                     public void onConnected(String name) {
                         L.i("Activity Start window got " + name);
+
                         socialServiceList.add(name);
                         updateServiceListView();
                     }
@@ -76,8 +77,9 @@ public class ActivityStartWindow extends Activity
                 Prototype prototype = new Prototype(ActivityStartWindow.this, listener);
                 prototype.discoverServices();
             }
+
         });
-        
+
     }
 
     private void updateServiceListView() {
@@ -96,6 +98,7 @@ public class ActivityStartWindow extends Activity
 
                 }
                 view.setText(services);
+
             }
         });
     }

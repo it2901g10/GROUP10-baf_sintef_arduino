@@ -27,7 +27,8 @@ public class TestTshirt extends Activity {
         ConnectionListener listener = getConnectionListener();
         try {
             L.i("creating new connection");
-            con = new BluetoothConnection("00:06:66:42:9B:C1", this, listener);
+//            con = new BluetoothConnection("00:06:66:42:9B:C1", this, listener);
+            con = new BluetoothConnection("00:10:06:29:00:48", this, listener);
         } catch (UnsupportedHardwareException e) {
             e.printStackTrace();
         }
