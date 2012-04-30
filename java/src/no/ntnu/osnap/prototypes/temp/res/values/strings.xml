@@ -5,19 +5,16 @@
     <!-- options_menu item names -->
     <string name="menu_share">Share</string>
     <string name="menu_setting">Settings</string>
-    <!-- tab_item names -->
-    <string name="tab_stats">Statistics</string>
-    <string name="tab_temp">Temperature</string>
     <!-- preference keys -->
     <string name="pref_tap">preftap</string>
     <string name="pref_time">preftime</string>
     <string name="pref_mac">Mac addres</string>
     <!-- div text strings -->
     <string name="text_refresh">Tap screen to update</string>
-    <string name="text_reset">Reset</string>
-    <string name="text_mintemp">Lowest temperature</string>
-    <string name="text_maxtemp">Highest temperature</string>
-    <string name="text_avgtemp">Average temperature</string>
-    <string name="text_temp">Temperature: </string>
+    <string name="text_temp">+88.888</string>
+    <string name="text_max">-99.99</string>
+    <string name="text_min">+99.99</string>
+    <string name="text_lastreset">Last reset: never</string>
+    <string name="text_lastupdate">Last updated: never</string>
     <!-- mac addres -->
 </resources>

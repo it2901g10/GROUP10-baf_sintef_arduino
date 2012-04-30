@@ -1,15 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
->
-    <LinearLayout 
-        android:id="@+id/fragment_container"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-    >
+ 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:background="@drawable/background"
+                android:layout_centerInParent="true"
+                android:orientation="vertical" >
 
-    </LinearLayout>
-</LinearLayout>
+    <ImageView 
+        android:id="@+id/top"
+        android:src="@drawable/background_01"
+        android:adjustViewBounds="true"
+        android:layout_width="480px"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"
+        android:layout_marginBottom="-7dp"/>
+               
+    <TextView
+        android:id="@+id/temperatureShow"
+        android:maxLength="5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_temp"
+        android:textColor="#000"
+        android:textSize="94sp"
+        android:layout_below="@id/top"
+        android:layout_marginLeft="13sp"/>
+        
+    <TextView
+        android:id="@+id/taprefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/temperatureShow"
+        android:alpha="0.4"
+        android:text="@string/text_refresh" />
+        
+    <TextView
+        android:id="@+id/lastupdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/taprefresh"
+        android:layout_marginTop="7dp"
+        android:alpha="0.4"
+        android:text="@string/text_lastupdate" />
+        
+    <TextView 
+        android:id="@+id/temperatureMax"
+        android:maxLength="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_max"
+        android:textColor="#000"
+        android:textSize="70sp"
+        android:layout_below="@id/taprefresh"
+        android:layout_marginLeft="63dp"
+        android:layout_marginTop="46dp"/>
+        
+    <TextView 
+        android:id="@+id/temperatureMin"
+        android:maxLength="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_min"
+        android:textColor="#000"
+        android:textSize="70sp"
+        android:layout_below="@id/temperatureMax"
+        android:layout_marginLeft="63dp"
+        android:layout_marginTop="22dp"/>
+        
+     <Button
+         android:id="@+id/resetButton"
+         android:focusable="false"
+         android:adjustViewBounds="true"
+         android:layout_width="140dp"
+         android:layout_height="37dp"
+         android:layout_centerHorizontal="true"
+         android:layout_below="@id/temperatureMin"
+         android:layout_marginTop="30dp"
+         android:background="@drawable/reset_button"
+         android:onClick="onReset"/>
+     
+     <TextView
+        android:id="@+id/lastreset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/resetButton"
+        android:layout_marginTop="7dp"
+        android:alpha="0.4"
+        android:text="@string/text_lastreset" />
 
+</RelativeLayout>
