@@ -58,7 +58,7 @@ public class BluetoothConnection extends Protocol {
 	protected BluetoothSocket socket;
 	protected BluetoothAdapter bluetooth;	
 	
-	private ConnectionState connectionState;
+	private volatile ConnectionState connectionState;
 		
 	/**
 	 * An enumeration describing the different connection states a BluetoothConnection can be
@@ -69,6 +69,9 @@ public class BluetoothConnection extends Protocol {
 		
 		/** The device is trying to establish a connection. */
 		STATE_CONNECTING,
+		
+		/** We are connected to the device, but we are waiting for a Ping */
+		STATE_FINALIZE_CONNECTION,
 		
 		/** A valid open connection is established to the remote device. */
 		STATE_CONNECTED
@@ -139,6 +142,10 @@ public class BluetoothConnection extends Protocol {
 				
 			case STATE_CONNECTING:
 				connectionListener.onConnecting(this);
+				break;
+				
+			default:
+				//dont notify listeners
 				break;
 		}
 		
@@ -212,7 +219,7 @@ public class BluetoothConnection extends Protocol {
 	 * Returns the current connection state of this BluetoothConnection to the remote device
 	 * @return STATE_CONNECTED, STATE_CONNECTING or STATE_DISCONNECTED
 	 */
-	public synchronized ConnectionState getConnectionState() {
+	public ConnectionState getConnectionState() {
 		return connectionState;
 	}
 	
@@ -222,7 +229,7 @@ public class BluetoothConnection extends Protocol {
 	 * @return true if there is a connection, false otherwise
 	 */
 	public boolean isConnected() {
-		return getConnectionState() == ConnectionState.STATE_CONNECTED;
+		return connectionState == ConnectionState.STATE_CONNECTED || connectionState == ConnectionState.STATE_FINALIZE_CONNECTION;
 	}
 	
 	/**
@@ -230,7 +237,7 @@ public class BluetoothConnection extends Protocol {
 	 * remote device can be done again.
 	 * @throws IOException if there was a problem closing the connection.
 	 */
-	public synchronized void disconnect() throws IOException {
+	public void disconnect() throws IOException {
 				
 		//Close socket only if we are connected or trying to connect
 		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
