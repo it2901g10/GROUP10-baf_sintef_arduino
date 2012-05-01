@@ -136,7 +136,7 @@ class ConnectionThread extends Thread {
 		try {
 			connection.ping();
 		} catch (TimeoutException ex) {
-			Log.e("ConnectionThread", "Remote module did not respond ping: " + ex.getMessage());
+			Log.e("ConnectionThread", "Failed to setup connection: " + ex.getMessage());
 			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
 			return;
 		}

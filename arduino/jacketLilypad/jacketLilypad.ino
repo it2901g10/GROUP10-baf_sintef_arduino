@@ -15,24 +15,12 @@ void* text(byte flag, byte content[], byte contentSize){
   
   for(int i = 0; i < contentSize; i++)
   {
-//    tone(PIN_SOUND, content[i]*100);
-    tone(PIN_SOUND, 400);
+    tone(PIN_SOUND, content[i]*100);
     delay(200);
     noTone(PIN_SOUND);  
   }
   
-    tone(PIN_SOUND, 400);
-    delay(200);
-    noTone(PIN_SOUND);  
-}
-
-void* deviceInfo(byte flag, byte content[], byte contentSize)
-{
-    static byte response[] = "{NAME:\"Jacket Prototype\", VERSION:\"1.3.0\","
-         "SERVICES:[\"SERVICE_LED_LAMP\", \"SERVICE_LCD_SCREEN\", \"SERVICE_VIBRATION\"],"
-         "LINKS:[{\"DEFAULT\":\"No download link\"}]}";
-         
-    return &response;
+    noTone(PIN_SOUND);
 }
 
 void setup()
@@ -40,13 +28,19 @@ void setup()
     //Initialize computer serial class
     comp.begin(9600);
     comp.attachFunction(comp.OPCODE_TEXT, &text);
-    comp.attachFunction(comp.OPCODE_DEVICE_INFO, &deviceInfo);
+   
+    comp.setDeviceName("Jacket Prototype");
+    comp.setDeviceVersion("1.3.6");
     
-  
     //Setup pins
     pinMode(PIN_VIBRATION, OUTPUT);	
+    comp.addDeviceService("SERVICE_VIBRATION");
+
     pinMode(PIN_SOUND, OUTPUT);	
+    comp.addDeviceService("SERVICE_SPEAKER");
+
     pinMode(PIN_DEBUG_LED, OUTPUT);    
+    comp.addDeviceService("SERVICE_LED_LAMP");
 }
 
 void loop()

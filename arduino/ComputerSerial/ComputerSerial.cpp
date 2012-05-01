@@ -22,8 +22,10 @@ void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t conte
 	return NULL;
 }
 
-ComputerSerial::ComputerSerial(){
-
+ComputerSerial::ComputerSerial(int baud)
+{
+    //Initialize with baudrate if requested
+    if(baud != 0) begin(baud);
 }
 
 void ComputerSerial::begin(int baud){
@@ -64,12 +66,51 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 	}
 }
 
-void ComputerSerial::getDeviceInfo(){
-    //send string representation of device info
-	char *rawData = (char*) functions[OPCODE_DEVICE_INFO](OPCODE_DEVICE_INFO, 0, 0);
+void ComputerSerial::setDeviceName(const String &name)
+{
+    deviceName = name;
+}
 
-    //convert char array to string to make life easier
-    String deviceInfo = String(*rawData);
+void ComputerSerial::setDeviceVersion(const String &version)
+{
+    deviceVersion = version;
+}
+
+void ComputerSerial::addDeviceService(const String &service)
+{
+    //Is the first element in the JSon array? If not we need to add a comma seperator
+    if(deviceServices.length() > 0) deviceServices += ", ";
+
+    //Append element to array
+    deviceServices += "\"" + service + "\"";
+}
+
+void ComputerSerial::addDeviceDownloadLink(const String &link, const String &platform)
+{
+    //Is the first element in the JSon array? If not we need to add a comma seperator
+    if(deviceDownloadLinks.length() > 0) deviceDownloadLinks += ", ";
+
+    //Append element to array
+    deviceDownloadLinks += "{" + platform + ": \"" + link + "\"}";
+}
+
+void ComputerSerial::getDeviceInfo(){
+    //Build the device info JSON object
+    String deviceInfo;
+
+    //Device name
+    deviceInfo += "{NAME:\"" + deviceName + "\", ";
+
+    //Device version
+    deviceInfo += "VERSION:\"" + deviceVersion + "\", ";
+
+    //Device services
+    deviceInfo += "SERVICES:[" + deviceServices + "], ";
+
+    //Device links
+    deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
+
+    //send string representation of device info
 	char response[deviceInfo.length()];
 	deviceInfo.toCharArray(response, deviceInfo.length());
 

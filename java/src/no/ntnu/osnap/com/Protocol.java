@@ -37,7 +37,7 @@ public abstract class Protocol extends Thread {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.3.5";
+	public final static String LIBRARY_VERSION = "1.3.6";
 	
 	/**
 	 * Private mutex flag for atomic methods
@@ -138,8 +138,8 @@ public abstract class Protocol extends Thread {
 		try {
 			sendBytes(newInstruction.getInstructionBytes());
 		} catch (IOException ex) {
-			System.out.println("Send fail");
-			//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
+			//System.out.println("Send fail");
+			Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
 		}
 		release();
 		
