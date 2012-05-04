@@ -8,18 +8,13 @@ static const int PIN_VIBRATION = 3;
 static const int PIN_SOUND = 9;
 static const int PIN_DEBUG_LED = 13;
 
-void* text(byte flag, byte content[], byte contentSize){
-    static bool toggle = false;
-    digitalWrite(PIN_DEBUG_LED, toggle ? HIGH : LOW);
-    toggle = !toggle;  
-  
+void* text(byte flag, byte content[], byte contentSize){ 
   for(int i = 0; i < contentSize; i++)
   {
-    tone(PIN_SOUND, content[i]*100);
+    tone(PIN_SOUND, content[i]*content[i]);
     delay(200);
     noTone(PIN_SOUND);  
-  }
-  
+  }  
     noTone(PIN_SOUND);
 }
 
