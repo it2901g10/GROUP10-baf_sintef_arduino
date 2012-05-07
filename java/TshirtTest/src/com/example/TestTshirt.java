@@ -86,14 +86,9 @@ public class TestTshirt extends Activity {
         Button lcdDisplay = (Button)findViewById(R.id.buttonLCDDisplay);
         lcdDisplay.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                L.i( "Sending string");
                 if(con.isConnected()){
-                    L.i("Is Connected");
                     try {
-                        con.print("ab", true);
-                        L.i("called con.print()");
-                    } catch (TimeoutException e) {
-                        L.i(e.getMessage());
+                        con.print("Update: " + System.currentTimeMillis(), false);
                     }
                     catch (Exception e){
                         L.i( e.getMessage());
@@ -110,10 +105,9 @@ public class TestTshirt extends Activity {
             public void onClick(View view) {
                 if(con.isConnected()){
     	    		try {
-						con.print("qwertyui", false);
+						con.data(new byte[]{100, 75, 52, 15}, false);
 					} catch (TimeoutException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						L.i(e.getMessage());
 					}
                 }
 
@@ -129,9 +123,9 @@ public class TestTshirt extends Activity {
                 	timer.schedule(new TimerTask(){
                 		public void run(){
                         	try {
-								con.write(3, true, false);
+								con.write(4, true, false);
 	                        	Thread.sleep(2000);
-	                        	con.write(3, false, false);
+	                        	con.write(4, false, false);
 							} 
                         	catch (Exception e) {
                                 quickToastMessage(e.getMessage());
