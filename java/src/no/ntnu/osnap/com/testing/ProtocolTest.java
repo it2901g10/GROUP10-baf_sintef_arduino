@@ -11,22 +11,10 @@ public class ProtocolTest {
 		
 		boolean toggle = false;
         
-        for (long i = 0; i < 1000; ++i){
-            //arduino.print(new String(new char[250]));
-            //arduino.newPrint(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-			//arduino.pulse(13);
-			//int value = arduino.sensor(0);
-            //System.out.println("value: " + value);
-			//arduino.write(13, value);
-            arduino.print(i + "s");
-			arduino.print(i + "s", true);
-			
-			//Thread.sleep(100);
-			
-			//arduino.print(value + "   ", false);
-			//System.out.println("0: " + arduino.sensor(0));
-			//System.out.println("10: " + arduino.sensor(10));
-			//System.out.println("20: " + arduino.sensor(20));
+        for (long i = 120; i < 1000; ++i){
+			System.out.println("Printing " + (byte)i);
+            arduino.data(new byte[]{(byte)i}, true);
+			Thread.sleep(1000);
         }
 		
 		Thread.sleep(10000);

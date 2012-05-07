@@ -109,6 +109,7 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
 				break;
 			} catch (TimeoutException e) {
 				System.out.println("Ping timeout");
+				close();
 			}
         }
         
