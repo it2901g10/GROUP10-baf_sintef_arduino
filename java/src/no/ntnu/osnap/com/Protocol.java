@@ -52,7 +52,7 @@ public abstract class Protocol extends Thread {
 	 */
 	protected ConnectionMetadata connectionMetadata;
 	
-	private BlockingQueue<ProtocolInstruction> pendingInstructions;
+	private final BlockingQueue<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
 
 	private boolean running;
