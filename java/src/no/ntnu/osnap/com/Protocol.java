@@ -19,11 +19,11 @@ package no.ntnu.osnap.com;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeoutException;
+
+import android.util.Log;
 
 /**
  * This class defines a communication standard with a remote device. The actual
@@ -37,7 +37,7 @@ public abstract class Protocol extends Thread {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.2.0";
+	public final static String LIBRARY_VERSION = "1.3.6";
 	
 	/**
 	 * Private mutex flag for atomic methods
@@ -138,8 +138,8 @@ public abstract class Protocol extends Thread {
 		try {
 			sendBytes(newInstruction.getInstructionBytes());
 		} catch (IOException ex) {
-			System.out.println("Send fail");
-			//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
+			//System.out.println("Send fail");
+			Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
 		}
 		release();
 		
@@ -203,7 +203,7 @@ public abstract class Protocol extends Thread {
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-			System.out.println("Size: " + pendingInstructions.size());
+        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " bytes");
 			pendingInstructions.notify();
 		}
 	}
@@ -217,29 +217,26 @@ public abstract class Protocol extends Thread {
     public final void ping() throws TimeoutException {
         lock();
         
-		ProtocolInstruction newInstruction =
-				new ProtocolInstruction(OpCode.PING, (byte)0, new byte[1]);
+		ProtocolInstruction newInstruction = new ProtocolInstruction(OpCode.PING, (byte)0, new byte[1]);
 		
         try {
             sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
-            System.out.println("Derp send");
+        	Log.e("Protocol", "Could not send data: " + ex);
         }
         
         waitingForAck = OpCode.PING;
         
         release();
 		
-		long time = System.currentTimeMillis();
+        //Wait up to TIMEOUT milliseconds before giving up
+		long time = System.currentTimeMillis() + TIMEOUT;
 		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > TIMEOUT){
+			if (System.currentTimeMillis() > time) {
 				waitingForAck = null;
-				throw new TimeoutException("Timeout");
+				throw new TimeoutException("Timeout (remote device used too long time to respond)");
 			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-			}
+			try { Thread.sleep(10); } catch (InterruptedException ex) { /*nothing*/ }
 		}
 
         ackProcessingComplete();
@@ -612,7 +609,7 @@ public abstract class Protocol extends Thread {
         	
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-				System.out.println("Ack received for: " + waitingForAck);
+            	Log.v("Protocol", "Ack received for: " + waitingForAck.name());
                 byte tempAck = waitingForAck.value;
                 
 				boolean hadAckProcessor = false;
@@ -636,6 +633,7 @@ public abstract class Protocol extends Thread {
 				
                 currentCommand = new Command();
             } else {
+            	Log.e("Protocol", "Received something unexpected");
                 throw new IllegalArgumentException("Received something unexpected");
             }
         }

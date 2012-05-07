@@ -1,4 +1,4 @@
-#define LCD 0
+//#define LCD 0
 #define LCD_LINES 2
 #define LCD_COLUMNS 16
 
@@ -40,20 +40,16 @@ void* buttons(byte flag, byte content[], byte contentSize){
 	*status = analogRead(flag < 6 ? flag : 0);
 	return status;
 }
-void* deviceInfo(byte flag, byte content[], byte contentSize){
-        byte response[] = "{NAME:\"Anders Arduino Module\", VERSION:\"1.2.0\","
-         "SERVICES:[\"SERVICE_LED_LAMP\", \"SERVICE_LCD_SCREEN\", \"SERVICE_RGB_LAMP\"],"
-         "LINKS:[{\"DEFAULT\":\"No download link\"}]}";
-         
-	return &response;
-}
 
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	comp.attachFunction(comp.OPCODE_TEXT, &text);
 	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
-	comp.attachFunction(comp.OPCODE_DEVICE_INFO, &deviceInfo);
+
+        comp.setDeviceInfo("{NAME:\"Anders Arduino Module\", VERSION:\"1.2.0\","
+         "SERVICES:[\"SERVICE_LED_LAMP\", \"SERVICE_LCD_SCREEN\", \"SERVICE_RGB_LAMP\"],"
+         "LINKS:[{\"DEFAULT\":\"No download link\"}]}");
 	
   	pinMode(13, OUTPUT);
 	
@@ -100,6 +96,10 @@ void loop(){
 
 void serialEvent(){
 	bytes += Serial.available();
-	
+
+	static boolean flag = false;
+        digitalWrite(13, flag ? HIGH : LOW);
+        flag = !flag;
+
 	comp.serialEvent();
 }

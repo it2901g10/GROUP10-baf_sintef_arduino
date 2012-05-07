@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/fe_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+            android:id="@+id/fe_labelFilterOptions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Filter Options"
+            android:textSize="16sp"/>
+    <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fe_radioGroupFilter">
+        <RadioButton
+                android:id="@+id/fe_radioMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Message"/>
+        <RadioButton
+                android:id="@+id/fe_radioSender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Sender"/>
+    </RadioGroup>
+    <TextView
+            android:id="@+id/fe_labelCompareTo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Compare to"
+            android:textSize="16sp"/>
+    <EditText
+            android:id="@+id/fe_editCompareString"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Compare String"
+            android:textSize="18sp"/>
+    <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fe_radioGroupOperator">
+        <RadioButton
+                android:id="@+id/fe_radioEqual"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Equal"/>
+        <RadioButton
+                android:id="@+id/fe_radioNotEqual"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Not Equal"
+                android:textSize="16sp"/>
+    </RadioGroup>
+    <Button
+            android:id="@+id/fe_buttonSaveFilter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Save Filter"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"/>
+</LinearLayout>

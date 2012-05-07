@@ -65,19 +65,18 @@ class ConnectionThread extends Thread {
 				try {
 					int readByte = connection.input.read();
 					if( readByte != -1 ) {
-				    	Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
+				    	//Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
 				    	connection.byteReceived( (byte)readByte );
 					}
 					else {
 						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				} catch (IOException e) {
-					Log.e("BluetoothConnection", "Read error: " + e.getMessage());
+					Log.e("ConnectionThread", "Read error: " + e.getMessage());
 					try {
-						connection.input.available();
+						connection.disconnect();
 					} catch (IOException e1) {
-						//If this happens there is an error with the connection
-						try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
+						Log.e("ConnectionThread", "FATAL ERROR: " + e1.getMessage());
 					}
 				}			
 			}

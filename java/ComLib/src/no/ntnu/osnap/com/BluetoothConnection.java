@@ -127,7 +127,7 @@ public class BluetoothConnection extends Protocol {
 	 * Changes the connection state of this BluetoothConnection. Package visible.
 	 * @param setState the new ConnectionState of this BluetoothConnection
 	 */
-	synchronized void setConnectionState(ConnectionState setState) {
+	void setConnectionState(ConnectionState setState) {
 		connectionState = setState;
 		
 		//Tell listener about any connection changes
@@ -242,12 +242,12 @@ public class BluetoothConnection extends Protocol {
 		//Close socket only if we are connected or trying to connect
 		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
 			setConnectionState(ConnectionState.STATE_DISCONNECTED);
+			super.stopThread();
 			if(socket != null) {
 				socket.close();
+				socket = null;
 				input = null;
 				output = null;
-				socket = null;
-				super.stopThread();
 			}
 			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
