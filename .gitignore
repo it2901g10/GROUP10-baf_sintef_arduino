@@ -1,4 +1,6 @@
 *.lyx
+*.glg
+*.gls
 
 documentation/report/report.aux
 

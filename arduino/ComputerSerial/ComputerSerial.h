@@ -41,21 +41,26 @@ class ComputerSerial{
 	void ping();
 	void text(uint8_t size, uint8_t flag, uint8_t content[]);
 	void sensor(uint8_t number);
-	void data(uint8_t pin);
+	void data(uint8_t size, uint8_t flag, uint8_t content[]);
 	void pinRead(uint8_t pin);
 	void pinWrite(uint8_t pin, uint8_t value);
-	void getDeviceInfo();
 	void reset();
 
 	unsigned int bytesReceived;
 
 public:
-	ComputerSerial();
+	ComputerSerial(int baud = 0);
 	static void* placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
 	void serialEvent();
 	void begin(int baud);
-	void attachFunction(uint8_t opcode,
-		void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
+	void attachFunction(uint8_t opcode, void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
+
+	//device info functions
+	void getDeviceInfo();
+	void setDeviceName(const String &name);
+	void setDeviceVersion(const String &version);
+	void addDeviceService(const String &service);
+	void addDeviceDownloadLink(const String &link, const String &platform = "DEFUALT");
 
 	unsigned int getBytesReceived();
 
@@ -75,6 +80,12 @@ public:
 private:
 	static const uint8_t NUM_OPCODES = 7;
 	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
+
+	//Device info variables
+	String deviceName;
+    String deviceVersion;
+    String deviceServices;
+    String deviceDownloadLinks;
 };
 
 #endif

@@ -20,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeoutException;
 
 import no.ntnu.osnap.com.BluetoothConnection.ConnectionState;
 
@@ -51,6 +52,38 @@ class ConnectionThread extends Thread {
 				
 		setDaemon(true);
 		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");
+	}
+	
+	/**
+	 * This thread monitors and polls for new data recieved from the remote device
+	 */
+	private class PollingThread extends Thread {
+		public void run() {			
+			
+			//Keep listening bytes from the stream
+			while( connection.isConnected() ){
+				try {
+					int readByte = connection.input.read();
+					if( readByte != -1 ) {
+				    	Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
+				    	connection.byteReceived( (byte)readByte );
+					}
+					else {
+						try { Thread.sleep(10); } catch (InterruptedException ex) {}
+					}
+				} catch (IOException e) {
+					Log.e("BluetoothConnection", "Read error: " + e.getMessage());
+					try {
+						connection.input.available();
+					} catch (IOException e1) {
+						//If this happens there is an error with the connection
+						try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
+					}
+				}			
+			}
+			
+			Log.i("BluetoothConnection", "Stopped polling for new data.");
+		}
 	}
 	
 	@Override
@@ -90,37 +123,26 @@ class ConnectionThread extends Thread {
 	    	connection.input = new BufferedInputStream(connection.socket.getInputStream());	
 		} catch (IOException ex) {
 			Log.e("ConnectionThread", "Unable to get input/output stream: " + ex.getMessage());
-			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
 			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
 			return;
 		}
-				
-		//We are now connected!
+
+		//Start the super protocol thread loop
+		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);		
 		new Thread(connection).start();
-		connection.setConnectionState(ConnectionState.STATE_CONNECTED);
-		
-		//Keep listening bytes from the stream
-		while( connection.isConnected() ){
-			try {
-				int readByte = connection.input.read();
-				if( readByte != -1 ) {
-					connection.byteReceived( (byte)readByte );
-				}
-			} catch (IOException e) {
-				Log.e("BluetoothConnection", "Read error: " + e.getMessage());
-				try {
-					connection.input.available();
-				} catch (IOException e1) {
-					//If this happens there is an error with the connection
-					try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
-				}
-			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {}
-			
+		new PollingThread().start();
+				
+		//Check if we are connected properly by sending a ping
+		try {
+			connection.ping();
+		} catch (TimeoutException ex) {
+			Log.e("ConnectionThread", "Failed to setup connection: " + ex.getMessage());
+			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
+			return;
 		}
-		
+
+		//We are now connected!
+		connection.setConnectionState(ConnectionState.STATE_CONNECTED);						
 	}
 
 }
