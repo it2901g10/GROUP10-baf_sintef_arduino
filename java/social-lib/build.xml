@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Social library" default="compile" basedir=".">
+
+   <property name="app.name"	value="social-lib"/>
+   <property name="src.home"	value="${basedir}/src"/>
+   <property name="doc.home"	value="${basedir}/doc"/>
+   <property name="build.home"	value="${basedir}/bin"/>
+   <property name="dist.home"	value="${basedir}/dist"/>
+
+    <property file="local.properties" />
+    <property file="ant.properties" />
+
+	<loadproperties srcFile="project.properties" />
+
+	<!-- quick check on sdk.dir -->
+    <fail
+            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through an env var"
+            unless="sdk.dir"
+    />
+
+	<path id="compile-src.classpath">
+	   <fileset dir="${sdk.dir}/platforms/${target}">
+		   <include name="android.jar"/>
+	   </fileset>
+	</path>
+
+	<target name="compile">
+		<mkdir dir="${build.home}"/>
+		<javac srcdir="${src.home}" destdir="${build.home}" debug="false" includeantruntime="false">
+			<classpath refid="compile-src.classpath"/>
+		</javac>
+	</target>
+
+	<target name="javadoc">
+		<javadoc sourcepath="${src.home}"
+				destdir="${doc.home}"
+				protected="true"
+				classpathref="compile-src.classpath"
+				packagenames = "no.ntnu.osnap.social,
+								no.ntnu.osnap.social.models,
+								no.ntnu.osnap.social.listeners">
+		</javadoc>
+	</target>
+
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist.home}"/>
+	   <jar jarfile="${dist.home}/${app.name}.jar">
+		   <fileset dir="${src.home}"/>
+		   <fileset dir="${build.home}"/>
+	   </jar>
+	</target>
+   
+   <target name="clean">
+	   <delete dir="${build.home}"/>
+	   <delete dir="${dist.home}"/>
+   </target>
+
+    <!-- version-tag: 1 -->
+    <import file="${sdk.dir}/tools/ant/build.xml" />
+
+</project>
