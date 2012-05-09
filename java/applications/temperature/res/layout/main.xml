@@ -11,7 +11,7 @@
         android:id="@+id/top"
         android:src="@drawable/background_01"
         android:adjustViewBounds="true"
-        android:layout_width="480px"
+        android:layout_width="480dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:visibility="invisible"
@@ -26,7 +26,7 @@
         android:textColor="#000"
         android:textSize="94sp"
         android:layout_below="@id/top"
-        android:layout_marginLeft="13sp"/>
+        android:layout_marginLeft="13sp" />
         
     <TextView
         android:id="@+id/taprefresh"

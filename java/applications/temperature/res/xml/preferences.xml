@@ -16,10 +16,17 @@
                           android:entries="@array/time_array"
                           android:entryValues="@array/time_entry" />
      <PreferenceCategory android:title="Arduino settings" >   
-            <Preference android:title="Mac address"
-                        android:key="@string/pref_mac"
-                        android:summary=""
-                        android:persistent="true"
-                        android:enabled="false" />
+            <EditTextPreference android:title="Mac address"
+                                    android:key="@string/pref_mac"
+                                    android:summary=""
+                                    android:persistent="true" />
+            <Preference android:title="Scan Mac Address"
+                            android:key="@string/scan_mac" 
+                            android:summary="@string/sum_scan" />
+            <Preference android:key="@string/mac_set"
+                                android:persistent="true"
+                                android:defaultValue="false"
+                                android:selectable="false"
+                                android:shouldDisableView="true" />
       </PreferenceCategory>
 </PreferenceScreen>

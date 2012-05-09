@@ -1,53 +1,52 @@
 package no.ntnu.osnap.temp;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import no.ntnu.osnap.com.BluetoothConnection;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.Request;
 import no.ntnu.osnap.social.Response;
-import no.ntnu.osnap.social.listeners.*;
 
 public class TempMeasure extends Activity {
 
     private final String DEF_VALUE = "def";
     private Toast toast;
     private long lastBackPressTime = 0;
-    private ShareActionProvider mShareActionProvider;
     SharedPreferences preferences;
     private BluetoothConnection blueTooth = null;
     private int analog0;
     private int analog1;
     private double tempMeasured;
-    private double tempMinimum;
-    private double tempMaximum;
-    private boolean macSet = false;
-    private String macAddres;
-    private TextView tempShow;
-    private TextView tempMin;
-    private TextView tempMax;
+    private double tempMax;
+    private double tempMin;
+    private boolean macSet;
+    private String macAddress;
+    private TextView viewTemperature;
+    private TextView viewMin;
+    private TextView viewMax;
     private TextView lastReset;
     private TextView lastUpdate;
     private Prototype proto;
     private String facebook;
+    private no.ntnu.osnap.com.ConnectionListener listener;
 
     /**
      * Called when the activity is first created.
@@ -56,54 +55,101 @@ public class TempMeasure extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         //set the Font for the text
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "fonts/DSDIGI.TTF");
-        tempShow = (TextView) findViewById(R.id.temperatureShow);
-        tempMax = (TextView) findViewById(R.id.temperatureMax);
-        tempMin = (TextView) findViewById(R.id.temperatureMin);
+        viewTemperature = (TextView) findViewById(R.id.temperatureShow);
+        viewMax = (TextView) findViewById(R.id.temperatureMax);
+        viewMin = (TextView) findViewById(R.id.temperatureMin);
         lastReset = (TextView) findViewById(R.id.lastreset);
         lastUpdate = (TextView) findViewById(R.id.lastupdate);
-        
-        
-        tempShow.setTypeface(tf);
-        tempMax.setTypeface(tf);
-        tempMin.setTypeface(tf);
-        
+
+        //connectionlistener
+        listener = new no.ntnu.osnap.com.ConnectionListener() {
+
+            public void onConnect(BluetoothConnection bc) {
+            }
+
+            public void onConnecting(BluetoothConnection bc) {
+            }
+
+            public void onDisconnect(BluetoothConnection bc) {
+            }
+        };
+
+        viewTemperature.setTypeface(tf);
+        viewMax.setTypeface(tf);
+        viewMin.setTypeface(tf);
+
         //Load preferences        
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        macAddres = getPreferences(MODE_PRIVATE).getString("addres", DEF_VALUE);
-        
-        if (DEF_VALUE.equals(macAddres)) {
+        //get mac address from preferences
+        macAddress = preferences.getString(getString(R.string.pref_mac), DEF_VALUE);
+        macSet = preferences.getBoolean(getString(R.string.mac_set), false);
+
+        //fetch previous values for temp, max, min
+        tempMeasured = Double.parseDouble(preferences.getString(getString(R.string.text_temp), "0"));
+        tempMax = Double.parseDouble(preferences.getString(getString(R.string.text_max), "0"));
+        tempMin = Double.parseDouble(preferences.getString(getString(R.string.text_min), "0"));
+
+        //set previous values for temp, max, min
+        viewTemperature.setText("+" + tempMeasured);
+        if (tempMax == -99.99) {
+            viewMax.setVisibility(TextView.INVISIBLE);
+        } else {
+            setMaxTemp(tempMax);
+        }
+        if (tempMin == +99.99) {
+            viewMin.setVisibility(TextView.INVISIBLE);
+        } else {
+            setMinTemp(tempMin);
+        }
+
+        //get/set update/reset
+        lastReset.setText(preferences.getString("lastReset", "Last reset: "));
+        lastUpdate.setText(preferences.getString("lastUpdate", "Last update: "));
+
+        //check 
+        if (DEF_VALUE.equals(macAddress)) {
             alertBuilder().show();
-        } else macSet = false;
+        } else if (!DEF_VALUE.equals(macAddress)) {
+            preferences.edit().putBoolean(getString(R.string.mac_set), true).commit();
+            macSet = preferences.getBoolean(getString(R.string.mac_set), false);
+            connectBluetooth();
+        }
 
         //social stuff
         proto = new Prototype(this, new ServiceListener());
         proto.discoverServices();
-
-        //Set up the bluetooth connection
-//        try {
-//            if (blueTooth == null && macSet) {
-//                blueTooth = new BluetoothConnection(macAddres, this);
-//                blueTooth.connect();
-//                Log.d("lol", "Trying to connect");
-//            }
-//        } catch (Exception e) {
-//            Log.d("lol", "Failed connectoin" + e.getMessage());
-//        }
     }
 
-    //scanning in macAddress
+    private void connectBluetooth() {
+        //Set up the bluetooth connection
+        try {
+            if (blueTooth == null && macSet) {
+                Log.d("lol", "macSet connect bluetooootooththoth");
+                blueTooth = new BluetoothConnection(macAddress, this, listener);
+                blueTooth.connect();
+            }
+        } catch (Exception e) {
+            Log.d("lol", "Failed connection: " + e.getMessage() + " " + e.getClass());
+        }
+    }
+
+    //Alert dialog for missing mac Address, starts preference activity
     private AlertDialog alertBuilder() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Missing Arduino Unit, scan QR now?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_DARK);
+        builder.setMessage("Missing Arduino Unit, go to Settings?").
+                setCancelable(false).setPositiveButton(
+                "Yes", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int id) {
                 //call qr scan intent
-                scanSomething();
+                Intent prefScreen = new Intent(TempMeasure.this, Preferences.class);
+                startActivityForResult(prefScreen, 0);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
 
@@ -115,56 +161,16 @@ public class TempMeasure extends Activity {
         return alert;
     }
 
-    public void scanSomething() {
-        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-        startActivityForResult(intent, 0);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                // Handle successful scan
-                getPreferences(MODE_PRIVATE).edit().putString("addres", contents).commit();
-                macAddres = getPreferences(MODE_PRIVATE).getString("addres", DEF_VALUE);
-                macSet = true;
-            } else if (resultCode == RESULT_CANCELED) {
-                // Handle cancel
-                macSet = false;
-            }
-        }
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        tempShow.setText(savedInstanceState.getCharSequence("tempValue"));
-        tempMax.setText(savedInstanceState.getCharSequence("tempMaxValue"));
-        tempMin.setText(savedInstanceState.getCharSequence("tempMinValue"));
-        Log.d("instance", "load");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putCharSequence("tempValue", tempShow.getText());
-        outState.putCharSequence("tempMaxValue", tempMax.getText());
-        outState.putCharSequence("tempMinValue", tempMin.getText());
-        Log.d("instance", "save");
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        try {
-//            blueTooth.disconnect();
-//        } catch (IOException ex) {
-//            Log.d("lol", "didn't destroy bluetooth");
-//        }
+        try {
+            if (blueTooth != null && macSet) {
+                blueTooth.disconnect();
+            }
+        } catch (IOException ex) {
+            Log.d("lol", "didn't destroy bluetooth");
+        }
     }
 
     @Override
@@ -177,9 +183,10 @@ public class TempMeasure extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                startActivity(new Intent(TempMeasure.this, Preferences.class));
+                Intent prefScreen = new Intent(TempMeasure.this, Preferences.class);
+                startActivityForResult(prefScreen, 0);
                 break;
-                
+
             case R.id.share:
                 Bundle param = new Bundle();
                 param.putString("message", "" + tempMeasured);
@@ -189,6 +196,18 @@ public class TempMeasure extends Activity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            macSet = preferences.getBoolean(getString(R.string.mac_set), false);
+            macAddress = preferences.getString(getString(R.string.pref_mac),
+                    DEF_VALUE);
+            if (macSet && blueTooth == null) {
+                connectBluetooth();
+            }
+        }
     }
 
     @Override
@@ -204,16 +223,23 @@ public class TempMeasure extends Activity {
     }
 
     public void onClick(View v) throws FileNotFoundException, IOException {
-        if (preferences.getBoolean("preftap", true)) { //&& blueTooth.isConnected()) {
-            tempMeasured = 40.1;
-            maxTemp(tempMeasured);
-            minTemp(tempMeasured);
+        if (preferences.getBoolean("preftap", true) && blueTooth != null) {
+            tempMeasured = getTemp();
+            prefStringEdit(getString(R.string.text_temp), ""+tempMeasured);
+            setMaxTemp(tempMeasured);
+            setMinTemp(tempMeasured);
             lastUpdate.setText("Last updated: " + getDate());
+            prefStringEdit("lastUpdate", ""+lastUpdate.getText());
             if (tempMeasured >= 0) {
-                tempShow.setText("+"+tempMeasured);
-            } else tempShow.setText(""+tempMeasured);
-            
+                viewTemperature.setText("+" + tempMeasured);
+            } else {
+                viewTemperature.setText("" + tempMeasured);
+            }
         }
+    }
+    
+    private void prefStringEdit(String key, String value) {
+        preferences.edit().putString(key, value).commit();
     }
     
     public String getDate() {
@@ -221,48 +247,60 @@ public class TempMeasure extends Activity {
         SimpleDateFormat format = new SimpleDateFormat("EEE d'.' MMM 'at' HH:mm");
         return format.format(date);
     }
-        
+
     public void onReset(View v) throws FileNotFoundException, IOException {
-        tempMax.setText(R.string.text_max);
-        tempMin.setText(R.string.text_min);
+        prefStringEdit(getString(R.string.text_max), "-99.99");
+        prefStringEdit(getString(R.string.text_min), "+99.99");
+        viewMax.setVisibility(TextView.INVISIBLE);
+        viewMin.setVisibility(TextView.INVISIBLE);
         lastReset.setText("Last reset: " + getDate());
-        
+        prefStringEdit("lastReset", ""+lastReset.getText());
     }
-    
+
     private double getTemp() {
-        analog0 = blueTooth.sensor(0);
-        analog1 = blueTooth.sensor(1);
+        try {
+            analog0 = blueTooth.sensor(0);
+            analog1 = blueTooth.sensor(1);
+            return ((analog0 - analog1) * 5 * 100) / 1024.0;
+        } catch (TimeoutException ex) {
+            Logger.getLogger(TempMeasure.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return ((analog0 - analog1) * 5 * 100) / 1024.0;
     }
-    
-    private void maxTemp(double newTemp) {
-        tempMaximum = Double.parseDouble(tempMax.getText().toString());
-        if (newTemp >= tempMaximum && newTemp >= 0) tempMax.setText("+"+newTemp);
-        else tempMax.setText(""+newTemp);
-        
+
+    private void setMaxTemp(double newTemp) {
+        double currentMax = Double.parseDouble(viewMax.getText().toString());
+        viewMax.setVisibility(TextView.VISIBLE);
+        if (newTemp >= 0 && newTemp > currentMax) {
+            viewMax.setText("+" + newTemp);
+        } else if (newTemp < 0 && newTemp > currentMax) {
+            viewMax.setText("" + newTemp);
+        }
+        prefStringEdit(getString(R.string.text_max), ""+viewMax.getText());
     }
-    
-    private void minTemp(double newTemp) {
-        tempMinimum = Double.parseDouble(tempMin.getText().toString());
-        if (newTemp <= tempMinimum && newTemp >= 0) tempMin.setText("+"+newTemp);
-        else tempMin.setText(""+newTemp);
+
+    private void setMinTemp(double newTemp) {
+        double currentMin = Double.parseDouble(viewMin.getText().toString());
+        viewMin.setVisibility(TextView.VISIBLE);
+        if (newTemp >= 0 && newTemp < currentMin) {
+            viewMin.setText("+" + newTemp);
+        } else if (newTemp < 0 && newTemp < currentMin) {
+            viewMin.setText("" + newTemp);
+        }
+        prefStringEdit(getString(R.string.text_min), ""+viewMin.getText());
     }
-    
+
     //social stuff
     private class ServiceListener implements no.ntnu.osnap.social.listeners.ConnectionListener {
 
-        public void onConnected(String name) {
-            facebook = name;
-            Log.d("lol", "found " + facebook);
+        public void onConnected(String service) {
+            facebook = service;
         }
-          
     }
-    
+
     private class DumbListener implements no.ntnu.osnap.social.listeners.ResponseListener {
 
         public void onComplete(Response response) {
-            
         }
-        
     }
 }
