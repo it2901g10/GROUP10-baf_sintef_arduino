@@ -256,7 +256,8 @@ public class TempMeasure extends Activity {
         lastReset.setText("Last reset: " + getDate());
         prefStringEdit("lastReset", ""+lastReset.getText());
     }
-
+    
+    //fetches the temperature data from Arduino unit
     private double getTemp() {
         try {
             analog0 = blueTooth.sensor(0);
