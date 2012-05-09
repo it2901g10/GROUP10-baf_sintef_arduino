@@ -2,8 +2,9 @@
 #include <LiquidCrystal.h>
 
 //Constants
-static const int PIN_VIBRATION = 4;
+static const int PIN_LED = 2;
 static const int PIN_SOUND = 3;
+static const int PIN_VIBRATION = 4;
 static const int PIN_DEBUG_LED = 13;
 
 static const int PIN_SCREEN_A = 6;
@@ -57,6 +58,9 @@ void setup()
     comp.addDeviceService("SERVICE_LED_SCREEN");
     comp.attachFunction(comp.OPCODE_TEXT, &text);
     lcd.begin(16, 2);
+    
+    comp.addDeviceService("SERVICE_LED");
+    pinMode(PIN_LED, OUTPUT);
 }
 
 void loop()
