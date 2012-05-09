@@ -23,6 +23,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import no.ntnu.osnap.tshirt.helperClass.Filter;
+import no.ntnu.osnap.tshirt.helperClass.Rule;
 
 import java.util.ArrayList;
 
@@ -33,9 +35,7 @@ public class RulesDB {
 
     public static final String KEY_ROWID = "_id";
 
-    public static final String KEY_OPERATOR = "operator";
     public static final String KEY_FILTER = "filter";
-    public static final String KEY_COMPARE = "compare";
     public static final String KEY_RULE = "rule";
     public static final String KEY_OUTPUT = "output";
 
@@ -48,7 +48,7 @@ public class RulesDB {
      * Database creation sql statement
      */
     private static final String DATABASE_CREATE_RULES = "create table rules (_id integer primary key autoincrement, rule text not null, filter text not null, output text not null);";
-    private static final String DATABASE_CREATE_FILTER = "create table filters (_id integer primary key autoincrement, filter text, compare text, operator text, connection integer not null);";
+    private static final String DATABASE_CREATE_FILTER = "create table filters (_id integer primary key autoincrement, filter text, connection integer not null);";
 
     private static final String DATABASE_NAME = "rulesDB";
     private static final String DATABASE_TABLE_RULES = "rules";
@@ -131,12 +131,8 @@ public class RulesDB {
         for (int i = 0; i < filters.length; i++) {
             initialValues = new ContentValues();
             initialValues.put(KEY_FILTER, filters[i]);
-            
             initialValues.put(KEY_CONNECTION, rowId);
-
             mDb.insert(DATABASE_TABLE_FILTERS, null, initialValues);
-
-
         }
 
         return rowId;
@@ -183,20 +179,11 @@ public class RulesDB {
 
     private Filter getFilter(Cursor c) {
         String filter = c.getString(c.getColumnIndexOrThrow(KEY_FILTER));
-        String compare = c.getString(c.getColumnIndexOrThrow(KEY_COMPARE));
-        String operator = c.getString(c.getColumnIndexOrThrow(KEY_OPERATOR));
-        return new Filter(filter, compare, operator);
+        return new Filter(filter);
         
         
     }
 
-//    public boolean updateRule(long row, String rule, String output) {
-//        ContentValues values = new ContentValues();
-//        values.put(KEY_RULE, rule);
-//        values.put(KEY_OUTPUT, output);
-//
-//        return mDb.update(DATABASE_TABLE_RULES, values, KEY_ROWID + "=" + row, null) > 0;
-//    }
     public boolean updateRule(long row, String rule, String output, String[] filters) {
         ContentValues values = new ContentValues();
         deleteFiltersConnectedTo(row);
@@ -225,8 +212,8 @@ public class RulesDB {
     }
 
     public Cursor fetchAllFiltersFromRule(long ruleID) {
-        return mDb.query(DATABASE_TABLE_FILTERS, new String[] {KEY_ROWID, KEY_OPERATOR,
-                KEY_FILTER, KEY_COMPARE}, KEY_CONNECTION + "=" + ruleID, null, null, null, null);
+        return mDb.query(DATABASE_TABLE_FILTERS, new String[] {KEY_ROWID,
+                KEY_FILTER}, KEY_CONNECTION + "=" + ruleID, null, null, null, null);
     }
 
     public long addNewRule(Rule rule){
@@ -241,10 +228,7 @@ public class RulesDB {
         for (int i = 0; i < filters.length; i++) {
             initialValues = new ContentValues();
             initialValues.put(KEY_FILTER, filters[i].filter);
-            initialValues.put(KEY_COMPARE, filters[i].compare);
-            initialValues.put(KEY_OPERATOR, filters[i].operator);
             initialValues.put(KEY_CONNECTION, rowId);
-
             mDb.insert(DATABASE_TABLE_FILTERS, null, initialValues);
         }
         L.i("Inserted new rule (" + rule + ") in database");

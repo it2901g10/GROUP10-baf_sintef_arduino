@@ -13,21 +13,25 @@
             android:padding="5dp"
             android:text="Filter Options"
             android:textSize="16sp"/>
-    <RadioGroup
+    <TextView
+            android:id="@+id/os_labelCurrentFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="No filter set yet"
+            android:textStyle="bold"/>
+    <Button
+            android:id="@+id/os_buttonSetFilter"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/os_radioGroupFilter">
-        <RadioButton
-                android:id="@+id/os_radioMessage"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Message"/>
-        <RadioButton
-                android:id="@+id/os_radioSender"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Sender"/>
-    </RadioGroup>
+            android:padding="5dp"
+            android:text="Set Filter"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:height="50dp"
+            android:background="@drawable/button_shape"/>
+
     <TextView
             android:id="@+id/os_labelOutput"
             android:layout_width="fill_parent"
@@ -70,5 +74,7 @@
             android:text="Save Filter"
             android:textSize="16sp"
             android:typeface="sans"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:height="50dp"
+            android:background="@drawable/button_shape"/>
 </LinearLayout>

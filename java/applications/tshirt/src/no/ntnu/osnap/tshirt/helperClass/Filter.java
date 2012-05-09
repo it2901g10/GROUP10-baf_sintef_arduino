@@ -11,20 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.tshirt;
+package no.ntnu.osnap.tshirt.helperClass;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
 
-public class Filter implements Parcelable {
-    String filter, compare, operator;
+/**
+ * A filter contains information on what to request from a social service and what to compare the results to </br>
+ * Example, the filter "getLatestPost:getSender:getName:=:David" checks if the creator of the latest post is called David
+ *
+ */
 
-    Filter(String filter, String compare, String operator) {
+public class Filter implements Parcelable {
+    public String filter;
+    String[] segments;
+
+    public Filter(String filter) {
         this.filter = filter;
-        this.compare = compare;
-        this.operator = operator;
+        segments = filter.split(":");
     }
 
     @Override
@@ -34,18 +40,17 @@ public class Filter implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[]{filter, compare, operator});
+        parcel.writeStringArray(new String[]{filter});
 
     }
 
     public Filter(Parcel in){
-        String[] array = new String[3];
+        String[] array = new String[1];
 
         in.readStringArray(array);
 
         filter = array[0];
-        compare = array[1];
-        operator = array[2];
+        segments = filter.split(":");
     }
     
     public static final Parcelable.Creator<Filter> CREATOR = new Parcelable.Creator<Filter>() {
@@ -60,34 +65,34 @@ public class Filter implements Parcelable {
 
     @Override
     public String toString() {
-        return filter + " " + operator + " " + compare;
+        return filter;
     }
 
     public boolean isFilterValid(Model model) {
         
         if(model instanceof Message) {
             Message message = (Message) model;
-            if(filter.equals("Message")){
-                return(checkOperator(message.getText()));
-            }
-            if(filter.equals("Sender")){
-                return(checkOperator(message.getSenderAsPerson().getName()));
-            }
+//            if(filter.equals("Message")){
+//                return(checkOperator(message.getText()));
+//            }
+//            if(filter.equals("Sender")){
+//                return(checkOperator(message.getSenderAsPerson().getName()));
+//            }
         }
         return false;
     }
     
-    private boolean checkOperator(String string){
-        
-
-        if(operator.equals("==")){
-            return string.equals(compare);
-        }
-        if(operator.equals("!=")){
-            return !string.equals(compare);
-        }
-
-        return false;
-    }
+//    private boolean checkOperator(String string){
+//
+//
+//        if(operator.equals("==")){
+//            return string.equals(compare);
+//        }
+//        if(operator.equals("!=")){
+//            return !string.equals(compare);
+//        }
+//
+//        return false;
+//    }
 
 }

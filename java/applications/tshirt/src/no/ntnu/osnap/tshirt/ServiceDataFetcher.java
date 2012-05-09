@@ -11,17 +11,15 @@ import no.ntnu.osnap.social.listeners.ResponseListener;
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
 import no.ntnu.osnap.social.models.Person;
+import no.ntnu.osnap.tshirt.helperClass.Rule;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by IntelliJ IDEA.
- * User: goldsack
- * Date: 25.04.12
- * Time: 10:28
- * To change this template use File | Settings | File Templates.
+ * Background service that reads rules in Database and use them to get information from social service </br>
+ * it then transmits data to arduino.
  */
 public class ServiceDataFetcher extends Service {
     
@@ -46,27 +44,24 @@ public class ServiceDataFetcher extends Service {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                L.i("Timer initiates to fetch data");
+                L.i("Timer initiates to fetch data from social service");
                 fetchDataFromSocialService();
             }
         };
         timer = new Timer();
-        timer.schedule(task, 1000, 10000);
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
+//        timer.schedule(task, 1000, 10000);
+        L.i("Timer to fetch data from social service is currently DISABLED");
     }
 
 
     private void fetchDataFromSocialService() {
         L.i("Attempt to fetch data from social service");
-        Request request = Request.obtain(Request.RequestCode.MESSAGES);
 
-        if(list.size() > 0){
-            prototype.sendRequest(list.get(0), request, createResponseListener());
-        }
+//        Request request = Request.obtain(Request.RequestCode.MESSAGES);
+//
+//        if(list.size() > 0){
+//            prototype.sendRequest(list.get(0), request, createResponseListener());
+//        }
 
 
     }

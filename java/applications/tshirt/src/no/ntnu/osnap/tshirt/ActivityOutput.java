@@ -17,10 +17,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.*;
+import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
+import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,11 +28,13 @@ import android.widget.Toast;
  * Time: 22:31
  * To change this template use File | Settings | File Templates.
  */
-public class ActivityOutput extends Activity {
+public class ActivityOutput extends Activity implements View.OnClickListener{
     /** Called when the activity is first created. */
 
     public final static String FILTER = "filter";
-    public final static String OUTPUT = "output";    
+    public final static String OUTPUT = "output";
+
+    private String currentFilter;
    
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -47,39 +48,56 @@ public class ActivityOutput extends Activity {
     }
 
     private void setOnClickListener() {
-        Button saveOutPutButton = (Button) findViewById(R.id.os_buttonSaveOutput);
-        saveOutPutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RadioGroup groupSignal = (RadioGroup) findViewById(R.id.os_radioGroupFilter);
-                int gf = groupSignal.getCheckedRadioButtonId();
+        Button saveOutputButton = (Button) findViewById(R.id.os_buttonSaveOutput);
+        saveOutputButton.setOnClickListener(this);
 
-                RadioGroup groupOutput = (RadioGroup) findViewById(R.id.os_radioGroupOutput);
-                int go = groupOutput.getCheckedRadioButtonId();
-
-                if(gf < 0 || go < 0){
-                    Toast.makeText(ActivityOutput.this, "Please select one radio button in each group", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Intent i = new Intent();
-                
-                RadioButton rButtonFilter = (RadioButton)findViewById(gf);
-                RadioButton rButtonOutput = (RadioButton)findViewById(go);
-                rButtonFilter.getText();
-                
-                i.putExtra(FILTER, rButtonFilter.getText());
-                i.putExtra(OUTPUT, rButtonOutput.getText());
-                setResult(RESULT_OK, i);
-                L.i("Returned from ActivityOutput with " + rButtonFilter.getText() + " and " + rButtonOutput.getText());
-                finish();
-
-            }
-        });
-
-        
-        
+        Button saveOutputFilter = (Button) findViewById(R.id.os_buttonSetFilter);
+        saveOutputFilter.setOnClickListener(this);
         
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);    
+        if(resultCode == RESULT_OK){
+            currentFilter = data.getStringExtra(ChangeMode.FINAL_FILTER);
+            TextView tv = (TextView)findViewById(R.id.os_labelCurrentFilter);
+            tv.setText(currentFilter);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.os_buttonSetFilter:
+                L.i("Send intent to start FilterSelection");
+                Intent i = new Intent(this, FilterMessage.class);
+                i.putExtra(ChangeMode.CURRENT_FILTER, getString(R.string.getLatestPost));
+                startActivityForResult(i, 0);
+                break;
+           
+            case R.id.os_buttonSaveOutput:
+                returnOutput();
+                break;
+            
+        }
+
+    }
+
+    /** Return set information to parent activity**/
+    private void returnOutput(){
+        RadioGroup groupOutput = (RadioGroup) findViewById(R.id.os_radioGroupOutput);
+        int go = groupOutput.getCheckedRadioButtonId();
+        if(go < 0){
+            Toast.makeText(ActivityOutput.this, "Please select one radio button in each group", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent i = new Intent();
+        RadioButton rButtonOutput = (RadioButton)findViewById(go);
+        i.putExtra(FILTER, currentFilter);
+        i.putExtra(OUTPUT, rButtonOutput.getText());
+        setResult(RESULT_OK, i);
+        L.i("Returned from ActivityOutput with " + currentFilter + " and " + rButtonOutput.getText());
+        finish();
+    }
 }

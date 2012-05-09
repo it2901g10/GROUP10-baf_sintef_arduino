@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import no.ntnu.osnap.tshirt.helperClass.Rule;
 
 
 public class RuleListAdapter extends BaseAdapter{

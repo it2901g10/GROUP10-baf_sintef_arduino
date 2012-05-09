@@ -11,14 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.tshirt;
+package no.ntnu.osnap.tshirt.helperClass;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
+import no.ntnu.osnap.tshirt.L;
 
+
+/***
+ * A rule includes the rulename, the outputfilter to send, the name of the component to receive, </br>
+ * and an array of filters that needs to be passed to send data to component.
+ */
 public class Rule implements Parcelable{
 
     public String name;

@@ -59,6 +59,7 @@ public class ActivityStartWindow extends Activity
         });
 
         Button searchSSButton = (Button)findViewById(R.id.sw_buttonSearchSocialServices);
+
         searchSSButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TshirtApp</string>
+
+
+    <string name="getSender">getSender</string>
+    <string name="getMessage">getMessage</string>
+    <string name="getName">getName</string>
+    <string name="getID">getID</string>
+    <string name="getAge">getAge</string>
+    <string name="getLatestPost">getLatestPost</string>
+
+
+
 </resources>

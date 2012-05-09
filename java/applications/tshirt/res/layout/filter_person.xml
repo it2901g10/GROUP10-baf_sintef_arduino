@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+        android:id="@+id/widget32"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:id="@+id/fp_labelCurrentSelection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:textStyle="bold"
+            android:text="Current Selection: Person"/>
+
+    <TextView
+            android:id="@+id/fp_labelCurrentMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Options"
+            android:textStyle="bold"/>
+    <Button
+            android:id="@+id/fp_buttonGetName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Get Name of Person"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:height="50dp"
+            android:background="@drawable/button_shape"/>
+
+    <View android:layout_height="2dip"/>
+
+    <Button
+            android:id="@+id/fp_buttonGetAge"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Get Age of Person"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:height="50dp"
+            android:background="@drawable/button_shape"/>
+    <View android:layout_height="2dip"/>
+    <Button
+            android:id="@+id/fp_buttonGetID"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Get ID of Person"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:height="50dp"
+            android:background="@drawable/button_shape"/>
+
+    <View android:layout_height="2dip"/>
+
+    <TextView
+            android:id="@+id/fp_labelOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Current Filter:"
+            android:textStyle="bold"/>
+    <TextView
+            android:id="@+id/fp_labelCurrentOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="LatestStream:"
+            android:textStyle="bold"/>
+
+</TableLayout>
