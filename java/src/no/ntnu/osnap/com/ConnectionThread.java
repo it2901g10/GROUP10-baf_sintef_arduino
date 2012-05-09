@@ -65,20 +65,15 @@ class ConnectionThread extends Thread {
 				try {
 					int readByte = connection.input.read();
 					if( readByte != -1 ) {
-				    	Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
+				    	//Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
 				    	connection.byteReceived( (byte)readByte );
 					}
 					else {
 						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				} catch (IOException e) {
-					Log.e("BluetoothConnection", "Read error: " + e.getMessage());
-					try {
-						connection.input.available();
-					} catch (IOException e1) {
-						//If this happens there is an error with the connection
-						try { connection.disconnect(); } catch (IOException e2) {/*ignore*/}
-					}
+					Log.e("ConnectionThread", "Read error: " + e.getMessage());
+					connection.disconnect();
 				}			
 			}
 			
@@ -123,12 +118,12 @@ class ConnectionThread extends Thread {
 	    	connection.input = new BufferedInputStream(connection.socket.getInputStream());	
 		} catch (IOException ex) {
 			Log.e("ConnectionThread", "Unable to get input/output stream: " + ex.getMessage());
-			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
+			connection.disconnect();
 			return;
 		}
 
 		//Start the super protocol thread loop
-		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);		
+		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);	
 		new Thread(connection).start();
 		new PollingThread().start();
 				
@@ -137,7 +132,7 @@ class ConnectionThread extends Thread {
 			connection.ping();
 		} catch (TimeoutException ex) {
 			Log.e("ConnectionThread", "Failed to setup connection: " + ex.getMessage());
-			try { connection.disconnect(); } catch (IOException e) {/*ignore*/}
+			connection.disconnect();
 			return;
 		}
 

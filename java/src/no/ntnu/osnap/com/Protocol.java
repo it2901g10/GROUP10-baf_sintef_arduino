@@ -33,17 +33,22 @@ import android.util.Log;
  * standard. This class can be extended to support new communication methods like
  * InfraRed, NFC or WiFi.
  */
-public abstract class Protocol extends Thread {
+public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.3.6";
+	public final static String LIBRARY_VERSION = "1.4.1";
 	
 	/**
 	 * Private mutex flag for atomic methods
 	 */
 	private volatile boolean locked = false;
-	
+
+	/**
+	 * Private mutex flag to determine if there is an active connection
+	 */
+	private volatile boolean activeConnection = false;
+
 	/**
 	 * The unique metadata package for this connection
 	 * This is initially set to null and need to be retrieved
@@ -52,10 +57,8 @@ public abstract class Protocol extends Thread {
 	 */
 	protected ConnectionMetadata connectionMetadata;
 	
-	private final BlockingQueue<ProtocolInstruction> pendingInstructions;
+	private BlockingQueue<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
-
-	private boolean running;
     
 	/**
 	 * Number of miliseconds to wait for a response before throwing a TimeoutException
@@ -109,9 +112,8 @@ public abstract class Protocol extends Thread {
     public Protocol() {
         currentCommand = new Command();
         waitingForAck = null;
-		pendingInstructions = new LinkedBlockingQueue<ProtocolInstruction>();
 		tempAckProcessor = null;
-		running = true;
+		pendingInstructions = new LinkedBlockingQueue<ProtocolInstruction>();
     }
 	
     /**
@@ -120,6 +122,32 @@ public abstract class Protocol extends Thread {
      * method should be defined by the sub-class
      */
     public abstract ConnectionMetadata getConnectionData();
+    
+    /**
+     * Establishes connection to the remote device
+     */
+    public abstract void connect();
+    
+    /**
+     * Shuts down the connection and resets every data field so that
+     * connect can be called again
+     */
+    public void disconnect()
+    {
+    	activeConnection = false;
+		lock();
+		
+		//Flush any pending instructions
+		synchronized (pendingInstructions) {
+			pendingInstructions.clear();
+		}
+		
+		//Reset states
+        currentCommand = new Command();
+        waitingForAck = null;
+		tempAckProcessor = null;
+		release();
+    }
         
     /**
      * Retrieves a single long String of raw unprocessed list of services, platforms and download links supported by the remote device
@@ -163,47 +191,46 @@ public abstract class Protocol extends Thread {
         return response;
 	}    
 	
-	public void stopThread() {
-		running = false;
-	}
-	
-	@Override
-	public void run(){
-		while (running){
+	public void run() {
+		activeConnection = true;
+
+		while (activeConnection){
+			
 			synchronized (pendingInstructions) {
-				while (pendingInstructions.isEmpty()){
-					try {
-						pendingInstructions.wait(1000);
-					} catch (InterruptedException ex) {
+				if( pendingInstructions.isEmpty() )
+				{
+					try { 
+						pendingInstructions.wait(1000); 
+					} 
+					catch (InterruptedException ex) {
+						
 					}
-					
-					if (!running) return; // Thread is stopped
+					continue;
 				}
 			}
 			
 			lock();
 			
 			currentInstruction = pendingInstructions.poll();
+			Log.d(getClass().getName(), "Sending instruction: " + currentInstruction.getOpcode().name());
 			
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());
-				
-				System.out.println("Sent: " + currentInstruction.getOpcode());
-				
 				waitingForAck = currentInstruction.getOpcode();
+				
 			} catch (IOException ex) {
-				// TODO: use logger
-				System.out.println("Send derp");
+				Log.e("Protocol", "Send error: " + ex);
 			}
 			
 			release();
 		}
+
 	}
 	
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " bytes");
+        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " length");
 			pendingInstructions.notify();
 		}
 	}
