@@ -23,7 +23,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeoutException;
 
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * This class defines a communication standard with a remote device. The actual
@@ -139,7 +139,7 @@ public abstract class Protocol extends Thread {
 			sendBytes(newInstruction.getInstructionBytes());
 		} catch (IOException ex) {
 			//System.out.println("Send fail");
-			Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
+			//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
 		}
 		release();
 		
@@ -203,7 +203,7 @@ public abstract class Protocol extends Thread {
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " bytes");
+        	//Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " bytes");
 			pendingInstructions.notify();
 		}
 	}
@@ -222,7 +222,7 @@ public abstract class Protocol extends Thread {
         try {
             sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
-        	Log.e("Protocol", "Could not send data: " + ex);
+        	//Log.e("Protocol", "Could not send data: " + ex);
         }
         
         waitingForAck = OpCode.PING;
@@ -609,7 +609,7 @@ public abstract class Protocol extends Thread {
         	
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-            	Log.v("Protocol", "Ack received for: " + waitingForAck.name());
+            	//Log.v("Protocol", "Ack received for: " + waitingForAck.name());
                 byte tempAck = waitingForAck.value;
                 
 				boolean hadAckProcessor = false;
@@ -633,7 +633,7 @@ public abstract class Protocol extends Thread {
 				
                 currentCommand = new Command();
             } else {
-            	Log.e("Protocol", "Received something unexpected");
+            	//Log.e("Protocol", "Received something unexpected");
                 throw new IllegalArgumentException("Received something unexpected");
             }
         }
