@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
-import no.ntnu.osnap.tshirt.L;
+import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.R;
 
 /**
@@ -58,4 +58,7 @@ public class FilterCompare extends Activity implements View.OnClickListener {
         finish();
     }
 
+    public String getCurrentFilter() {
+        return currentFilter;
+    }
 }

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package no.ntnu.osnap.tshirt;
+package no.ntnu.osnap.tshirt.helperClass;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,8 +23,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import no.ntnu.osnap.tshirt.helperClass.Filter;
-import no.ntnu.osnap.tshirt.helperClass.Rule;
 
 import java.util.ArrayList;
 

@@ -21,11 +21,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
+import no.ntnu.osnap.tshirt.helperClass.L;
+import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
 
-public class ActivityStartWindow extends Activity
-{
+public class ActivityStartWindow extends Activity implements View.OnClickListener{
 
     TshirtSingleton singleton;
     ArrayList<String> socialServiceList;
@@ -42,45 +43,13 @@ public class ActivityStartWindow extends Activity
 
     private void setOnClickListeners() {
         Button setRulesButton = (Button)findViewById(R.id.sw_buttonSetRules);
-        setRulesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(ActivityStartWindow.this, ActivityRulesList.class);
-                startActivity(i);
-            }
-        });
+        setRulesButton.setOnClickListener(this);
         
         Button arduinoConnectionButton = (Button)findViewById(R.id.sw_buttonConnection);
-        arduinoConnectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                singleton.toggleArduinoConnection();
-            }
-        });
+        arduinoConnectionButton.setOnClickListener(this);
 
         Button searchSSButton = (Button)findViewById(R.id.sw_buttonSearchSocialServices);
-
-        searchSSButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                socialServiceList.clear();
-                updateServiceListView();
-                ConnectionListener listener = new ConnectionListener() {
-                    @Override
-                    public void onConnected(String name) {
-                        L.i("Activity Start window got " + name);
-
-                        socialServiceList.add(name);
-                        updateServiceListView();
-                    }
-                };
-                Prototype prototype = new Prototype(ActivityStartWindow.this, listener);
-                prototype.discoverServices();
-            }
-
-        });
-
+        searchSSButton.setOnClickListener(this);
     }
 
     private void updateServiceListView() {
@@ -104,4 +73,33 @@ public class ActivityStartWindow extends Activity
         });
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+
+            case R.id.sw_buttonSetRules:
+                Intent i = new Intent(ActivityStartWindow.this, ActivityRulesList.class);
+                startActivity(i);
+                break;
+            case R.id.sw_buttonConnection:
+                singleton.toggleArduinoConnection();
+                break;
+            case R.id.sw_buttonSearchSocialServices:
+                socialServiceList.clear();
+                updateServiceListView();
+                ConnectionListener listener = new ConnectionListener() {
+                    @Override
+                    public void onConnected(String name) {
+                        L.i("Activity Start window got " + name);
+                        socialServiceList.add(name);
+                        updateServiceListView();
+                    }
+                };
+                Prototype prototype = new Prototype(ActivityStartWindow.this, listener);
+                prototype.discoverServices();
+                break;
+
+        }
+
+    }
 }

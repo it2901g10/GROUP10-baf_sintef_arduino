@@ -18,7 +18,6 @@ import android.os.Parcelable;
 
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
-import no.ntnu.osnap.tshirt.L;
 
 
 /***

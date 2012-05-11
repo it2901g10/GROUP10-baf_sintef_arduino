@@ -18,7 +18,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
+import no.ntnu.osnap.tshirt.helperClass.RuleListAdapter;
+import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 
 /**
@@ -43,8 +46,6 @@ public class ActivityRulesList extends ListActivity{
 
         singleton = TshirtSingleton.getInstance(this);
 
-        //singleton.database.open();
-        //singleton.database.addNewRule(new Rule("name", "tew", "Ts", null, 3));
         layoutRulesList();
     }
 
@@ -82,6 +83,5 @@ public class ActivityRulesList extends ListActivity{
             layoutRulesList();
             L.i("Received new rule: " + rule);
         }
-
     }
 }

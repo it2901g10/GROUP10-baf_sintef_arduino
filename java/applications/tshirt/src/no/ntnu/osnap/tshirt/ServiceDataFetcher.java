@@ -6,12 +6,15 @@ import android.os.IBinder;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.Request;
 import no.ntnu.osnap.social.Response;
+import no.ntnu.osnap.social.SocialService;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
 import no.ntnu.osnap.social.listeners.ResponseListener;
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
 import no.ntnu.osnap.social.models.Person;
+import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
+import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -45,16 +48,24 @@ public class ServiceDataFetcher extends Service {
             @Override
             public void run() {
                 L.i("Timer initiates to fetch data from social service");
-                fetchDataFromSocialService();
+                iterateRulesAndCallSocialService();
             }
         };
         timer = new Timer();
-//        timer.schedule(task, 1000, 10000);
+        timer.schedule(task, 1000, 10000);
         L.i("Timer to fetch data from social service is currently DISABLED");
     }
 
 
-    private void fetchDataFromSocialService() {
+    private void iterateRulesAndCallSocialService() {
+
+        Rule[] rules = singleton.database.getRules();
+
+        Request r = new Request(Request.RequestCode.SELF);
+        for (int i = 0; i < rules.length; i++) {
+            checkRule(rules[i]);
+        }
+
         L.i("Attempt to fetch data from social service");
 
 //        Request request = Request.obtain(Request.RequestCode.MESSAGES);
@@ -63,6 +74,14 @@ public class ServiceDataFetcher extends Service {
 //            prototype.sendRequest(list.get(0), request, createResponseListener());
 //        }
 
+
+    }
+
+    private void checkRule(Rule rule) {
+
+//        if(rule.isRuleSatisfied()){
+//
+//        }
 
     }
 

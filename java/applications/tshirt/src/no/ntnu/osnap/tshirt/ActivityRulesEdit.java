@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.*;
 import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
 import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
+import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
 import no.ntnu.osnap.tshirt.helperClass.Filter;
 

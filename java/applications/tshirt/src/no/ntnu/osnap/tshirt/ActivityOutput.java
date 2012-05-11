@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.*;
 import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
 import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
+import no.ntnu.osnap.tshirt.helperClass.L;
 
 /**
  * Created by IntelliJ IDEA.
@@ -73,6 +74,7 @@ public class ActivityOutput extends Activity implements View.OnClickListener{
                 L.i("Send intent to start FilterSelection");
                 Intent i = new Intent(this, FilterMessage.class);
                 i.putExtra(ChangeMode.CURRENT_FILTER, getString(R.string.getLatestPost));
+                i.putExtra(ChangeMode.NO_COMPARE, true);
                 startActivityForResult(i, 0);
                 break;
            

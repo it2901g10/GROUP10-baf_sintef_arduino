@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.ntnu.osnap.tshirt;
+package no.ntnu.osnap.tshirt.helperClass;
 
 import android.content.Context;
 import android.widget.Toast;

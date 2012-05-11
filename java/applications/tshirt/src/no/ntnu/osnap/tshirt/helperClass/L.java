@@ -1,5 +1,4 @@
-
-package no.ntnu.osnap.tshirt;
+package no.ntnu.osnap.tshirt.helperClass;
 
 import android.util.Log;
 

@@ -46,4 +46,5 @@ public class FilterMessage extends Activity implements View.OnClickListener{
                 break;
         }
     }
+
 }

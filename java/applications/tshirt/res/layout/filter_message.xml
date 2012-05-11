@@ -8,6 +8,22 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
+            android:id="@+id/fm_labelOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Current Filter:"
+            android:textStyle="bold"/>
+    <TextView
+            android:id="@+id/fm_labelCurrentOutput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="LatestStream:"
+            android:textStyle="bold"/>
+
+    <TextView
             android:id="@+id/fm_labelCurrentSelection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,22 +65,5 @@
             android:height="50dp"
             android:background="@drawable/button_shape"/>
 
-    <View android:layout_height="2dip"/>
-
-    <TextView
-            android:id="@+id/fm_labelOutput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:text="Current Filter:"
-            android:textStyle="bold"/>
-    <TextView
-            android:id="@+id/fm_labelCurrentOutput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="LatestStream:"
-            android:textStyle="bold"/>
 
 </TableLayout>
