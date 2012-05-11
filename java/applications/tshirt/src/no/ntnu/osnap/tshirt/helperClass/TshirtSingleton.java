@@ -15,6 +15,7 @@ package no.ntnu.osnap.tshirt.helperClass;
 
 import android.content.Context;
 import android.widget.Toast;
+import no.ntnu.osnap.tshirt.R;
 
 public class TshirtSingleton{
 
@@ -38,43 +39,46 @@ public class TshirtSingleton{
         if(instance == null){
             instance = new TshirtSingleton(context.getApplicationContext());
         }
-
         return instance;
     }
     //Connection
 
     public void toggleArduinoConnection() {
         Toast.makeText(context, "toggleArduinoConnection() is not yet implemented", Toast.LENGTH_SHORT).show();
-        connectBT();
+    }
+    
+    public void sendToArduino(String output, String device){
+        
+        L.i("Sending data " + output + " to " + device + " on Arduino");
+        
+        if(device.equals(context.getString(R.string.outputDISPLAY))){
+           sendToLCDArduino(output); 
+        }
+        else if(device.equals(context.getString(R.string.outputLED))){
+            sendToLEDArduino(output);   
+        }
+        else if(device.equals(context.getString(R.string.outputVIBRATOR))){
+            sendToVibratorArduino(output);
+        }
+        else if(device.equals(context.getString(R.string.outputSPEAKER))){
+            sendToSpeakerArduino(output);   
+        }
+        else{
+            L.e("Err, Unknown output");
+        }
 
     }
-
-    private void connectBT() {
-//        ConnectionListener listener = new ConnectionListener() {
-//            @Override
-//            public void onConnect(BluetoothConnection bluetoothConnection) {
-//            }
-//            @Override
-//            public void onConnecting(BluetoothConnection bluetoothConnection) {
-//            }
-//            @Override
-//            public void onDisconnect(BluetoothConnection bluetoothConnection) {
-//            }
-//        };
-//        con = new BluetoothConnection("00:10:06:29:00:48", context ,listener);
-
-    }
-
-    public void sendToLEDArduino(String string){
+    
+    private void sendToLEDArduino(String string){
         
     }
-    public void sendToLCDDiplayArduino(String text){
+    private void sendToLCDArduino(String text){
         
     }
-    public void sendToVibratorArduino(String text){
+    private void sendToVibratorArduino(String text){
 
     }
-    public void sendToSpeakerArduino(String text){
+    private void sendToSpeakerArduino(String text){
 
     }
 }

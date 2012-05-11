@@ -29,20 +29,21 @@ import no.ntnu.osnap.tshirt.helperClass.L;
  * Time: 22:31
  * To change this template use File | Settings | File Templates.
  */
-public class ActivityOutput extends Activity implements View.OnClickListener{
-    /** Called when the activity is first created. */
+public class ActivityOutput extends Activity implements View.OnClickListener {
+    /**
+     * Called when the activity is first created.
+     */
 
     public final static String FILTER = "filter";
     public final static String OUTPUT = "output";
 
     private String currentFilter;
-   
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.output_select_window);
-        
+
         setOnClickListener();
 
 
@@ -54,22 +55,22 @@ public class ActivityOutput extends Activity implements View.OnClickListener{
 
         Button saveOutputFilter = (Button) findViewById(R.id.os_buttonSetFilter);
         saveOutputFilter.setOnClickListener(this);
-        
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);    
-        if(resultCode == RESULT_OK){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
             currentFilter = data.getStringExtra(ChangeMode.FINAL_FILTER);
-            TextView tv = (TextView)findViewById(R.id.os_labelCurrentFilter);
+            TextView tv = (TextView) findViewById(R.id.os_labelCurrentFilter);
             tv.setText(currentFilter);
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.os_buttonSetFilter:
                 L.i("Send intent to start FilterSelection");
                 Intent i = new Intent(this, FilterMessage.class);
@@ -77,27 +78,46 @@ public class ActivityOutput extends Activity implements View.OnClickListener{
                 i.putExtra(ChangeMode.NO_COMPARE, true);
                 startActivityForResult(i, 0);
                 break;
-           
+
             case R.id.os_buttonSaveOutput:
                 returnOutput();
                 break;
-            
-        }
 
+        }
     }
 
-    /** Return set information to parent activity**/
-    private void returnOutput(){
+    /**
+     * Return set information to parent activity*
+     */
+    private void returnOutput() {
         RadioGroup groupOutput = (RadioGroup) findViewById(R.id.os_radioGroupOutput);
-        int go = groupOutput.getCheckedRadioButtonId();
-        if(go < 0){
+        int gOutputID = groupOutput.getCheckedRadioButtonId();
+        if (gOutputID < 0) {
             Toast.makeText(ActivityOutput.this, "Please select one radio button in each group", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent i = new Intent();
-        RadioButton rButtonOutput = (RadioButton)findViewById(go);
+        RadioButton rButtonOutput = (RadioButton) findViewById(gOutputID);
+
+        String outputDevice = "NO_OUTPUT";
+        
+        switch (rButtonOutput.getId()) {
+            case R.id.os_radioLCD:
+                outputDevice = getString(R.string.outputDISPLAY);
+                break;
+            case R.id.os_radioLED:
+                outputDevice = getString(R.string.outputLED);
+                break;
+            case R.id.os_radioVibrator:
+                outputDevice = getString(R.string.outputVIBRATOR);
+                break;
+            case R.id.os_radioSpeaker:
+                outputDevice = getString(R.string.outputSPEAKER);
+                break;
+        }
+
         i.putExtra(FILTER, currentFilter);
-        i.putExtra(OUTPUT, rButtonOutput.getText());
+        i.putExtra(OUTPUT, outputDevice);
         setResult(RESULT_OK, i);
         L.i("Returned from ActivityOutput with " + currentFilter + " and " + rButtonOutput.getText());
         finish();

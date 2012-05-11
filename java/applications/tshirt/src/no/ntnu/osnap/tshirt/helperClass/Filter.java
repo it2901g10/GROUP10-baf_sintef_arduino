@@ -68,31 +68,24 @@ public class Filter implements Parcelable {
         return filter;
     }
 
-    public boolean isFilterValid(Model model) {
+    public boolean isFilterValid(String string) {
         
-        if(model instanceof Message) {
-            Message message = (Message) model;
-//            if(filter.equals("Message")){
-//                return(checkOperator(message.getText()));
-//            }
-//            if(filter.equals("Sender")){
-//                return(checkOperator(message.getSenderAsPerson().getName()));
-//            }
+        String operator = segments[segments.length-2];
+        String compare = segments[segments.length-1];
+
+        if(operator.equals("!")){
+            return !compare.equals(string);
+            
         }
+        else if(operator.equals("=")){
+            return compare.equals(string);
+            
+        }
+        else {
+            L.e("Err, invalid operator " + operator);
+        }
+        
         return false;
     }
-    
-//    private boolean checkOperator(String string){
-//
-//
-//        if(operator.equals("==")){
-//            return string.equals(compare);
-//        }
-//        if(operator.equals("!=")){
-//            return !string.equals(compare);
-//        }
-//
-//        return false;
-//    }
 
 }

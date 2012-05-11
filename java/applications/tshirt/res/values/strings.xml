@@ -11,5 +11,13 @@
     <string name="getLatestPost">getLatestPost</string>
 
 
+    <string name="outputDISPLAY">outputDisplay</string>
+    <string name="outputLED">outputLED</string>
+    <string name="outputVIBRATOR">outputVibrator</string>
+    <string name="outputSPEAKER">outputSpeaker</string>
+
+
+
+
 
 </resources>

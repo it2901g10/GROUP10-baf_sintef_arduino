@@ -27,7 +27,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * Helper class to retrive and insert new rules with its filters
+ * Helper class to retrieve and insert new rules with its filters
  */
 public class RulesDB {
 

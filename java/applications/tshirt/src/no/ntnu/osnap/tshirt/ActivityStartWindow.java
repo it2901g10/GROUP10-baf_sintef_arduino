@@ -21,9 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
-import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.helperClass.L;
-import no.ntnu.osnap.tshirt.helperClass.SocialHelper;
+import no.ntnu.osnap.tshirt.helperClass.Rule;
+import no.ntnu.osnap.tshirt.helperClass.RuleArduinoTransfer;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
@@ -86,10 +86,8 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 break;
             case R.id.sw_buttonConnection:
 
-                SocialHelper helper = new SocialHelper(prototype, this, socialServiceList.get(0));
-                String result = helper.getStringFromFilter(getString(R.string.getLatestPost) + ":" + getString(R.string.getMessage));
-//                L.i("Got Person Self" + p );
-//                singleton.toggleArduinoConnection();
+
+                singleton.toggleArduinoConnection();
                 break;
             case R.id.sw_buttonSearchSocialServices:
                 socialServiceList.clear();

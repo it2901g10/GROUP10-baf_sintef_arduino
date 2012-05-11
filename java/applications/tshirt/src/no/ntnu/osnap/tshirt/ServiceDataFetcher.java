@@ -14,6 +14,7 @@ import no.ntnu.osnap.social.models.Model;
 import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
+import no.ntnu.osnap.tshirt.helperClass.RuleArduinoTransfer;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
@@ -61,27 +62,11 @@ public class ServiceDataFetcher extends Service {
 
         Rule[] rules = singleton.database.getRules();
 
-        Request r = new Request(Request.RequestCode.SELF);
-        for (int i = 0; i < rules.length; i++) {
-            checkRule(rules[i]);
-        }
-
-        L.i("Attempt to fetch data from social service");
-
-//        Request request = Request.obtain(Request.RequestCode.MESSAGES);
-//
-//        if(list.size() > 0){
-//            prototype.sendRequest(list.get(0), request, createResponseListener());
-//        }
+        //TODO RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer()
+//        Rule[] rules = singleton.database.getRules();
+//        RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer(prototype, this, socialServiceList.get(0),rules[0]);
 
 
-    }
-
-    private void checkRule(Rule rule) {
-
-//        if(rule.isRuleSatisfied()){
-//
-//        }
 
     }
 
@@ -96,52 +81,4 @@ public class ServiceDataFetcher extends Service {
         };
 
     }
-
-    private ResponseListener createResponseListener(){
-        return new ResponseListener() {
-            @Override
-            public void onComplete(Response response) {
-                L.i("Got Response " + response.getStatus().name());
-                L.i("Got Response " + response.getNetwork());
-                if(response.getModel() instanceof Person){
-                    L.i("Got Response " + ((Person) response.getModel()).getName());
-                }
-                if(response.getModel() instanceof Message){
-                    L.i("Got Response " + ((Message) response.getModel()).getText());
-
-                    Rule[] rules = singleton.database.getRules();
-                    L.i("Number of rules is " + rules.length);
-                    for (int i = 0; i < rules.length; i++) {
-                        if(rules[i].isRuleSatisfied(response.getModel())){
-                            L.i("Rule is satisfied");
-                            sendToArduino(rules[i], response.getModel());
-                        }
-                        else{
-                            L.i("Rule is not satisfied");
-                        }
-                    }
-                }
-            }
-        };
-    }
-
-    private void sendToArduino(Rule rule, Model model) {
-        if(rule.getOutputFilter().equals("Message")){
-            String text = ((Message)model).getText();
-            if(rule.getOutputDevice().equals("LED")){ singleton.sendToLEDArduino(text);}
-            if(rule.getOutputDevice().equals("LCD Display")){ singleton.sendToLCDDiplayArduino(text); }
-            if (rule.getOutputDevice().equals("Vibrator")){ singleton.sendToLCDDiplayArduino(text); }
-            if(rule.getOutputDevice().equals("Speaker")){ singleton.sendToLCDDiplayArduino(text); }
-        }
-        if(rule.getOutputFilter().equals("Sender")){
-            String text = ((Message)model).getSenderAsPerson().getName();
-            if(rule.getOutputDevice().equals("LED")){ singleton.sendToLEDArduino(text);}
-            if(rule.getOutputDevice().equals("LCD Display")){ singleton.sendToLCDDiplayArduino(text); }
-            if (rule.getOutputDevice().equals("Vibrator")){ singleton.sendToLCDDiplayArduino(text); }
-            if(rule.getOutputDevice().equals("Speaker")){ singleton.sendToLCDDiplayArduino(text); }
-
-        }
-    }
-
-
 }

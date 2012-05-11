@@ -97,21 +97,6 @@ public class Rule implements Parcelable{
         return filters;
     }
 
-    public boolean isRuleSatisfied(Model model){
-        if(model instanceof Message){
-            Message p = (Message)model;
-            for (int i = 0; i < filters.length; i++) {
-                if(filters[i].isFilterValid(model) == false){
-                    L.i("Rule " + name + " filters did not satisfy given model");
-                    return false;
-                }
-            }
-            L.i("Rule " + name + " has passed filters");
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public String toString() {
         String result = name + " " + id + " " + outputFilter+ " " + outputDevice + " {";
