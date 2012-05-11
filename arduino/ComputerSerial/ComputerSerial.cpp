@@ -76,13 +76,17 @@ void ComputerSerial::setDeviceVersion(const String &version)
     deviceVersion = version;
 }
 
-void ComputerSerial::addDeviceService(const String &service)
+void ComputerSerial::addDeviceService(const String &service, const string &pin)
 {
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceServices.length() > 0) deviceServices += ", ";
 
     //Append element to array
-    deviceServices += "\"" + service + "\"";
+    //deviceServices += "\"" + service + "\"";
+	deviceServices += "{" + service + ":\"" + pin + "\"}";
+
+	// sample: {"service":"pin"}
+
 }
 
 void ComputerSerial::addDeviceDownloadLink(const String &link, const String &platform)
@@ -91,7 +95,11 @@ void ComputerSerial::addDeviceDownloadLink(const String &link, const String &pla
     if(deviceDownloadLinks.length() > 0) deviceDownloadLinks += ", ";
 
     //Append element to array
-    deviceDownloadLinks += "{" + platform + ": \"" + link + "\"}";
+    //deviceDownloadLinks += "{" + platform + ": \"" + link + "\"}";
+
+	deviceDownloadLinks += "{\"" + platform + "\": \"" + link + "\"}";
+
+	// sample: {"platform":"link"}
 }
 
 void ComputerSerial::getDeviceInfo(){
@@ -99,16 +107,20 @@ void ComputerSerial::getDeviceInfo(){
     String deviceInfo;
 
     //Device name
-    deviceInfo += "{NAME:\"" + deviceName + "\", ";
+    //deviceInfo += "{NAME:\"" + deviceName + "\", ";
+	deviceInfo += "{\"name\":\"" + deviceName + "\",";
 
     //Device version
-    deviceInfo += "VERSION:\"" + deviceVersion + "\", ";
+    //deviceInfo += "VERSION:\"" + deviceVersion + "\", ";
+	deviceInfo += "\"version\":\"" + deviceVersion + "\",";
 
     //Device services
-    deviceInfo += "SERVICES:[" + deviceServices + "], ";
+    //deviceInfo += "SERVICES:[" + deviceServices + "], ";
+	deviceInfo += "\"services\": [" + deviceServices + "],";
 
     //Device links
-    deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
+    //deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
+	deviceInfo += "\"links\": [" + deviceName + "]}";
 
     //send string representation of device info
 	char response[deviceInfo.length()];
