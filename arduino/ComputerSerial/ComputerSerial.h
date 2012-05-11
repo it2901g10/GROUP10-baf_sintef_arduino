@@ -59,7 +59,7 @@ public:
 	void getDeviceInfo();
 	void setDeviceName(const String &name);
 	void setDeviceVersion(const String &version);
-	void addDeviceService(const String &service);
+	void addDeviceService(const String &service, const String &pin);
 	void addDeviceDownloadLink(const String &link, const String &platform = "DEFUALT");
 
 	unsigned int getBytesReceived();
