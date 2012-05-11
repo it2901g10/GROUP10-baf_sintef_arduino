@@ -2,10 +2,10 @@
 
 \emph{This is the problem description, as per the customer's request.}
 
-Social networking sites such as Facebook and Twitter have normally been accessed  via a web browser.
-Lately mobile versions have become popular, and allow access to context data such as location of
-users. We foresee a much greater popularity of mobile and pervasive interfaces to social media in
-the coming years.
+Social networking sites such as Facebook\cite{link:facebook} and Twitter\cite{link:twitter}
+have normally been accessed  via a web browser. Lately mobile versions have become popular,
+and allow access to context data such as location of users. We foresee a much greater popularity
+of mobile and pervasive interfaces to social media in the coming years.
 
 Arduino\cite{link:arduino} is a platform that allows software to be written in order to construct
 hardware prototypes. In this task the students will develop an Arduino-based interface to Facebook.
@@ -13,9 +13,9 @@ The information from Facebook will be made available on Arduino displays and the
 with Facebook through Arduino sensors and actuators.
 
 In case Facebook data access shows to be difficult, the students will use Shindig\cite{link:shinding} which 
-is an open source implementation of OpenSocial APIs. The service specification is developed in the European project 
-SOCIETIES in collaboration with European partners. The students are however expected to innovate and come up 
-with new concepts, user interfaces, and service organization.
+is an open source implementation of OpenSocial\cite{link:opensocial} APIs. The service specification is developed
+in the European project SOCIETIES in collaboration with European partners. The students are however expected to
+innovate and come up with new concepts, user interfaces, and service organization.
 
 \section{The context}
 In the past few years, social networks have become more and more popular, continuously increasing their user-base.
@@ -27,14 +27,13 @@ The product has served both as a proof-of-concept and as a starting point for fu
 Our customer was SINTEF, represented by Mr. Babak A. Farshchian.
 
 SINTEF is the largest independent research organization in Scandinavia \cite{link:sintef}.
-It is an independent, non-commercial organization with their head office in Trondheim. They have approximately 2100 employees, mainly in Trondheim and Oslo.
+It is an independent, non-commercial organization with their head office in Trondheim.
+They have approximately 2100 employees, mainly in Trondheim and Oslo.
 
 \section{The team}
-The team consisted of seven students from NTNU. About half of the members have worked
-together on previous projects and thus shared some teamwork skills and experiences.
-Having a properly functioning team where all the skills of each team member are properly
-utilized is vital for the success of any project. None of the team members had 
-worked for a customer before.
+The team consisted of six students from NTNU and one exchange studend.
+About half of the members have worked together on previous projects and thus shared
+some teamwork skills and experiences. None of the team members had worked for a customer before.
 
 \subsection{Team members}
 
@@ -57,7 +56,7 @@ Experience with Java.
 
 \item{\emanuele}\newline
 Third year Computer Science exchange student from Tor Vergata University, Rome.
-Experience with Java, C and C++ programming.
+Experience with Java, C and C++ programming, basic electronic notions.
 
 \item{\jonas}\newline
 Third year student at NTNU. Experience with Java, Python, Lua, PHP, and web standards such as HTML,
@@ -74,21 +73,38 @@ own projects.
 Here we introduce a list of the terms used in this document with a short explanation of their meaning.
 
 \begin{description}
-\item[Android:] An operating system based on Linux primarily for mobile devices made by Google.
-\item[Android-Arduino applications:] With this term we refer to Android applications used to control the behavior of prototypes.
-\item[Apache:] A software foundation focused on open source and community driven software.
-\item[Arduino:] Arduino is a tool for making computers that can sense and control more of the physical world than your
-desktop computer. It's an open-source physical computing platform based on a simple microcontroller board, and a development
-environment for writing software for the board. \cite{link:arduino}
-\item[Facebook:] Facebook is the biggest social network. It is also the network our libraries primarily focus on.
-\item[OpenSocial:] OpenSocial\cite{link:opensocial} is an open source standard by Google for a set of API. It's aim is to
-provide a common runtime environment for web applications within different social networks. It is supported by networks
-such as Orkut, MySpace, LinkedIn and many more. Facebook and Twitter do not support OpenSocial and they both have their
-own custom proprietary APIs.
-\item[Product:] This project's deliverables: a set of prototypes and Android applications and libraries.
-\item[Prototype:] An Arduino board, running a custom firmware. It works in conjunction with an Android application
-that controls its behavior and another Android application that fetches the required data from a social network.
-\item[Shield:] An Arduino chip (or module) one puts on top of the main board to extends the arduino's feature set.
-\item[Shindig:] Shindig is Apache's implementation of the OpenSocial standard.
-\item[Social service:] With this term we refer to Android services used to fetch data from a social network.
+
+\item[Android:]
+	An operating system based on Linux primarily for mobile devices made by Google.
+\item[Android-Arduino applications:]
+	With this term we refer to Android applications used to control the behavior of Arduino-base T.U.I.
+\item[Apache:]
+	A software foundation focused on open source and community driven software.
+\item[Arduino:]
+	Arduino is a tool for making computers that can sense and control more of the physical world than your
+	desktop computer. It's an open-source physical computing platform based on a simple microcontroller board, and a development
+	environment for writing software for the board. 
+\item[Facebook:]
+	Facebook is the biggest social network. It is also the network our libraries primarily focus on.
+\item[OpenSocial:]
+	OpenSocial is an open source standard by Google for a set of API. It's aim is to
+	provide a common runtime environment for web applications within different social networks. It is supported by networks
+	such as Orkut, MySpace, LinkedIn and many more, except Facebook and Twitter.
+\item[Product:]
+	This project's deliverables: a set of prototypes and Android applications and libraries.
+\item[Prototype:]
+	An Arduino board, running a custom firmware, acting as a tangible user interface.
+\item[REST:]
+	A software architecture for distributed systems. Software that complies with REST constrains is called RESTful.
+\item[Shield:]
+	An Arduino chip (or module) one puts on top of the main board to extends the arduino's feature set.
+\item[Shindig:]
+	Shindig is Apache's implementation of the OpenSocial standard.
+\item[Social service:]
+	With this term we refer to Android services, used to fetch data from a social network.
+\item[TUI:]
+	Acronym for tangible user interfaces.
+\item[Twitter:]
+	World's biggest micro-blogging network.
+	
 \end{description}
