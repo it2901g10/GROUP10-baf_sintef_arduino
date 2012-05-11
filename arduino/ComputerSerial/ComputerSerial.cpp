@@ -76,7 +76,7 @@ void ComputerSerial::setDeviceVersion(const String &version)
     deviceVersion = version;
 }
 
-void ComputerSerial::addDeviceService(const String &service, const string &pin)
+void ComputerSerial::addDeviceService(const String &service, const String &pin)
 {
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceServices.length() > 0) deviceServices += ", ";
