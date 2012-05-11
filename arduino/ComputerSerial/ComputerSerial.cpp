@@ -120,7 +120,9 @@ void ComputerSerial::getDeviceInfo(){
 
     //Device links
     //deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
-	deviceInfo += "\"links\": [" + deviceName + "]}";
+	deviceInfo += "\"links\": [" + deviceName + "]";
+
+	deviceInfo += "}";
 
     //send string representation of device info
 	char response[deviceInfo.length()];
