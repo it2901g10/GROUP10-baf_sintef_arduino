@@ -127,7 +127,7 @@ public class BluetoothConnection extends Protocol {
 	 * Changes the connection state of this BluetoothConnection. Package visible.
 	 * @param setState the new ConnectionState of this BluetoothConnection
 	 */
-	synchronized void setConnectionState(ConnectionState setState) {
+	void setConnectionState(ConnectionState setState) {
 		connectionState = setState;
 		
 		//Tell listener about any connection changes
@@ -162,8 +162,7 @@ public class BluetoothConnection extends Protocol {
 		if( bluetooth.isDiscovering() ) return;
     	
 		//Start an asynchronous connection and return immediately so we do not interrupt program flow
-		ConnectionThread thread = new ConnectionThread(this);
-		thread.start();
+		new ConnectionThread(this).start();
     }
     
     /**
@@ -172,7 +171,7 @@ public class BluetoothConnection extends Protocol {
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
      * active connection (STATE_CONNECTING to STATE_DISCONNECTED)
      */
-	public synchronized void connect() {
+	public void connect() {
 		
 		//Don't try to connect more than once
 		if( connectionState != ConnectionState.STATE_DISCONNECTED ) {
@@ -235,21 +234,24 @@ public class BluetoothConnection extends Protocol {
 	/**
 	 * Disconnects the remote device. connect() has to be called before any communication to the
 	 * remote device can be done again.
-	 * @throws IOException if there was a problem closing the connection.
 	 */
-	public void disconnect() throws IOException {
+	public void disconnect() {
 				
 		//Close socket only if we are connected or trying to connect
 		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
 			setConnectionState(ConnectionState.STATE_DISCONNECTED);
+			super.disconnect();
 			if(socket != null) {
-				socket.close();
-				input = null;
-				output = null;
-				socket = null;
-				super.stopThread();
+				try {
+					socket.close();
+					socket = null;
+					input = null;
+					output = null;
+					Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
+				} catch (IOException e) {
+					Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
+				}
 			}
-			Log.v("BluetoothConnection", "Bluetooth connection closed: " + device.getAddress());
 			return;
 		}
 		
@@ -274,7 +276,7 @@ public class BluetoothConnection extends Protocol {
             		case BluetoothAdapter.STATE_TURNING_OFF:
             		case BluetoothAdapter.STATE_OFF:
             			//make sure socket is disconnected when Bluetooth is shutdown
-						try { disconnect(); } catch (IOException e) {}
+					    disconnect();
             		break;
             		
             		//Bluetooth is Enabled and ready

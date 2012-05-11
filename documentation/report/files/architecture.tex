@@ -8,18 +8,14 @@ The system consists of:
 \begin{description}
 	\item[Libraries:] Social library, Communication library
 	\item[Applications:] T-Shirt application, other applications
-	\item[Prototypes:] T-Shirt prototype, other prototypes
+	\item[(U.I.) Prototypes:] T-Shirt prototype, other prototypes
 \end{description}
 
-The figure \ref{fig:design-toplevel} illustrates the overall system architecture, demonstration 3 Applications
-that use only the communication library, only the social service library, or both. Note that in the figure there is no
-connection between all the applications and the oSNAP SocialLib. This is intentional because some of the prototypes we
-will develop will only use parts of the entire oSNAP library. This is to show that our library is modular and you can use
-only parts of it and it still works.
+The figure \ref{fig:design-toplevel} illustrates the overall system architecture.
 
 \begin{figure}[h!]
-	\centering \includegraphics[scale=0.35]{img/design-toplevel.png}
-	\caption{Overall system architecture}
+	\centering \includegraphics[scale=0.55]{img/design-toplevel.png}
+	\caption{System architecture overview}
 	\label{fig:design-toplevel}
 \end{figure}
 
@@ -28,15 +24,14 @@ only parts of it and it still works.
 \label{sec:system-design}
 As the requirements for the product were not set early on by the customer, a lot of effort
 was put into producing working prototypes to show during the meetings in order to receive
-as much feedback as possible and identify the ideas the customer had in mind.
-These would provide what was needed to proceed with system design.
-At some point thou, after roughly one month, we understood that we were going in the wrong direction,
-and that our design wouldn't satisfy the requirements for the use cases the customer mentioned and the
-design of some parts of the system had to be revised. It involved especially the Social library and both
-the Facebook and T-Shirt applications.
+as much feedback as possible and identify the ideas the customer had in mind; these would provide
+what was needed to proceed with system design. At some point thou, after roughly one month,
+we understood that we were going in the wrong direction, and that our design wouldn't satisfy
+the requirements the customer had mentioned. The design of some parts of the system had to be revised.
+This involved especially the Social library and both the Facebook and T-Shirt applications.
 
 \subsection{First design}
-Our first system design was based on the scenario where the user would download the t-shirt
+Our first system design was based on the scenario where the user would download the T-shirt
 and the social applications, browse for some content from within the social application
 and actively send it to the t-shirt application pressing a 'share' button.
 This scenario is illustrated in figure \ref{fig:design-usecase1}.
@@ -120,8 +115,8 @@ to exchange social data. This mechanism is based on Android Intent's API.
 
 \subsubsection{First approach}
 Our first design approach consisted in a library that would handle the connection to social networks
-such as Facebook, Twitter, LinkedIn, etc. This would  allow the developers to write full-fledged
-social 'multi-network' clients. It would also provide abstractions for many common concepts
+such as Facebook, Twitter, LinkedIn, etc. This would allow the developers to write full-fledged
+social 'multi-network' clients. It would also provide abstractions for common concepts
 found in these networks such as Post, User, Comment and so on.
 
 \subsubsection{Revised approach}
@@ -131,18 +126,17 @@ using Android's Intent mechanism and inter-process communication, between Social
 the Android-Arduino applications to allow the requesting and forwarding of social data.
 It will still provide abstractions for common concepts found in social networks.
 This revised approach was made necessary after the first meetings with the customer as we misunderstood
-the project scope, and went on to solve a very ambitious and unneeded task. The new design also accommodated
-very well the overall system design. Some of the code and documentation we produced for the previous design
-was re-used, but some could not.
+the project scope, and went on to solve a very ambitious and unneeded task. Some of the code and documentation
+we produced for the previous design was re-used, but some could not.
 
 \todo{
 	a class diagram maybe?
 }
 
 
-\subsection{The communication library}
-This library consists of a Java library (implemented on Android) and an Arduino firmware (figure \ref{fig:comlib-diagram}). 
-Both implement the ComLib protocol. The Java library provides a set of classes that allow to easily connect to Arduino 
+\subsection{The Communication library}
+This library consists of a Java library (implemented on Android) and an Arduino firmware (figure \ref{fig:comlib-diagram}),
+both implementing the ComLib protocol. The Java library provides a set of classes that simplify the connection to Arduino
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
 services the remote device supports and any software download links associated with the remote device. A service might
 be a sensor, a lamp, display screen while download links are represented as an URI link. All this meta information is stored
@@ -262,25 +256,25 @@ For completeness we present the previous application use case in figure \ref{fig
 
 \section{Prototypes}
 \label{sec:prototypes}
-Three different prototypes will be produced for the project. They serve both as a proof of concept and
-to test that the library works. Each of the prototypes should be different to show that the library can be
-used to quickly prototype Arduino Tangible User Interfaces. One of the prototypes, the T-Shirt, is significantly
-bigger and more complex than the other two. The T-Shirt is the main prototype of the project; the purpose of the other two
+Three different prototypes will be produced for the project. Their purpose is to serve as proof of concept and
+to show that the libraries and can effectively simplify the prototyping of Arduino-based T.U.I.
+One of the prototypes, the T-Shirt, is significantly bigger and more complex than the other two.
+The T-Shirt is the main prototype of the project; the purpose of the other two
 is just to show that the libraries can be use for other applications and in different contexts.
 
-\subsection{Prototype 1: The social T-Shirt}
+\subsection{Prototype 1: The social Jacket}
 	
 \begin{figure}
 	\begin{center}
 	\includegraphics[scale=0.2]{img/design-tshirtproto}
 	\end{center}
-	\caption{Concept drawing of the T-Shirt Prototype}
+	\caption{Concept drawing of the Jacket Prototype}
 	\label{fig:design-TShirt}
 \end{figure}
 	
 This is our main prototype and will showcase a lot features.
-It consists of a T-Shirt or sweater connected to a Lilypad Arduino that will feature
-several displays and indicators which will receive social data from the Android phone.
+It consists of aJacket connected to a Lilypad Arduino that will feature
+several displays and indicators which will receive social data from an Android phone.
 The shirt features different tangible interfaces (see figure \ref{fig:design-TShirt}):
 	
 \begin{itemize}
@@ -291,17 +285,10 @@ The shirt features different tangible interfaces (see figure \ref{fig:design-TSh
 \end{itemize}
 	
 Any of these can be mapped to a fair deal of concepts found in social network.
-So a "Poke" from Facebook could become a vibration on the T-Shirt. When someone "Likes" your post a small sound effect
-could be played, a LED blinking on status updates from Twitter, etc. The T-Shirt is connected to the social networks
-throu a wireless connection to the Android mobile. Specifically, the mobile Android is connected to the Internet
-and carried in the pocket of the person using the T-Shirt and is connected wirelessly with the Arduino Lilypad through Bluetooth.
-	
-	%\begin{figure}[h!]
-	%\centering \includegraphics[width=1.0\textwidth]{img/testing-tshirtproto}
-	%\caption{Concept drawing of the T-Shirt Prototype}
-	%\label{fig:testing-TShirt}
-	%\end{figure}
-
+So a "Poke" from Facebook could become a vibration on the Jacket. When someone "Likes" your post a small sound effect
+could be played, a LED blinking on status updates from Twitter, etc. The Jacket is connected to the social networks
+through a wireless connection to an Android mobile. Specifically, the mobile Android is connected to the Internet
+and carried in the pocket of the person using the Jacket and is connected wirelessly with the Arduino Lilypad through Bluetooth.
 
 	
 \subsection{Prototype 2: Temperature Sensor for Android}
@@ -352,10 +339,12 @@ in a real world situation, so we changed the concept of this prototype. It ended
 \end{figure}
 
 \section{Package Structure}
-The system can be divided into smaller sections. This section describes some of the structures
-we have divided the system into. The most obvious distinction is between the Java code runs
-on the Android platform and the C code which is executed by the Arduino platform.
-The Java code is again divided into packaged libraries as described below.
+The source code of the whole system can be organized in smaller sections.
+Here we describes some of the packages we have divided the system code into.
+The system was coded in Arduino C and Java.
+Java was used to code Android libraries and applications.
+Arduino C code is executed on the Arduino prototype's board.
+The Java code is again divided into packages as described below.
 
 \subsection{Java code}
 \begin{itemize}
@@ -372,10 +361,11 @@ The Java code is again divided into packaged libraries as described below.
 		protocol.
 	\item \textbf{no.ntnu.osnap.social}\newline
 		Social Library provides an easy to use interface between social services and applications/services
-		running on the Android platform. The SocialLib also provides some general data models such as Person,
+		running on the Android platform. It also provides some general data models such as Person,
 		Group or Message for concepts commonly used in most social networks. 
-	\item \textbf{no.ntnu.osnap.social.testing}  \newline
-		Test units and sample programs for the SocialLib.
+	\item \textbf{no.ntnu.osnap.mockups}  \newline
+		Stubs and 'driver' applications used for testing purposes and to showcase the functionalities of the
+		system.
 \end{itemize}
 
 \subsection{Arduino C code}

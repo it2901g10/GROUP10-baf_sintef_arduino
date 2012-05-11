@@ -5,46 +5,65 @@ software development, but they all suggest that testing has to be performed cont
 during the development process. This is of particular importance to our process since
 it follows an iterative approach. Testing should be planned in the early stages of each
 iteration for each testable unit that is going to be implemented and performed as soon as
-it is complete. As the system evolves so does the testing. It should be more comprehensive
+it is completed. As the system evolves so does the testing. It should be more comprehensive
 and cover each module and the system itself as a whole.
 
 \section{Customer feedback}
 Customer feedback was an important part of the testing approach for our project.
 Working prototypes and/or documentation were produced for each meeting with the customer
-in order to test the features implemented in the prototypes, receive a general acceptance
-on our iteration goals and plan the next iteration. Receiving a constant feedback from the
-user was very important as the project didn't really have a specific set of requirements from
-the beginning, so acquiring feedback from the customer allowed us to understand the most common
-use case scenarios and from those obtain a set of requirements used to design the system.
+in order to test the features implemented, receive a general acceptance on our iteration goals
+and plan the next iteration. Receiving a constant feedback from the user was very important as the
+project didn't really have a specific set of requirements from the beginning, so acquiring feedback
+from the customer allowed us to understand the most common use case scenarios and from those obtain
+a set of requirements used to design the system and plan test cases.
+
+\section{Testing approach}
+Testing can be performed in a top-down or bottom-up fashion.
+
+The top-down approach consists in integrating modules incrementally, moving downward in 
+the hierarchy in either a breadth-first or depth-first fashion. Subordinate dummy modules are 
+substituted one at time with the real ones and tested. Regression testing follows each integration increment.
+
+On the other side the bottom-up approach begins testing atomic modules, sometimes combining them into clusters,
+and moves upward in the program structure. Sometimes 'driver' programs are produced in order to test
+non-standalone components like libraries. This approach eliminates the need for dummy modules, but the
+system as whole doesn't exist as an "entity" until the last module is integrated.
+
+In our case, since we presented many prototypes to the customer, we needed to have an implementation
+of the system as a whole quite early. We coded various mockup applications that acted as 'drivers' in order
+to demonstrate and test the functionalities of the libraries. Stubs (or dummy modules) were also coded
+to supply functionalities not yet fully implemented.
+
+\todo {
+	mention that mockups have their own package: no.ntnu.osnap.mockups
+	add a link to package structure maybe?
+}
 
 \section{Unit testing}
-This involves testing small portions, like methods and functions, of the code, making sure they work 
-as intended throughout the process of implementing code. Tests will be executed after changes in the 
-code to make sure that it still works as expected, this means that unit tests have to be written for 
-large portions of the API.
+Unit testing involves testing small portions of code or of the system itself (modules).
+Where possible, functions have been tested indipendetly. In order to test non indipendent system modules,
+such as the libraries, mockup applications were coded.
 
 \section{User interface testing}
-To run the prototypes we made some applications that will run on an Android phone. To make sure our 
-prototypes are understandable and easy to use, we have used group members that have not been 
-involved in the process of making the UI, as test candidates. It might not be the ideal way of testing 
-an UI, but in the given time-frame of this project it was the easiest and fastest way of doing it.
+Since our product encompassed various Android applications, we performed some user interface testing.
+To make sure the user interfaces are understandable and easy to use, we have delegated their testing to
+group members that have not been involved in their design and coding.
 
 \section{Integration testing}
-After each module has been unit tested, they will be put together to form bigger components 
-of the working system. This is to make sure that the smaller modules will work correctly when placed 
-into bigger components. In our case this will be to run tests on the Communication and Social libraries
-making sure they work individually, before they are tested together.
+Once the system modules were completed they were integrated one by one into the final system.
+After each stub had been swapped with its correspective module, it was tested again to ensure
+it was working properly.
 
 \section{System testing}
-This involves putting the components from integration testing together to form a complete system that 
-can be tested. Preferably each module will be added incrementally, to easily spot if any modules produce errors.
+System testing constists in testing the system as a whole.
+In our case this consisted in testing our final prototype, performing a series of tests involving all
+the parts of the system from the Social applications to the Prototype application and lastly to
+the Arduino board on the jacket.
 
 \section{Functional requirement testing}
-Since the project is a combination of proof-of-concept and research project, tests are made
-in mind to support a run of the system and are not made to check for edge
-cases and more specific use.
-
-The unit tests is made to see if we have fulfilled the functional requirements from packages F1-F7.
+Since the project is a combination of proof-of-concept and research project, tests are planned in order
+to support a run of the system, not to test for particular scenarios or more specific use.
+The unit tests is planned to see if we have fulfilled the functional requirements from packages F1-F7.
 
 \section{Testing order}
 Since some of the packages are connected, we need to test them in order.
