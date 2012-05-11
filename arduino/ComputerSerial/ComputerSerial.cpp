@@ -83,7 +83,7 @@ void ComputerSerial::addDeviceService(const String &service, const String &pin)
 
     //Append element to array
     //deviceServices += "\"" + service + "\"";
-	deviceServices += "{ \"name\": \"" + service + "\", \"pins\" :\"" + pin + "\"}";
+	deviceServices += "{ \"id\": \"" + service + "\", \"pins\" :\"" + pin + "\"}";
 
 	// sample: {"name":"service",
 	//			"pins":"1,2,3" }
