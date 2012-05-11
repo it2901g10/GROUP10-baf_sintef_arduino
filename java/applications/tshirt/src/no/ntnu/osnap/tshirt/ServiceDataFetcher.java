@@ -52,7 +52,7 @@ public class ServiceDataFetcher extends Service {
             }
         };
         timer = new Timer();
-        timer.schedule(task, 1000, 10000);
+//        timer.schedule(task, 1000, 10000);
         L.i("Timer to fetch data from social service is currently DISABLED");
     }
 

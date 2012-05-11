@@ -8,4 +8,7 @@ public class L {
     public static void i(String message){
         Log.i(LOGTAG, message);
     }
+    public static void e(String message){
+        Log.e(LOGTAG, message);
+    }
 }

@@ -21,7 +21,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
+import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.helperClass.L;
+import no.ntnu.osnap.tshirt.helperClass.SocialHelper;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
 
     TshirtSingleton singleton;
     ArrayList<String> socialServiceList;
+    Prototype prototype;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -82,7 +85,11 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 startActivity(i);
                 break;
             case R.id.sw_buttonConnection:
-                singleton.toggleArduinoConnection();
+
+                SocialHelper helper = new SocialHelper(prototype, this, socialServiceList.get(0));
+                String result = helper.getStringFromFilter(getString(R.string.getLatestPost) + ":" + getString(R.string.getMessage));
+//                L.i("Got Person Self" + p );
+//                singleton.toggleArduinoConnection();
                 break;
             case R.id.sw_buttonSearchSocialServices:
                 socialServiceList.clear();
@@ -95,7 +102,7 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                         updateServiceListView();
                     }
                 };
-                Prototype prototype = new Prototype(ActivityStartWindow.this, listener);
+                prototype = new Prototype(ActivityStartWindow.this, listener);
                 prototype.discoverServices();
                 break;
 
