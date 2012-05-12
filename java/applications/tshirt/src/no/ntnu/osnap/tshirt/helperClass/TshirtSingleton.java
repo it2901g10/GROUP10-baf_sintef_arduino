@@ -14,6 +14,8 @@
 package no.ntnu.osnap.tshirt.helperClass;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.widget.Toast;
 import no.ntnu.osnap.tshirt.R;
 
@@ -26,7 +28,11 @@ public class TshirtSingleton{
     private Context context;
     public RulesDB database;
 
+    /**  What service we are working on (Example facebook) (If we have multiple)*/
+    public String serviceName;
 
+    /** Boolean value if we want our service to run in the background*/
+    public boolean serviceActivated;
 
     public TshirtSingleton(Context applicationContext) {
         context = applicationContext;
@@ -43,7 +49,20 @@ public class TshirtSingleton{
     }
     //Connection
 
+
+    public String getServiceName() {
+        L.i("getName" + serviceName);
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        L.i("SetName" + serviceName);
+
+        this.serviceName = serviceName;
+    }
+
     public void toggleArduinoConnection() {
+
         Toast.makeText(context, "toggleArduinoConnection() is not yet implemented", Toast.LENGTH_SHORT).show();
     }
     
@@ -64,21 +83,21 @@ public class TshirtSingleton{
             sendToSpeakerArduino(output);   
         }
         else{
-            L.e("Err, Unknown output");
+            L.e("Err, Unknown output" + device + context.getString(R.string.outputVIBRATOR));
         }
 
     }
     
-    private void sendToLEDArduino(String string){
-        
+    private void sendToLEDArduino(String text){
+        Log.i("ARDUINO", "LED" + text);
     }
     private void sendToLCDArduino(String text){
-        
+        Log.i("ARDUINO", "LCD" + text);
     }
     private void sendToVibratorArduino(String text){
-
+        Log.i("ARDUINO", "VIBRATOR" + text);
     }
     private void sendToSpeakerArduino(String text){
-
+        Log.i("ARDUINO", "SPEAKER" + text);
     }
 }

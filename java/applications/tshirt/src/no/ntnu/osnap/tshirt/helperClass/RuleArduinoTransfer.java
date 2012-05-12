@@ -36,6 +36,11 @@ import java.util.concurrent.CountDownLatch;
         this.rule = rule;
         singleton = TshirtSingleton.getInstance(context);
         
+
+    }
+
+    /** Begins to check the filters, before grabbing the output text and finally push it to the arduino */
+    public void start(){
         isFiltersSatisfied();
     }
 
@@ -126,7 +131,7 @@ import java.util.concurrent.CountDownLatch;
         
         Filter f = linkedList.poll();
         if(!f.isFilterValid(result)){
-            L.i("Rule " + rule.getName() + " was not satisfied with filter " + f + " compared to " + result);
+            L.i("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() +  " " + f);
             return;
         }
 

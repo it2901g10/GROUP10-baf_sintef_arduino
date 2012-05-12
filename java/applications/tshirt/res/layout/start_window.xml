@@ -76,6 +76,7 @@
             android:background="@color/dark_gray"
             android:padding="5dp"
             android:text="Rules"
+            android:layout_marginBottom="5dp"
             android:textSize="16sp" />
 
 
@@ -88,5 +89,27 @@
             android:typeface="sans"
             android:textStyle="bold"
             android:height="50dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/button_shape"/>
+    <TextView
+            android:id="@+id/sw_labelOption"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Options"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp" />
+    <ToggleButton
+            android:id="@+id/sw_toggleButtonActiveService"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textOn="Service Enabled"
+            android:textOff="Service Disabled"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:height="50dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/toggle_shape" />
 </LinearLayout>

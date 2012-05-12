@@ -14,11 +14,13 @@
 package no.ntnu.osnap.tshirt;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
 import no.ntnu.osnap.tshirt.helperClass.L;
@@ -39,9 +41,17 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_window);
         singleton = TshirtSingleton.getInstance(this);
-        setOnClickListeners();
+        
         socialServiceList = new ArrayList<String>();
-        startService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
+        
+        initComp();
+    }
+
+    private void initComp() {
+
+        setOnClickListeners();
+        ToggleButton toggleButton = (ToggleButton)findViewById(R.id.sw_toggleButtonActiveService);
+        toggleButton.setChecked(singleton.serviceActivated);
     }
 
     private void setOnClickListeners() {
@@ -53,6 +63,9 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
 
         Button searchSSButton = (Button)findViewById(R.id.sw_buttonSearchSocialServices);
         searchSSButton.setOnClickListener(this);
+
+        ToggleButton toggleButton = (ToggleButton)findViewById(R.id.sw_toggleButtonActiveService);
+        toggleButton.setOnClickListener(this);
     }
 
     private void updateServiceListView() {
@@ -68,10 +81,8 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 String services = "";
                 for (int i = 0; i < socialServiceList.size(); i++) {
                     services += socialServiceList.get(i) + ((i < socialServiceList.size()-1)?"\n":"");
-
                 }
                 view.setText(services);
-
             }
         });
     }
@@ -85,10 +96,24 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 startActivity(i);
                 break;
             case R.id.sw_buttonConnection:
-
-
+                singleton.setServiceName(socialServiceList.get(0));
                 singleton.toggleArduinoConnection();
                 break;
+            case R.id.sw_toggleButtonActiveService:
+
+                if(singleton.serviceActivated){
+                    stopService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
+                    L.i("Disabled Service");
+                    singleton.serviceActivated = false;
+                }
+                else{
+                    startService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
+                    L.i("Activated Service");
+                    singleton.serviceActivated = true;
+                }
+
+                break;
+
             case R.id.sw_buttonSearchSocialServices:
                 socialServiceList.clear();
                 updateServiceListView();
@@ -103,7 +128,6 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 prototype = new Prototype(ActivityStartWindow.this, listener);
                 prototype.discoverServices();
                 break;
-
         }
 
     }

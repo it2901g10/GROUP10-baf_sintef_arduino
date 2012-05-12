@@ -32,6 +32,7 @@ public class ServiceDataFetcher extends Service {
     ArrayList<String> list;
     TshirtSingleton singleton;
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -48,13 +49,29 @@ public class ServiceDataFetcher extends Service {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                L.i("Timer initiates to fetch data from social service");
-                iterateRulesAndCallSocialService();
+                if(isClearToGo()){
+                    L.i("Timer initiates to fetch data from social service");
+                    iterateRulesAndCallSocialService();
+                }
             }
         };
         timer = new Timer();
-//        timer.schedule(task, 1000, 10000);
+        timer.schedule(task, 1000, 10000);
         L.i("Timer to fetch data from social service is currently DISABLED");
+    }
+
+    private boolean isClearToGo() {
+
+        if(singleton.serviceActivated == false){
+            return false;
+        }
+
+        if(singleton.getServiceName() != null){
+            return true;
+        }
+        
+        L.i("No selected service to connect to");
+        return false;
     }
 
 
@@ -62,12 +79,22 @@ public class ServiceDataFetcher extends Service {
 
         Rule[] rules = singleton.database.getRules();
 
-        //TODO RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer()
-//        Rule[] rules = singleton.database.getRules();
-//        RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer(prototype, this, socialServiceList.get(0),rules[0]);
+        for (int i = 0; i < rules.length; i++) {
+            Rule rule = rules[i];
+            activateRule(rule);
+            
+            
+        }
+    }
 
-
-
+    private void activateRule(final Rule rule) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.serviceName, rule)).start();
+            }
+        });
+        t.start();
     }
 
     private ConnectionListener createConnectionListener(){

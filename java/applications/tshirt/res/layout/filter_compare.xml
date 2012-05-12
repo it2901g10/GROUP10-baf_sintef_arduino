@@ -46,6 +46,12 @@
                 android:id="@+id/fc_radioNotEqual"
                 android:text="is not equal to"
                 android:textSize="16sp"/>
+        <RadioButton
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fc_radioContains"
+                android:text="contains"
+                android:textSize="16sp"/>
     </RadioGroup>
     <EditText
             android:id="@+id/fc_editComparison"

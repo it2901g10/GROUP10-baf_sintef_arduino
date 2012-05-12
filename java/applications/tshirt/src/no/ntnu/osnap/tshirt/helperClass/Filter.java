@@ -72,14 +72,16 @@ public class Filter implements Parcelable {
         
         String operator = segments[segments.length-2];
         String compare = segments[segments.length-1];
-
         if(operator.equals("!")){
             return !compare.equals(string);
             
         }
         else if(operator.equals("=")){
             return compare.equals(string);
-            
+        }
+
+        else if(operator.equals("contains")){
+            return string.contains(compare);
         }
         else {
             L.e("Err, invalid operator " + operator);
@@ -88,4 +90,13 @@ public class Filter implements Parcelable {
         return false;
     }
 
+    public String getOperator() {
+        if(segments.length > 2){
+            return segments[segments.length - 2];
+        }
+        L.e("Tried to get operator from filter that is too short");
+        return "ERROR NO FILTER";
+        
+        
+    }
 }
