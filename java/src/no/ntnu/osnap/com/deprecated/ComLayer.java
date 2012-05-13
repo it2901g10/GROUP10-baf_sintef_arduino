@@ -37,6 +37,11 @@ public class ComLayer extends Protocol implements SerialPortEventListener {
 	public ConnectionMetadata getConnectionData() {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
+
+	@Override
+	public void connect() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
     
     /*
      *  0 = scanning

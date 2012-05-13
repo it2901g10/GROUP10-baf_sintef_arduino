@@ -60,7 +60,7 @@ public abstract class Protocol implements Runnable {
 	 */
 	protected ConnectionMetadata connectionMetadata;
 	
-	private BlockingQueue<ProtocolInstruction> pendingInstructions;
+	private final BlockingQueue<ProtocolInstruction> pendingInstructions;
 	private ProtocolInstruction currentInstruction;
     
 	/**
@@ -220,14 +220,14 @@ public abstract class Protocol implements Runnable {
 			lock();
 			
 			currentInstruction = pendingInstructions.poll();
-			Log.d(getClass().getName(), "Sending instruction: " + currentInstruction.getOpcode().name());
+			//Log.d(getClass().getName(), "Sending instruction: " + currentInstruction.getOpcode().name());
 			
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());
 				waitingForAck = currentInstruction.getOpcode();
 				
 			} catch (IOException ex) {
-				Log.e("Protocol", "Send error: " + ex);
+				//Log.e("Protocol", "Send error: " + ex);
 			}
 			
 			release();
@@ -238,7 +238,7 @@ public abstract class Protocol implements Runnable {
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " length");
+        	//Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " length");
 			pendingInstructions.notify();
 		}
 	}
@@ -645,7 +645,7 @@ public abstract class Protocol implements Runnable {
         	
             // Process command
             if (currentCommand.isAckFor(waitingForAck)) {
-            	Log.v("Protocol", "Ack received for: " + waitingForAck.name());
+            	//Log.v("Protocol", "Ack received for: " + waitingForAck.name());
                 byte tempAck = waitingForAck.value;
                 
 				boolean hadAckProcessor = false;
@@ -669,7 +669,7 @@ public abstract class Protocol implements Runnable {
 				
                 currentCommand = new Command();
             } else {
-            	Log.e("Protocol", "Received something unexpected");
+            	//Log.e("Protocol", "Received something unexpected");
                 throw new IllegalArgumentException("Received something unexpected");
             }
         }

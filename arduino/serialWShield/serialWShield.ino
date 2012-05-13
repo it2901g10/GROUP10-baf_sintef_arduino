@@ -13,7 +13,7 @@
 #include <ComputerSerial.h>
 
 #if LCD==0
-	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+	LiquidCrystal lcd(8, 7, 12, 11, 10, 9);
 #elif LCD==1
 	DogLcd lcd(12, 11, 9, 10);
 #elif LCD==2
@@ -55,6 +55,12 @@ void setup(){
 	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
 	comp.attachFunction(comp.OPCODE_DATA, &data);
 	
+	
+	//comp.setDeviceName("Derp");
+	//comp.setDeviceVersion("0.1");
+	//comp.addDeviceService("LED", "good");
+	//comp.addDeviceDownloadLink("DerpOS", "http://google.com");
+
   	pinMode(13, OUTPUT);
 	
 #if LCD==0
