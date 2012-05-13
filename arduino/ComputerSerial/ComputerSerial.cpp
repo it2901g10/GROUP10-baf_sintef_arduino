@@ -18,8 +18,7 @@
 
 #include "ComputerSerial.h"
 
-void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize)
-{
+void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize){
 	return NULL;
 }
 
