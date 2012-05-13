@@ -212,14 +212,14 @@ public abstract class Protocol implements Runnable {
 			lock();
 			
 			currentInstruction = pendingInstructions.poll();
-			Log.d(getClass().getName(), "Sending instruction: " + currentInstruction.getOpcode().name());
+			//Log.d(getClass().getName(), "Sending instruction: " + currentInstruction.getOpcode().name());
 			
 			try {
 				sendBytes(currentInstruction.getInstructionBytes());
 				waitingForAck = currentInstruction.getOpcode();
 				
 			} catch (IOException ex) {
-				Log.e("Protocol", "Send error: " + ex);
+				//Log.e("Protocol", "Send error: " + ex);
 			}
 			
 			release();
@@ -230,7 +230,7 @@ public abstract class Protocol implements Runnable {
 	private void queueInstruction(ProtocolInstruction instr){
 		synchronized (pendingInstructions) {
 			pendingInstructions.add(instr);
-        	Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " length");
+        	//Log.v("Protocol", "Added new pending instruction of: " + pendingInstructions.size() + " length");
 			pendingInstructions.notify();
 		}
 	}

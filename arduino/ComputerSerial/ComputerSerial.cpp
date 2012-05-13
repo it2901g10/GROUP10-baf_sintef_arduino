@@ -22,8 +22,7 @@ void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t conte
 	return NULL;
 }
 
-ComputerSerial::ComputerSerial(int baud)
-{
+ComputerSerial::ComputerSerial(int baud){
     //Initialize with baudrate if requested
     if(baud != 0) begin(baud);
 }
@@ -66,18 +65,15 @@ void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, 
 	}
 }
 
-void ComputerSerial::setDeviceName(const String &name)
-{
+void ComputerSerial::setDeviceName(const String &name){
     deviceName = name;
 }
 
-void ComputerSerial::setDeviceVersion(const String &version)
-{
+void ComputerSerial::setDeviceVersion(const String &version){
     deviceVersion = version;
 }
 
-void ComputerSerial::addDeviceService(const String &service, const String &pin)
-{
+void ComputerSerial::addDeviceService(const String &service, const String &pin){
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceServices.length() > 0) deviceServices += ", ";
 
@@ -89,8 +85,7 @@ void ComputerSerial::addDeviceService(const String &service, const String &pin)
 
 }
 
-void ComputerSerial::addDeviceDownloadLink(const String &link, const String &platform)
-{
+void ComputerSerial::addDeviceDownloadLink(const String &link, const String &platform){
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceDownloadLinks.length() > 0) deviceDownloadLinks += ", ";
 

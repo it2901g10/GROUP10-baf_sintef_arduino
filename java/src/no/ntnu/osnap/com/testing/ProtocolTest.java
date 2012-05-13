@@ -7,8 +7,10 @@ import no.ntnu.osnap.com.deprecated.ComLayer;
 public class ProtocolTest {
     public static void main(String[] args) throws TimeoutException, InterruptedException {
         ComLayer arduino = new ComLayer();
-		//arduino.setDaemon(true);
-		arduino.start();
+		Thread th = new Thread(arduino);
+		th.start();
+		
+		//System.out.println(arduino.getConnectionData().getAddress());
 		
 		boolean toggle = false;
 		
@@ -27,10 +29,7 @@ public class ProtocolTest {
         }
 		
 		Thread.sleep(10000);
-		arduino.stopThread();
-		
-		while (arduino.isAlive())
-			Thread.sleep(100);
+		arduino.disconnect();
 		
 		arduino.close();
         
