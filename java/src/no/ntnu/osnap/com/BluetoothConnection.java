@@ -21,8 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -317,7 +315,7 @@ public class BluetoothConnection extends Protocol {
 
 
 	@Override
-	protected synchronized void sendBytes(byte[] data) throws IOException {
+	protected void sendBytes(byte[] data) throws IOException {
 		
 		//Make sure we are connected before sending data
 		if( !isConnected() ){
@@ -327,23 +325,6 @@ public class BluetoothConnection extends Protocol {
 		//Send the data
 		output.write(data);
 		output.flush();
-	}
-
-
-	@Override
-	public ConnectionMetadata getConnectionData() {
-		if(super.connectionMetadata == null) 
-		{
-			JSONObject object;
-			try {
-				object = new JSONObject(super.getDeviceInfo());
-				super.connectionMetadata = new ConnectionMetadata(object);
-			} catch (Exception e) {
-				Log.e(getClass().getName(), "Oh no! Failed to get connection data correctly: " + e);
-			}
-		}
-		
-		return super.connectionMetadata;
 	}
 	
 }

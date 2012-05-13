@@ -30,6 +30,7 @@ public class ConnectionMetadata {
 	private String address;
 	private HashMap<String, String> applicationDownloadLinks;
 	private HashSet<String> servicesSupported;
+	private HashMap<String, HashSet<Integer>> servicePin;
 	
 	public interface Service {
 		String name();
@@ -63,7 +64,8 @@ public class ConnectionMetadata {
 		SERVICE_RGB_LAMP,
 		SERVICE_SERVO_MOTOR,
 		SERVICE_VIBRATION,
-		SERVICE_TEMPERATURE_SESNOR
+		SERVICE_TEMPERATURE_SESNOR,
+		SERVICE_SPEAKER
 	}	
 	
 	/**
@@ -83,41 +85,61 @@ public class ConnectionMetadata {
 			servicesSupported.add(service.name());
 		}
 		
+		servicePin = new HashMap<String, HashSet<Integer>>();
+		
 		//Add download links
 		this.applicationDownloadLinks = applicationDownloadLink;		
 	}
 		
 	/**
 	 * Constructs a ConnectionMetadata object out of a JSON object
-	 * @param deviceInfo JSONObject reperesentation of the ConnectionMetadata
+	 * @param deviceInfo JSONObject representation of the ConnectionMetadata
 	 * @param address an unique address specifier represented as a String (mac address, IP address, phone number, etc.)
 	 */
 	public ConnectionMetadata(JSONObject deviceInfo) {
+        Log.v(getClass().getSimpleName(), "Recieved JSON string: " + deviceInfo.toString());
 		
 		//Get custom name
-		this.name = deviceInfo.optString("NAME");
+		this.name = deviceInfo.optString("name");
 		
 		//Device address
-		this.address = deviceInfo.optString("ADDRESS");
+		this.address = deviceInfo.optString("address");
 		
 		//Get services supported
 		servicesSupported = new HashSet<String>();
-		JSONArray services = deviceInfo.optJSONArray("SERVICES");
+		servicePin = new HashMap<String, HashSet<Integer>>();
+		JSONArray services = deviceInfo.optJSONArray("services");
 		if(services != null) {
-			for(int i = 0; i < services.length(); i++)
-				servicesSupported.add(services.optString(i));
+			for(int i = 0; i < services.length(); i++) {
+				JSONObject element = services.optJSONObject(i);
+				
+				//Service name
+				String serviceName = element.optString("id");
+				if(serviceName.equals("")) continue;
+				serviceName = "SERVICE_" + serviceName;
+				servicesSupported.add(serviceName);
+				servicePin.put(serviceName, new HashSet<Integer>());
+				
+				//Pins associated with this service
+				for(String pin : element.optString("pins").split(",")) {
+					try{
+						servicePin.get(serviceName).add( Integer.parseInt(pin) );
+					}
+					catch (NumberFormatException ex) {}
+				}
+			}
 		}
 			
 		//Get download links
 		this.applicationDownloadLinks = new HashMap<String, String>();
-		JSONArray downloadLinks = deviceInfo.optJSONArray("LINKS");
+		JSONArray downloadLinks = deviceInfo.optJSONArray("links");
 		if(downloadLinks != null) {
 			for(int i = 0; i < downloadLinks.length(); i++) {
 				JSONObject pair;
 				try {
 					pair = downloadLinks.getJSONObject(i);
-					String platform = pair.getString("PLATFORM");
-					String link = pair.getString("LINK");
+					String platform = "PLATFORM_" + pair.getString("platform");
+					String link = pair.getString("link");
 					applicationDownloadLinks.put(platform, link);
 				} catch (JSONException e) {
 					//Failed to get link
@@ -138,6 +160,16 @@ public class ConnectionMetadata {
 	}
 	
 	/**
+	 * Returns an array of all associated pins to the service
+	 * @param service which service we want to retrieve the pins for
+	 * @return an array of Integer objects (empty if there are no specific pins)
+	 */
+	public Integer[] getServicePins(String service){
+		HashSet<Integer> set = servicePin.get(service);		
+		return set.toArray(new Integer[set.size()]);
+	}
+	
+	/**
 	 * Gets the download link for the application for this device.
 	 * @param platform which platform the application is for
 	 * @return URI of the application for this device
@@ -148,13 +180,21 @@ public class ConnectionMetadata {
 	}
 	
 	/**
-	 * 
+	 * Checks if a specific service is supported by the remote device
 	 * @param service which service is requested? 
 	 * @return returns true if the specified service is supported by the remote device
 	 * @see DefaultServices
 	 */
 	public boolean isServiceSupported(String service){
 		return servicesSupported.contains(service);
+	}
+	
+	/**
+	 * Returns a String array of all services supported by the remote device
+	 * @return a String array where each element is a single service supported
+	 */
+	public String[] getServicesSupported() {
+		return servicesSupported.toArray(new String[servicesSupported.size()]);
 	}
 	
 	/**
