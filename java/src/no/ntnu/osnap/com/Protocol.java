@@ -183,7 +183,7 @@ public abstract class Protocol implements Runnable {
     public void disconnect()
     {
     	activeConnection = false;
-		lock();
+		//lock();
 		
 		//Flush any pending instructions
 		synchronized (pendingInstructions) {
@@ -194,7 +194,7 @@ public abstract class Protocol implements Runnable {
         currentCommand = new Command();
         waitingForAck = null;
 		tempAckProcessor = null;
-		release();
+		//release();
     }
 
     /**

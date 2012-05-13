@@ -115,10 +115,6 @@ public class BluetoothConnection extends Protocol {
 		this.parentActivity = parentActivity;
 		connectionState = ConnectionState.STATE_DISCONNECTED;
 		device = bluetooth.getRemoteDevice(address);
-		
-		//Register broadcast receivers
-		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
 	}	
 	
 	/**
@@ -179,6 +175,10 @@ public class BluetoothConnection extends Protocol {
 		
 		//Start connecting
     	setConnectionState(ConnectionState.STATE_CONNECTING);
+    	
+		//Register broadcast receivers
+		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));    	
 		
 		//Make sure bluetooth is enabled
 		if( !bluetooth.isEnabled() ) {
@@ -243,20 +243,30 @@ public class BluetoothConnection extends Protocol {
 	 */
 	public void disconnect() {
 				
-		//Close socket only if we are connected or trying to connect
-		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
-			setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			super.disconnect();
-			if(socket != null) {
-				try {
-					socket.close();
-					socket = null;
-					input = null;
-					output = null;
-					Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
-				} catch (IOException e) {
-					Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
-				}
+		
+		setConnectionState(ConnectionState.STATE_DISCONNECTED);
+		
+		//Disconnect superclass
+		super.disconnect();
+
+    	//Make sure activity is unregistered
+		try {
+			parentActivity.unregisterReceiver(mReceiver);
+		}
+		catch(IllegalArgumentException ex) {
+			//oh ok... the receiver is already unregistered so no harm done here
+		}
+		
+		//Disconnect socket
+		if(socket != null) {
+			try {
+				socket.close();
+				socket = null;
+				input = null;
+				output = null;
+				Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
+			} catch (IOException e) {
+				Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
 			}
 		}
 		
@@ -309,13 +319,9 @@ public class BluetoothConnection extends Protocol {
 		
     @Override
     public void finalize() throws Throwable {
-    	
-    	//Make sure activity is unregistered
-    	parentActivity.unregisterReceiver(mReceiver);
-    	
+    	    	
     	//make sure that the Bluetooth connection is terminated on object destruction
     	disconnect();
-    	if(socket != null) socket.close();
     	
     	//Allow deconstruction
 		super.finalize();
