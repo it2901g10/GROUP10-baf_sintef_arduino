@@ -16,6 +16,7 @@
 */
 package no.ntnu.osnap.com;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -138,9 +139,9 @@ public class ConnectionMetadata {
 				JSONObject pair;
 				try {
 					pair = downloadLinks.getJSONObject(i);
-					String platform = "PLATFORM_" + pair.getString("platform");
+					String name = pair.getString("name");
 					String link = pair.getString("link");
-					applicationDownloadLinks.put(platform, link);
+					applicationDownloadLinks.put(name, link);
 				} catch (JSONException e) {
 					//Failed to get link
 					Log.v(getClass().getName(), "Failed to parse JSON link: " + e.getMessage());
@@ -152,11 +153,14 @@ public class ConnectionMetadata {
 	}
 	
 	/**
-	 * Gets the download link for the application for this device.
-	 * @return URI of the default application
+	 * Retrieves a list of all Applications associated with the remote module.
+	 * You can use getApplicationDownloadLink() to retrieve the download
+	 * link for the specified application.
+	 * @return an array of Strings containing the name of each application
 	 */
-	public String getDefaultApplicationDownloadLink(){
-		return getApplicationDownloadLink(DefaultPlatforms.PLATFORM_DEFAULT);
+	public String[] getApplications() {
+		Collection<String> links = applicationDownloadLinks.keySet();
+		return links.toArray( new String[links.size()] );
 	}
 	
 	/**
@@ -175,8 +179,8 @@ public class ConnectionMetadata {
 	 * @return URI of the application for this device
 	 * @see DefaultPlatforms
 	 */
-	public String getApplicationDownloadLink(Platform platform){
-		return applicationDownloadLinks.get(platform.name());
+	public String getApplicationDownloadLink(String applicationName){
+		return applicationDownloadLinks.get(applicationName);
 	}
 	
 	/**

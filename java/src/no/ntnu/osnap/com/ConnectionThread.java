@@ -120,6 +120,10 @@ class ConnectionThread extends Thread {
 		//Wait until connection is successful or TIMEOUT milliseconds has passed
 		socketThread.start();		
 		long timeout = System.currentTimeMillis() + Protocol.TIMEOUT;
+		
+		//30 extra seconds to respond if we are not paired already
+		if(!connection.isPaired()) timeout += 30000;
+		
 		while(!connectionSuccessful) {
 			if(System.currentTimeMillis() > timeout) {
 				connection.disconnect();

@@ -230,6 +230,14 @@ public class BluetoothConnection extends Protocol {
 	}
 	
 	/**
+	 * Checks if this BluetoothConnection is paired or not
+	 * @return true if we are already paired (false otherwise)
+	 */
+	public boolean isPaired() {
+		return bluetooth.getBondedDevices().contains(device);
+	}
+	
+	/**
 	 * Disconnects the remote device. connect() has to be called before any communication to the
 	 * remote device can be done again.
 	 */
@@ -250,7 +258,6 @@ public class BluetoothConnection extends Protocol {
 					Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
 				}
 			}
-			return;
 		}
 		
 	}
@@ -308,6 +315,7 @@ public class BluetoothConnection extends Protocol {
     	
     	//make sure that the Bluetooth connection is terminated on object destruction
     	disconnect();
+    	if(socket != null) socket.close();
     	
     	//Allow deconstruction
 		super.finalize();
