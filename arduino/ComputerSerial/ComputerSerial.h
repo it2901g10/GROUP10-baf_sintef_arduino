@@ -22,26 +22,28 @@
 #define START_BYTE (byte)0xFF
 #define NULL_BYTE (byte)0x00
 
-#define CONTENT_SIZE 250
 #define TIMEOUT 2000
 
 class ComputerSerial{
+    //static const int HEADER_BYTE_SIZE = 4;
+
 	// SerialEvent state enum
-	typedef enum {
+	typedef enum
+	{
 		STATE_START,
-		STATE_SIZE,
+		STATE_SIZE_HIGH,
+		STATE_SIZE_LOW,
 		STATE_OPCODE,
 		STATE_FLAG,
 		STATE_CONTENT
 	};
 
-	void commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, uint8_t content[]);
-	void ack(uint8_t opcode);
-	void ack(uint8_t opcode, uint8_t content[], uint8_t contentSize);
+	void commandHandler(word size, uint8_t opcode, uint8_t flag, uint8_t content[]);
+	void ack(uint8_t opcode, uint8_t content[] = NULL_BYTE, word contentSize = 0);
 	void ping();
-	void text(uint8_t size, uint8_t flag, uint8_t content[]);
+	void text(word size, uint8_t flag, uint8_t content[]);
 	void sensor(uint8_t number);
-	void data(uint8_t size, uint8_t flag, uint8_t content[]);
+	void data(word size, uint8_t flag, uint8_t content[]);
 	void pinRead(uint8_t pin);
 	void pinWrite(uint8_t pin, uint8_t value);
 	void reset();
@@ -50,22 +52,22 @@ class ComputerSerial{
 
 public:
 	ComputerSerial(int baud = 0);
-	static void* placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize);
+	static void* placeHolder(uint8_t flag, uint8_t content[], word contentSize);
 	void serialEvent();
 	void begin(int baud);
-	void attachFunction(uint8_t opcode, void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize));
+	void attachFunction(uint8_t opcode, void* (*handler)(uint8_t flag, uint8_t content[], word contentSize));
 
 	//device info functions
 	void getDeviceInfo();
 	void setDeviceName(const String &name);
 	void setDeviceVersion(const String &version);
-	void addDeviceService(const String &service, const String &pin);
-	void addDeviceDownloadLink(const String &link, const String &platform = "DEFUALT");
+	void addDeviceService(const char service[], const char pin[]);
+	void addDeviceDownloadLink(const char link[], const char platform[] = "DEFUALT");
 
 	unsigned int getBytesReceived();
 
 	// Enum for protocol OPCodes
-	typedef enum {
+	typedef enum uint_8 {
 		OPCODE_PING, 	            // 0
 		OPCODE_TEXT, 	            // 1
 		OPCODE_SENSOR, 	            // 2
@@ -79,7 +81,7 @@ public:
 
 private:
 	static const uint8_t NUM_OPCODES = 7;
-	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], uint8_t contentSize);
+	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], word contentSize);
 
 	//Device info variables
 	String deviceName;
