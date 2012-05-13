@@ -15,8 +15,12 @@ public class ProtocolTest {
 		boolean toggle = false;
 		
 		Random rand = new Random();
+		
+		arduino.print("WIN! :D", true);
         
         for (long i = 120; i < 1000; ++i){
+		
+		arduino.print("WIN! :D" + i, true);
             arduino.data(new byte[]{
 				(byte)rand.nextInt(255),
 				(byte)rand.nextInt(255),

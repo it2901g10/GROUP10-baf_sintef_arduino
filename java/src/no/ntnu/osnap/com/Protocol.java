@@ -26,7 +26,7 @@ import java.util.concurrent.TimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+//import android.util.Log;
 
 /**
  * This class defines a communication standard with a remote device. The actual
@@ -310,7 +310,7 @@ public abstract class Protocol implements Runnable {
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
 			} catch (IOException ex) {
-				Log.e(getClass().getName(), "Send byte failure: " + ex);
+				//Log.e(getClass().getName(), "Send byte failure: " + ex);
 			}
 			release();
 			
@@ -639,7 +639,7 @@ public abstract class Protocol implements Runnable {
      * @param data a single byte received from the remote device
      */
     protected final void byteReceived(byte data) {
-    	Log.d(getClass().getSimpleName(), "Recieved byte: " + data);
+    	//Log.d(getClass().getSimpleName(), "Recieved byte: " + data);
     	
         if (currentCommand.byteReceived(data)) {
         	
@@ -736,14 +736,14 @@ public abstract class Protocol implements Runnable {
                 case STATE_SIZE_HIGH:
                     size = toUnsigned(data) << 8;
                     state = State.STATE_SIZE_LOW;
-                	Log.d(getClass().getSimpleName(), "high byte = " + toUnsigned(data) + "(raw " + data + ")");
+                	//Log.d(getClass().getSimpleName(), "high byte = " + toUnsigned(data) + "(raw " + data + ")");
                     break;
                 case STATE_SIZE_LOW:
                     size += toUnsigned(data);
                     content = new byte[size];
                     state = State.STATE_OPCODE;
-                	Log.d(getClass().getSimpleName(), "low byte = " + toUnsigned(data) + "(raw " + data + ")");
-                    Log.d(getClass().getSimpleName(), "RECIEVING NEW PACKET OF LENGTH: " + size);
+                	//Log.d(getClass().getSimpleName(), "low byte = " + toUnsigned(data) + "(raw " + data + ")");
+                    //Log.d(getClass().getSimpleName(), "RECIEVING NEW PACKET OF LENGTH: " + size);
                     break;
                 case STATE_OPCODE:
                     opcode = data;
