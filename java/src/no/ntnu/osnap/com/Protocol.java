@@ -23,7 +23,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeoutException;
 
-//import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.util.Log;
 
 /**
  * This class defines a communication standard with a remote device. The actual
@@ -37,7 +40,7 @@ public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "1.4.1";
+	public final static String LIBRARY_VERSION = "2.0.0";
 	
 	/**
 	 * Private mutex flag for atomic methods
@@ -61,10 +64,9 @@ public abstract class Protocol implements Runnable {
 	private ProtocolInstruction currentInstruction;
     
 	/**
-	 * Number of miliseconds to wait for a response before throwing a TimeoutException
+	 * Number of milliseconds to wait for a response before throwing a TimeoutException
 	 */
-	protected static final int TIMEOUT = 2000;
-	protected static final int MAX_CONTENT_SIZE = 250;
+	protected static final int TIMEOUT = 5000;
 
 	/**
 	 * Package private enumeration for all Commands supported by the Protocol standard
@@ -121,7 +123,53 @@ public abstract class Protocol implements Runnable {
      * is normally stored internally on the remote device. Implementation of this 
      * method should be defined by the sub-class
      */
-    public abstract ConnectionMetadata getConnectionData();
+    public ConnectionMetadata getConnectionData() {
+		return connectionMetadata;
+    }
+    
+    /**
+     * 
+     * @throws TimeoutException
+     */
+    protected void handshakeConnection() throws TimeoutException {
+		ProtocolInstruction newInstruction = new ProtocolInstruction(OpCode.DEVICE_INFO, (byte)0, new byte[1]);
+		
+		// Blocking method lock();
+		lock();
+		try {
+			waitingForAck = OpCode.DEVICE_INFO;
+			tempAckProcessor = OpCode.DEVICE_INFO;
+			sendBytes(newInstruction.getInstructionBytes());
+		} catch (IOException ex) {
+			throw new TimeoutException("Failed to send metadata request: " + ex);
+		}
+		release();
+		
+		//Wait until we get a response or a timeout
+		long timeout = System.currentTimeMillis() + TIMEOUT;
+		while (waitingForAck != null) {
+			
+			//Timeout?
+			if (System.currentTimeMillis() > timeout) throw new TimeoutException(Thread.currentThread().getStackTrace()[2].getMethodName() + " has timed out");
+			
+			//Wait 10 ms for a resonse
+			try { Thread.sleep(10); } catch (InterruptedException ex) {}				
+		}
+		
+		//Build a string from the byte array
+        String response = new String( currentCommand.getContent() );
+
+        //Finished processing this instruction
+		tempAckProcessor = null;
+        ackProcessingComplete();
+		
+        //Build a MetaData package out from the raw String object using JSON parsing
+		try {
+			connectionMetadata = new ConnectionMetadata( new JSONObject(response) );
+		} catch (JSONException e) {
+			throw new TimeoutException("Could not construct metadata: " + e);
+		}
+	}
     
     /**
      * Establishes connection to the remote device
@@ -148,49 +196,10 @@ public abstract class Protocol implements Runnable {
 		tempAckProcessor = null;
 		release();
     }
-        
+
     /**
-     * Retrieves a single long String of raw unprocessed list of services, platforms and download links supported by the remote device
-     * @return a raw String representation of the device info retrieved from the remote device
-     * @throws TimeoutException if the remote device used longer than Protocol.TIMEOUT milliseconds to respond
+     * Internal loop to process queued instructions
      */
-	protected final String getDeviceInfo() throws TimeoutException {
-		ProtocolInstruction newInstruction = new ProtocolInstruction(OpCode.DEVICE_INFO, (byte)0, new byte[1]);
-		
-		// Blocking methodlock();
-		lock();
-
-		waitingForAck = OpCode.DEVICE_INFO;
-		tempAckProcessor = OpCode.DEVICE_INFO;
-
-		try {
-			sendBytes(newInstruction.getInstructionBytes());
-		} catch (IOException ex) {
-			//System.out.println("Send fail");
-			//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
-		}
-		release();
-		
-		//Wait until we get a response or a timeout
-		long time = System.currentTimeMillis();
-		while (waitingForAck != null) {
-			if (System.currentTimeMillis() - time > TIMEOUT)
-				throw new TimeoutException(Thread.currentThread().getStackTrace()[2].getMethodName() + " has timed out");
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {
-			}
-		}
-		
-		tempAckProcessor = null;
-		
-        String response = new String( currentCommand.getContent() );
-
-        ackProcessingComplete();
-
-        return response;
-	}    
-	
 	public void run() {
 		activeConnection = true;
 
@@ -203,7 +212,6 @@ public abstract class Protocol implements Runnable {
 						pendingInstructions.wait(1000); 
 					} 
 					catch (InterruptedException ex) {
-						
 					}
 					continue;
 				}
@@ -249,7 +257,7 @@ public abstract class Protocol implements Runnable {
         try {
             sendBytes(newInstruction.getInstructionBytes());
         } catch (IOException ex) {
-        	//Log.e("Protocol", "Could not send data: " + ex);
+        	throw new TimeoutException("Could not send data: " + ex);
         }
         
         waitingForAck = OpCode.PING;
@@ -302,8 +310,7 @@ public abstract class Protocol implements Runnable {
 			try {
 				sendBytes(newInstruction.getInstructionBytes());
 			} catch (IOException ex) {
-				System.out.println("Send fail");
-				//Log.e(getClass().getName(), "Send byte failure: " + ex);	//TODO: should be this format (but only works on Android)
+				Log.e(getClass().getName(), "Send byte failure: " + ex);
 			}
 			release();
 			
@@ -404,7 +411,7 @@ public abstract class Protocol implements Runnable {
 		
 		//ProtocolInstruction tempInstruction;
 		
-		if (data.length > MAX_CONTENT_SIZE){
+		/*if (data.length > MAX_CONTENT_SIZE){
 			byte[] tempBytes = new byte[MAX_CONTENT_SIZE];
 			
 			int restSize = 0;
@@ -431,7 +438,7 @@ public abstract class Protocol implements Runnable {
 				new ProtocolInstruction(OpCode.DATA, (byte)0, restBytes)
 				);
 		}
-		else {
+		else*/ {
 			newInstructions.add(
 				new ProtocolInstruction(OpCode.DATA, (byte)0, data)
 				);
@@ -632,6 +639,8 @@ public abstract class Protocol implements Runnable {
      * @param data a single byte received from the remote device
      */
     protected final void byteReceived(byte data) {
+    	Log.d(getClass().getSimpleName(), "Recieved byte: " + data);
+    	
         if (currentCommand.byteReceived(data)) {
         	
             // Process command
@@ -692,7 +701,8 @@ public abstract class Protocol implements Runnable {
      */
     private enum State {
         STATE_START,
-        STATE_SIZE,
+        STATE_SIZE_HIGH,
+        STATE_SIZE_LOW,
         STATE_OPCODE,
         STATE_FLAG,
         STATE_CONTENT,
@@ -707,7 +717,7 @@ public abstract class Protocol implements Runnable {
         private final byte START_BYTE = (byte) 0xFF;
 
         private State state;
-        private byte size;
+        private int size;
         private byte opcode;
         private byte flag;
         private byte[] content;
@@ -721,14 +731,19 @@ public abstract class Protocol implements Runnable {
         public boolean byteReceived(byte data) {
             switch (state) {
                 case STATE_START:
-                    if (data == START_BYTE) {
-                        state = State.STATE_SIZE;
-                    }
+                    if (data == START_BYTE) state = State.STATE_SIZE_HIGH;
                     break;
-                case STATE_SIZE:
-                    size = data;
+                case STATE_SIZE_HIGH:
+                    size = toUnsigned(data) << 8;
+                    state = State.STATE_SIZE_LOW;
+                	Log.d(getClass().getSimpleName(), "high byte = " + toUnsigned(data) + "(raw " + data + ")");
+                    break;
+                case STATE_SIZE_LOW:
+                    size += toUnsigned(data);
                     content = new byte[size];
                     state = State.STATE_OPCODE;
+                	Log.d(getClass().getSimpleName(), "low byte = " + toUnsigned(data) + "(raw " + data + ")");
+                    Log.d(getClass().getSimpleName(), "RECIEVING NEW PACKET OF LENGTH: " + size);
                     break;
                 case STATE_OPCODE:
                     opcode = data;
@@ -736,15 +751,22 @@ public abstract class Protocol implements Runnable {
                     break;
                 case STATE_FLAG:
                     flag = data;
-                    state = State.STATE_CONTENT;
-                    break;
-                case STATE_CONTENT:
-                    content[contentCounter++] = data;
-                    if (contentCounter >= size - 3) {
-                        state = State.STATE_DONE;
-                        return true;
+                    if(size == 0) {
+                    	state = State.STATE_START;
+                    	return true;
                     }
+                    else state = State.STATE_CONTENT;
                     break;
+                    
+                case STATE_CONTENT:
+                	content[contentCounter] = data;
+                	contentCounter++;
+                	if(contentCounter >= content.length) {
+                        state = State.STATE_DONE;
+                		return true;
+                	}
+                    break;
+                    
                 case STATE_DONE:
                     throw new IndexOutOfBoundsException("Command already finished");
                 default:
@@ -753,10 +775,6 @@ public abstract class Protocol implements Runnable {
 
             return false;
         }
-
-        /*public byte getOpcode() {
-            return opcode;
-        }*/
 
         public byte[] getContent() {
             return content;

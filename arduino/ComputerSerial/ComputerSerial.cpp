@@ -18,7 +18,8 @@
 
 #include "ComputerSerial.h"
 
-void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize) {
+void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize)
+{
 	return NULL;
 }
 
@@ -79,9 +80,10 @@ void ComputerSerial::addDeviceService(const String &service, const String &pin){
 
     //Append element to array
     //deviceServices += "\"" + service + "\"";
-	deviceServices += "{" + service + ":\"" + pin + "\"}";
+	deviceServices += "{ \"id\": \"" + service + "\", \"pins\" :\"" + pin + "\"}";
 
-	// sample: {"service":"pin"}
+	// sample: {"name":"service",
+	//			"pins":"1,2,3" }
 
 }
 
@@ -102,27 +104,33 @@ void ComputerSerial::getDeviceInfo(){
     String deviceInfo;
 
     //Device name
-    //deviceInfo += "{NAME:\"" + deviceName + "\", ";
-	deviceInfo += "{\"name\":\"" + deviceName + "\",";
+	deviceInfo += "{\"name\":\"";
+	deviceInfo += deviceName;
+	deviceInfo += "\",";
 
     //Device version
-    //deviceInfo += "VERSION:\"" + deviceVersion + "\", ";
-	deviceInfo += "\"version\":\"" + deviceVersion + "\",";
+    deviceInfo += "\"version\":\"";
+    deviceInfo += deviceVersion;
+    deviceInfo += "\",";
 
     //Device services
-    //deviceInfo += "SERVICES:[" + deviceServices + "], ";
-	deviceInfo += "\"services\": [" + deviceServices + "],";
+	deviceInfo += "\"services\": [";
+	deviceInfo += deviceServices;
+	deviceInfo += "],";
 
     //Device links
-    //deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
-	deviceInfo += "\"links\": [" + deviceName + "]}";
-
-    //send string representation of device info
-	char response[deviceInfo.length()];
-	deviceInfo.toCharArray(response, deviceInfo.length());
+	deviceInfo += "\"links\": [";
+	deviceInfo += deviceName;
+	deviceInfo += "]}";
 
     //send response back
-	ack(OPCODE_DEVICE_INFO, (uint8_t*)response, deviceInfo.length());
+	Serial.write(START_BYTE);
+	Serial.write(deviceInfo.length() + 3);
+	Serial.write(OPCODE_RESPONSE);
+	Serial.write(OPCODE_DEVICE_INFO);
+    for(int i = 0; i < deviceInfo.length(); i++) {
+        Serial.write(deviceInfo[i]);
+    }
 }
 
 void ComputerSerial::ack(uint8_t opcode){
@@ -138,7 +146,7 @@ void ComputerSerial::ack(uint8_t opcode, uint8_t content[], uint8_t contentSize)
 	Serial.write(contentSize + 3);
 	Serial.write(OPCODE_RESPONSE);
 	Serial.write(opcode);
-	for (int i = 0; i < contentSize; ++i){
+	for (int i = 0; i < contentSize; i++){
 		Serial.write(content[i]);
 	}
 }

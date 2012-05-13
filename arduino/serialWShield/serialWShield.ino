@@ -33,7 +33,7 @@ void* text(byte flag, byte content[], byte contentSize){
 	digitalWrite(13, toggle ? HIGH : LOW);
 	toggle = !toggle;
 #endif
-}
+} 
 
 void* buttons(byte flag, byte content[], byte contentSize){
 	int *status = (int*)malloc(sizeof(int));
@@ -41,11 +41,20 @@ void* buttons(byte flag, byte content[], byte contentSize){
 	return status;
 }
 
+void* data(byte flag, byte content[],byte contentSize){
+	lcd.setCursor(7, 0);
+	lcd.print("         ");
+	lcd.setCursor(7,0);
+	lcd.print(content[0]);
+}
+
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	comp.attachFunction(comp.OPCODE_TEXT, &text);
 	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
+	comp.attachFunction(comp.OPCODE_DATA, &data);
+	
 	
 	//comp.setDeviceName("Derp");
 	//comp.setDeviceVersion("0.1");

@@ -37,6 +37,7 @@ import android.util.Log;
  */
 class ConnectionThread extends Thread {	
 	private final BluetoothConnection connection;
+	private volatile boolean connectionSuccessful;
 	
 	/**
 	 * Create new thread to connect with the remote device
@@ -45,6 +46,7 @@ class ConnectionThread extends Thread {
 	 */
 	public ConnectionThread(BluetoothConnection connection) throws IllegalArgumentException {
 		this.connection = connection;
+		connectionSuccessful = false;
 		
 		if( connection.getConnectionState() == ConnectionState.STATE_CONNECTED ) {
 			throw new IllegalArgumentException("The specified BluetoothConnection is already connected!");
@@ -65,7 +67,6 @@ class ConnectionThread extends Thread {
 				try {
 					int readByte = connection.input.read();
 					if( readByte != -1 ) {
-				    	//Log.d("BluetoothConnection", "Recieved new byte! (" + readByte + ")");
 				    	connection.byteReceived( (byte)readByte );
 					}
 					else {
@@ -102,14 +103,29 @@ class ConnectionThread extends Thread {
 			return;
 		}
 		
-		//Connect to the remote device
-		try {
-			connection.socket.connect();
-		} catch (IOException ex) {
-			Log.e("ConnectionThread", "Unable to open socket: " + ex.getMessage());
-			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			connection.socket = null;
-			return;
+		//Open socket in new thread because socket.connect() is blocking
+		Thread socketThread = new Thread(){
+			@Override
+			public void run() {
+				try {
+					connection.socket.connect();
+					connectionSuccessful = true;
+				} catch (IOException ex) {
+					Log.e("ConnectionThread", "Unable to open socket: " + ex);
+					connection.disconnect();
+				}
+			}
+		};
+		
+		//Wait until connection is successful or TIMEOUT milliseconds has passed
+		socketThread.start();		
+		long timeout = System.currentTimeMillis() + Protocol.TIMEOUT;
+		while(!connectionSuccessful) {
+			if(System.currentTimeMillis() > timeout) {
+				connection.disconnect();
+				return;
+			}			
+			try {Thread.sleep(10); } catch (InterruptedException e) {}
 		}
 				
 		//Get input and output streams
@@ -123,15 +139,15 @@ class ConnectionThread extends Thread {
 		}
 
 		//Start the super protocol thread loop
-		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);	
+		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);
 		new Thread(connection).start();
 		new PollingThread().start();
 				
-		//Check if we are connected properly by sending a ping
+		//Check if we are connected properly by sending a metadata request
 		try {
-			connection.ping();
-		} catch (TimeoutException ex) {
-			Log.e("ConnectionThread", "Failed to setup connection: " + ex.getMessage());
+			connection.handshakeConnection();
+		} catch (TimeoutException e) {
+			Log.e("ConnectionThread", "Failed to setup connection: Could not retrieve ConnectionMetadata (" + e + ")");
 			connection.disconnect();
 			return;
 		}
