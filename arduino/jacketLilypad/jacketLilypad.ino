@@ -7,12 +7,12 @@ static const int PIN_SOUND = 6;
 static const int PIN_VIBRATION = 4;
 static const int PIN_DEBUG_LED = 13;
 
-static const int PIN_SCREEN_A = 7;
-static const int PIN_SCREEN_B = 8;
-static const int PIN_SCREEN_1 = 9;
-static const int PIN_SCREEN_2 = 10;
-static const int PIN_SCREEN_3 = 11;
-static const int PIN_SCREEN_4 = 12;
+static const int PIN_SCREEN_A = 8;
+static const int PIN_SCREEN_B = 7;
+static const int PIN_SCREEN_1 = 12;
+static const int PIN_SCREEN_2 = 11;
+static const int PIN_SCREEN_3 = 10;
+static const int PIN_SCREEN_4 = 9;
 
 //Global variables
 static ComputerSerial comp;
@@ -20,11 +20,8 @@ static LiquidCrystal lcd(PIN_SCREEN_A, PIN_SCREEN_B, PIN_SCREEN_1, PIN_SCREEN_2,
 
 void* text(byte flag, byte content[], word contentSize)
 {
-  for(int i = 0; i < contentSize; i++)
-  {
-    lcd.setCursor(i, 0);
-    lcd.print( (char) content[i] );
-  }
+  lcd.home();
+  for(int i = 0; i < contentSize; i++) lcd.print( (char) content[i] );
 }
 
 void* data(byte flag, byte data[], word dataSize)
@@ -42,7 +39,7 @@ void setup()
     //Initialize computer serial class
     comp.begin(9600);   
     comp.setDeviceName("Jacket Prototype");
-    comp.setDeviceVersion("1.4.2");
+    comp.setDeviceVersion("2.0.0");
     
     //Setup pins
     comp.addDeviceService("VIBRATION", "4");
@@ -52,7 +49,7 @@ void setup()
     comp.attachFunction(comp.OPCODE_DATA, &data);
     pinMode(PIN_SOUND, OUTPUT);	
     
-    comp.addDeviceService("LED_SCREEN", "");
+    comp.addDeviceService("LCD_SCREEN", "");
     comp.attachFunction(comp.OPCODE_TEXT, &text);
     lcd.begin(16, 2);
     
@@ -61,7 +58,7 @@ void setup()
     pinMode(PIN_DEBUG_LED, OUTPUT);    
     
     //Download links
-    comp.addDeviceDownloadLink("NONE", "DEFAULT");
+    comp.addDeviceDownloadLink("http://folk.ntnu.no/svarvaa/utils/pro2www/#appId1", "OSNAP Jacket");
 }
 
 void loop()
