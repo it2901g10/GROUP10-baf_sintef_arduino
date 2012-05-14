@@ -16,8 +16,11 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Timer;
@@ -48,6 +51,7 @@ public class OsnapApp extends Activity {
         
         layout = new TableLayout(this);
         layout.setLayoutParams( new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.FILL_PARENT) );
+        layout.setOrientation(TableLayout.VERTICAL);
 
         //Initialize scan button
         scanButton = new Button(this);
@@ -66,7 +70,7 @@ public class OsnapApp extends Activity {
             }
         } );
         
-        layout.addView(scanButton);
+        resetUI();
         
         
         //Initialize disconnect/reconnect button
@@ -92,12 +96,35 @@ public class OsnapApp extends Activity {
        });
     }
     
+    private void clearUI() {
+        runOnUiThread(new Runnable() {
+             public void run() {
+            	 layout.removeAllViews();
+             }
+        });
+    }
+    
     private void resetUI() {
         runOnUiThread(new Runnable() {
              public void run() {
             	 layout.removeAllViews();
+            	 
+            	 OsnapApp.super.setTitle("OSNAP - Generic Prototype Application");
+
+            	 TextView text1 = new TextView(OsnapApp.this);
+            	 text1.setText("Please scan the QR tag on your OSNAP product.");
+            	 text1.setTextSize(24);
+            	 layout.addView(text1);
+            	 
             	 layout.addView(scanButton);
-				 con = null;
+            	 
+            	 TextView text2 = new TextView(OsnapApp.this);
+            	 text2.setText("This will connect your Android via Bluetooth to the remote device and retrieve more information of your OSNAP product. You can test the functionality of the remote device and download a more specialized Application (if you are connected to the internet).");
+            	 layout.addView(text2);
+            	 
+            	 ImageView image = new ImageView(OsnapApp.this);
+            	 image.setImageResource(R.drawable.scan);
+            	 layout.addView(image);
              }
         });
     }
@@ -227,6 +254,7 @@ public class OsnapApp extends Activity {
         return new ConnectionListener() {
             public void onConnect(BluetoothConnection bluetoothConnection) {
                 quickToastMessage("Connected! (" + con.toString() + ")");
+                clearUI();
                 addButton(disconnectButton);
                 
                 //Add a button for every service found
