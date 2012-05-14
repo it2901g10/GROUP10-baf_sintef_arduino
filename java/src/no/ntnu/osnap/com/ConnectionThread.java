@@ -44,9 +44,12 @@ class ConnectionThread extends Thread {
 		this.connection = connection;
 		connectionSuccessful = false;
 		
-		if( connection.getConnectionState() == ConnectionState.STATE_CONNECTED ) {
+		if( connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ) {
 			throw new IllegalArgumentException("The specified BluetoothConnection is already connected!");
 		}
+		
+		//Start connecting
+    	connection.setConnectionState(ConnectionState.STATE_CONNECTING);
 				
 		setDaemon(true);
 		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");
@@ -69,7 +72,7 @@ class ConnectionThread extends Thread {
 						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				} catch (IOException e) {
-					Log.e("ConnectionThread", "Read error: " + e.getMessage());
+					Log.w(getClass().getSimpleName(), "Could not read byte from socket: " + e.getMessage());
 					connection.disconnect();
 				}			
 			}
@@ -81,7 +84,21 @@ class ConnectionThread extends Thread {
 	@Override
 	public void run() {	
 		long timeout;
+		boolean discoveryMode = false;
+		
+		//Stop discovery when connecting
+		while( connection.bluetooth.isDiscovering() ) {
+			
+			//wait until discovery has finished before connecting
+			if(!discoveryMode) {
+				Log.v("BluetoothConnection", "BluetoothDevice is in discovery mode. Waiting for discovery to finish before connecting");
+				discoveryMode = true;
+			}
 
+			//Wait 250 ms
+			try { wait(250); } catch (InterruptedException e) {/*do nothing*/}
+		}
+		
 		//Open socket in new thread because socket.connect() is blocking
 		Thread socketThread = new Thread(){
 			@Override
@@ -100,15 +117,16 @@ class ConnectionThread extends Thread {
 		
 		//30 extra seconds to respond if we are not paired already
 		if(!connection.isPaired()) timeout = System.currentTimeMillis() + 30000;
-		else					   timeout = System.currentTimeMillis() + Protocol.TIMEOUT;
+		else					   timeout = System.currentTimeMillis() + 4000;
 
 		//Wait until connection is successful or TIMEOUT milliseconds has passed
 		while(!connectionSuccessful) {
 			if(System.currentTimeMillis() > timeout) {
+				Log.e(getClass().getSimpleName(), "Bluetooth socket connection timeout (remote device used too long time to respond)");
 				connection.disconnect();
 				return;
 			}			
-			try {Thread.sleep(25); } catch (InterruptedException e) {}
+			//try {Thread.sleep(25); } catch (InterruptedException e) {}
 		}
 
 		//Start the super protocol thread loop

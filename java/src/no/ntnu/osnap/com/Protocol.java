@@ -40,7 +40,7 @@ public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "2.0.2";
+	public final static String LIBRARY_VERSION = "2.0.3";
 	
 	/**
 	 * Private mutex flag for atomic methods

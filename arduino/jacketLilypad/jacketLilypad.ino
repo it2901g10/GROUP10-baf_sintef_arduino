@@ -20,8 +20,36 @@ static LiquidCrystal lcd(PIN_SCREEN_A, PIN_SCREEN_B, PIN_SCREEN_1, PIN_SCREEN_2,
 
 void* text(byte flag, byte content[], word contentSize)
 {
+  boolean wrap = false;
+  
+  lcd.clear();
   lcd.home();
-  for(int i = 0; i < contentSize; i++) lcd.print( (char) content[i] );
+  for(int i = 0; i < contentSize; i++) 
+  {
+    char letter = (char) content[i];
+    
+    //newline?
+    if(letter == '\n')
+    {
+      wrap = true;
+      lcd.setCursor(0, 1);
+      continue;
+    }
+    
+    //Print character
+    lcd.print(letter);
+    
+    //Wrap to next line if needed
+    if(!wrap && i >= 15)
+    {
+      wrap = true;
+      lcd.setCursor(0, 1);
+    }
+    
+    //Max 30 letters on the display
+    if(i > 30) break;
+  }
+  
 }
 
 void* data(byte flag, byte data[], word dataSize)
@@ -52,10 +80,14 @@ void setup()
     comp.addDeviceService("LCD_SCREEN", "");
     comp.attachFunction(comp.OPCODE_TEXT, &text);
     lcd.begin(16, 2);
+    lcd.setCursor(0, 0);
+    lcd.print("OSNAP Jacket");
+    lcd.setCursor(0, 1);
+    lcd.print("Scan QR tag");
     
     comp.addDeviceService("LED_LAMP", "5,13");
     pinMode(PIN_LED, OUTPUT);
-    pinMode(PIN_DEBUG_LED, OUTPUT);    
+    pinMode(PIN_DEBUG_LED, OUTPUT);
     
     //Download links
     comp.addDeviceDownloadLink("http://folk.ntnu.no/svarvaa/utils/pro2www/#appId1", "OSNAP Jacket");
@@ -63,10 +95,7 @@ void setup()
 
 void loop()
 {
-  lcd.setCursor(0, 1);
-  lcd.print("Time: ");
-  lcd.setCursor(6, 1);
-  lcd.print(millis()/1000);
+
 }
 
 void serialEvent()
