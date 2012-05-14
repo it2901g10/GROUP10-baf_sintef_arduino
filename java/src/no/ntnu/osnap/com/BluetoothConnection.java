@@ -20,6 +20,7 @@ package no.ntnu.osnap.com;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -68,9 +69,6 @@ public class BluetoothConnection extends Protocol {
 		/** The device is trying to establish a connection. */
 		STATE_CONNECTING,
 		
-		/** We are connected to the device, but we are waiting for a Ping */
-		STATE_FINALIZE_CONNECTION,
-		
 		/** A valid open connection is established to the remote device. */
 		STATE_CONNECTED
 	}
@@ -81,7 +79,7 @@ public class BluetoothConnection extends Protocol {
 	 * Is useful for connecting to a specific device through discovery mode
 	 * @see BluetoothConnection(String address, Activity parentActivity)
 	 */
-	public BluetoothConnection(BluetoothDevice device, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException {
+	public BluetoothConnection(BluetoothDevice device, Activity parentActivity, ConnectionListener listener) throws ComLibException, IllegalArgumentException {
 		this(device.getAddress(), parentActivity, listener);
 	}
 	
@@ -90,10 +88,10 @@ public class BluetoothConnection extends Protocol {
 	 * Default constructor for creating a new BluetoothConnection to a remote device.
 	 * @param address The Bluetooth MAC address of the remote device
 	 * @param parentActivity The Activity that wants exclusive access to the BluetoothConnection
-	 * @throws UnsupportedHardwareException is thrown if the Android device does not support Bluetooth
+	 * @throws ComLibException is thrown if the Android device does not support Bluetooth
 	 * @throws IllegalArgumentException is thrown if the specified address/remote device is invalid or if ConnectionListener is null
 	 */
-	public BluetoothConnection(String address, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException{
+	public BluetoothConnection(String address, Activity parentActivity, ConnectionListener listener) throws ComLibException, IllegalArgumentException{
 		
 		//Validate the address
 		if( !BluetoothAdapter.checkBluetoothAddress(address) ){
@@ -108,13 +106,40 @@ public class BluetoothConnection extends Protocol {
 		//Make sure this device has bluetooth
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if( bluetooth == null ){
-			throw new UnsupportedHardwareException("No bluetooth hardware found");
+			throw new ComLibException("No bluetooth hardware found");
 		}		
 		
 		this.connectionListener = listener;
 		this.parentActivity = parentActivity;
 		connectionState = ConnectionState.STATE_DISCONNECTED;
 		device = bluetooth.getRemoteDevice(address);
+		
+		//Create a socket through a hidden method (normal method does not work on all devices like Samsung Galaxy SII)
+		try {
+			Method m  = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+			socket = (BluetoothSocket) m.invoke(device, Integer.valueOf(1));
+		}
+		catch (Exception ex){
+			Log.e(getClass().getSimpleName(), "Unable to create socket: " + ex.getMessage());
+			throw new ComLibException("Unable to create socket: " + ex.getMessage());
+		}	
+		
+		//Get input and output streams
+		try {
+	    	output = new BufferedOutputStream(socket.getOutputStream());
+	    	input = new BufferedInputStream(socket.getInputStream());	
+		} catch (IOException ex) {
+			Log.e(getClass().getSimpleName(), "Unable to get input/output stream: " + ex.getMessage());
+			throw new ComLibException("Unable to get input/output stream: " + ex.getMessage());
+		}	
+		
+		//Ensure that we disconnect and free resources on exit
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run(){
+				disconnect();
+			}
+		});
 	}	
 	
 	/**
@@ -122,6 +147,10 @@ public class BluetoothConnection extends Protocol {
 	 * @param setState the new ConnectionState of this BluetoothConnection
 	 */
 	void setConnectionState(ConnectionState setState) {
+		//Nothing to change?
+		if(connectionState == setState) return;
+		
+		//Change the state
 		connectionState = setState;
 		
 		//Tell listener about any connection changes
@@ -144,22 +173,8 @@ public class BluetoothConnection extends Protocol {
 		}
 		
 	}
-		
-	/**
-	 * Private connection method. This actually creates a new thread that established the connection to
-	 * the remote device. This method does not have any safeguards to check if Bluetooth or remote device 
-	 * is valid.
-	 */
-    private synchronized final void establishConnection() {
-    	
-    	//Never establish connections when in discovery mode
-		if( bluetooth.isDiscovering() ) return;
-    	
-		//Start an asynchronous connection and return immediately so we do not interrupt program flow
-		new ConnectionThread(this).start();
-    }
-    
-    /**
+	
+	/**	
      * Establishes a connection to the remote device. Note that this function is asynchronous and returns
      * immediately after starting a new connection thread. Use isConnected() or getConnectionState() to
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
@@ -195,8 +210,8 @@ public class BluetoothConnection extends Protocol {
 			return;
 		}
 		
-		//All is good!
-		establishConnection();
+		//Start an asynchronous connection and return immediately so we do not interrupt program flow
+		new ConnectionThread(this).start();
 	}
 
 	/**
@@ -226,7 +241,7 @@ public class BluetoothConnection extends Protocol {
 	 * @return true if there is a connection, false otherwise
 	 */
 	public boolean isConnected() {
-		return connectionState == ConnectionState.STATE_CONNECTED || connectionState == ConnectionState.STATE_FINALIZE_CONNECTION;
+		return connectionState == ConnectionState.STATE_CONNECTED;
 	}
 	
 	/**
@@ -242,7 +257,6 @@ public class BluetoothConnection extends Protocol {
 	 * remote device can be done again.
 	 */
 	public void disconnect() {
-				
 		
 		setConnectionState(ConnectionState.STATE_DISCONNECTED);
 		
@@ -258,16 +272,11 @@ public class BluetoothConnection extends Protocol {
 		}
 		
 		//Disconnect socket
-		if(socket != null) {
-			try {
-				socket.close();
-				socket = null;
-				input = null;
-				output = null;
-				Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
-			} catch (IOException e) {
-				Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
-			}
+		try {
+			socket.close();
+			Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
+		} catch (IOException e) {
+			Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
 		}
 		
 	}
@@ -298,7 +307,9 @@ public class BluetoothConnection extends Protocol {
             		case BluetoothAdapter.STATE_ON:
             			//automatically connect if we are waiting for a connection
             			if( getConnectionState() == ConnectionState.STATE_CONNECTING ) {
-            				establishConnection();
+
+            				//Start an asynchronous connection and return immediately so we do not interrupt program flow
+            				new ConnectionThread(BluetoothConnection.this).start();
             			}
             		break;         		            		
             	}
@@ -309,23 +320,15 @@ public class BluetoothConnection extends Protocol {
             else if( action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED) ) {
     			//automatically connect if we are waiting for a connection
     			if( getConnectionState() == ConnectionState.STATE_CONNECTING ) {
-    				establishConnection();
+
+    				//Start an asynchronous connection and return immediately so we do not interrupt program flow
+    				new ConnectionThread(BluetoothConnection.this).start();
     			}            	
             }
             
         }
         
-    };	
-		
-    @Override
-    public void finalize() throws Throwable {
-    	    	
-    	//make sure that the Bluetooth connection is terminated on object destruction
-    	disconnect();
-    	
-    	//Allow deconstruction
-		super.finalize();
-    }
+    };
 
 
 	@Override

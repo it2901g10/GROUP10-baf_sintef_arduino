@@ -40,7 +40,7 @@ public abstract class Protocol implements Runnable {
 	/**
 	 * The version number of this ComLib release
 	 */
-	public final static String LIBRARY_VERSION = "2.0.1";
+	public final static String LIBRARY_VERSION = "2.0.2";
 	
 	/**
 	 * Private mutex flag for atomic methods
@@ -66,7 +66,7 @@ public abstract class Protocol implements Runnable {
 	/**
 	 * Number of milliseconds to wait for a response before throwing a TimeoutException
 	 */
-	protected static final int TIMEOUT = 5000;
+	protected static final int TIMEOUT = 2000;
 
 	/**
 	 * Package private enumeration for all Commands supported by the Protocol standard
@@ -150,7 +150,7 @@ public abstract class Protocol implements Runnable {
 		while (waitingForAck != null) {
 			
 			//Timeout?
-			if (System.currentTimeMillis() > timeout) throw new TimeoutException(Thread.currentThread().getStackTrace()[2].getMethodName() + " has timed out");
+			if (System.currentTimeMillis() > timeout) throw new TimeoutException("handshakeConnection() has timed out (did not recieve all data)");
 			
 			//Wait 10 ms for a resonse
 			try { Thread.sleep(10); } catch (InterruptedException ex) {}				
@@ -167,7 +167,7 @@ public abstract class Protocol implements Runnable {
 		try {
 			connectionMetadata = new ConnectionMetadata( new JSONObject(response) );
 		} catch (JSONException e) {
-			throw new TimeoutException("Could not construct metadata: " + e);
+			throw new TimeoutException("JSONException when constructing metadata: " + e);
 		}
 	}
     

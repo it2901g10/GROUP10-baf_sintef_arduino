@@ -17,17 +17,17 @@
 package no.ntnu.osnap.com;
 
 /**
- * Indicates a problem with the hardware or missing hardware services 
+ * Indicates a problem with the ComLib such as missing hardware services 
  * requested by the software
  */
-public class UnsupportedHardwareException extends Exception {
+public class ComLibException extends Exception {
 	private static final long serialVersionUID = 7361286372494041006L;
 	
 	/**
-	 * Default constructor for a new UnsupportedHardwareException
+	 * Default constructor for a new ComLibException
 	 * @param detailMessage a more detailed message with information on the exception
 	 */
-	public UnsupportedHardwareException(String detailMessage) {
+	public ComLibException(String detailMessage) {
 		super(detailMessage);
 	}
 }
