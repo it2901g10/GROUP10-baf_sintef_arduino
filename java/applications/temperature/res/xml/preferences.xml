@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="first_preferences" >
-    <SwitchPreference android:title="Tap to refresh"
+    <CheckBoxPreference android:title="Tap to refresh"
                           android:key="@string/pref_tap"
                           android:summary="Enable to save battery"
                           android:defaultValue="true"
