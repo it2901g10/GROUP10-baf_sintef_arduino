@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/re_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+<TableLayout
         android:id="@+id/re_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -7,31 +12,23 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
             android:id="@+id/re_labelRuleName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:background="@color/dark_gray"
             android:padding="5dp"
             android:text="Rule Name"
             android:textSize="16sp" />
     <EditText
             android:id="@+id/re_editRuleName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="RuleName"
             android:textSize="18sp" />
     <TextView
             android:id="@+id/re_labelOutput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:background="@color/dark_gray"
             android:padding="8dp"
             android:text="Rule Output"
             android:textSize="16sp" />
     <TextView
             android:id="@+id/re_labelSetOutput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="No output set"
             android:textSize="16sp"
@@ -39,8 +36,6 @@
             android:gravity="center" />
     <Button
             android:id="@+id/re_buttonSetOutput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Set Output"
             android:textSize="16sp"
@@ -50,8 +45,6 @@
             android:background="@drawable/button_shape"/>
     <TextView
             android:id="@+id/re_labelFilters"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:background="@color/dark_gray"
             android:padding="5dp"
             android:text="Filters"
@@ -59,21 +52,14 @@
             />
     <ListView
             android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            />
+            android:padding="5dp"/>
 
     <TextView
             android:id="@android:id/empty"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="No filters added"/>
     <Button
             android:id="@+id/re_buttonAddFilter"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Add Filter"
             android:textSize="16sp"
@@ -84,8 +70,6 @@
 
     <Button
             android:id="@+id/re_buttonSaveRule"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="Save Rule"
             android:textSize="16sp"
@@ -93,4 +77,5 @@
             android:textStyle="bold"
             android:height="50dp"
             android:background="@drawable/button_shape"/>
-</LinearLayout>
+</TableLayout>
+    </ScrollView>

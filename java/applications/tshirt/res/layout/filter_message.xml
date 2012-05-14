@@ -1,69 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TableLayout
-        android:id="@+id/widget32"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-            android:id="@+id/fm_labelOutput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:text="Current Filter:"
-            android:textStyle="bold"/>
-    <TextView
-            android:id="@+id/fm_labelCurrentOutput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="LatestStream:"
-            android:textStyle="bold"/>
-
-    <TextView
-            android:id="@+id/fm_labelCurrentSelection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:textStyle="bold"
-            android:text="Current Selection: Message"/>
-
-    <TextView
-            android:id="@+id/fm_labelCurrentMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Options"
-            android:textStyle="bold"/>
-    <Button
-            android:id="@+id/fm_buttonGetSender"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/fm_scrollView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Get Sender of Message"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:textStyle="bold"
-            android:height="50dp"
-            android:background="@drawable/button_shape"/>
-
-    <View android:layout_height="2dip"/>
-
-    <Button
-            android:id="@+id/fm_buttonGetMessage"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <TableLayout
+            android:id="@+id/fm_layout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Get Text in Message"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:textStyle="bold"
-            android:height="50dp"
-            android:background="@drawable/button_shape"/>
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/fm_labelOutput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Current Filter:"
+                android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/fm_labelCurrentOutput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="LatestStream:"
+                android:textStyle="bold"/>
+
+        <TextView
+                android:id="@+id/fm_labelCurrentSelection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:text="Current Selection: Message"/>
+
+        <TextView
+                android:id="@+id/fm_labelCurrentMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Options"
+                android:textStyle="bold"/>
+        <Button
+                android:id="@+id/fm_buttonGetSender"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Get Sender of Message"
+                android:textSize="16sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:height="50dp"
+                android:background="@drawable/button_shape"/>
+
+        <View android:layout_height="2dip"/>
+
+        <Button
+                android:id="@+id/fm_buttonGetMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Get Text in Message"
+                android:textSize="16sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:height="50dp"
+                android:background="@drawable/button_shape"/>
 
 
-</TableLayout>
+    </TableLayout>
+</ScrollView>

@@ -45,7 +45,8 @@ public class ServiceDataFetcher extends Service {
         list = new ArrayList<String>();
         L.i("ServiceTshirtApp started");
         prototype = new Prototype(this, createConnectionListener());
-        prototype.discoverServices();
+        singleton.connect();
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -91,7 +92,7 @@ public class ServiceDataFetcher extends Service {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.serviceName, rule)).start();
+                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.getServiceName(), rule)).start();
             }
         });
         t.start();
@@ -107,5 +108,11 @@ public class ServiceDataFetcher extends Service {
             }
         };
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        singleton.disconnect();
     }
 }

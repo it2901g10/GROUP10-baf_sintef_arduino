@@ -55,8 +55,11 @@ public class RuleListAdapter extends BaseAdapter{
 
         TextView textView = new TextView(context);
         textView.setText(rules[i].name);
+        textView.setPadding(5,5,5,5);
+        textView.setTextSize(18);
 
         layout.addView(textView);
         return layout;
     }
+
 }

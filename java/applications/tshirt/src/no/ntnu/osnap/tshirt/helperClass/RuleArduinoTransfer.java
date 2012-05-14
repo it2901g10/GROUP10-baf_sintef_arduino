@@ -97,7 +97,6 @@ import java.util.concurrent.CountDownLatch;
             Request request = new Request(Request.RequestCode.PERSON_DATA, ((Message)model).getSenderAsPerson());
             prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
         }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
-
     }
 
     /** Get name of person in model */
@@ -124,7 +123,12 @@ import java.util.concurrent.CountDownLatch;
         if(linkedList.size() == 0){
             resultToOutput = result;
             L.i("Rule Passed: got output " + resultToOutput + " and sent to " + rule.getOutputDevice());
-            singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            if(singleton.isConnected()){
+                singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            }
+            else{
+                L.i("App is not connected to arduino");
+            }
             return;
 
         }
@@ -143,11 +147,7 @@ import java.util.concurrent.CountDownLatch;
         else{
             recursiveFiltering(linkedList.peek().filter.split(":"),null);
         }
-
-        
-        
     }
-
 
     private ResponseListener getNewResponseListener(final String[] decrList){
         return new ResponseListener() {
