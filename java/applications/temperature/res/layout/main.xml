@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/main"
                 android:onClick="onClick"
                 android:background="@drawable/background"
                 android:layout_centerInParent="true"

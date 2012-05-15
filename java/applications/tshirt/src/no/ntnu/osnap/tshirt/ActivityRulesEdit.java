@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.*;
 import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
 import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
+import no.ntnu.osnap.tshirt.filterMode.FilterStart;
 import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
 import no.ntnu.osnap.tshirt.helperClass.Filter;
@@ -35,7 +36,7 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
 
     private String outputFilter = null;
     private String outputDevice = null;
-    private int ruleID = -1;
+    private long ruleID = -1;
 
     public static final String RULE = "rule";
 
@@ -48,6 +49,23 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rules_edit_window);
         setOnClickListener();
+        if(getIntent().getParcelableExtra(RULE) != null && getIntent().getParcelableExtra(RULE) instanceof Rule){
+            setUpExistingRule();        
+        }
+    }
+
+    private void setUpExistingRule() {
+        Rule r = (Rule)getIntent().getParcelableExtra(RULE);
+        setOutput(r.getOutputFilter(), r.getOutputDevice());
+        EditText editText = (EditText)findViewById(R.id.re_editRuleName);
+        editText.setText(r.getName());
+        ruleID = r.getId();
+        Filter[] filters = r.getFilters();
+        for (int i = 0; i < filters.length; i++) {
+            list.add(filters[i]);
+            
+        }
+        updateListView();
     }
 
     private void setOnClickListener() {
@@ -74,15 +92,19 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
             setOutput(data.getStringExtra(ActivityOutput.FILTER), data.getStringExtra(ActivityOutput.OUTPUT));
         }
         if(requestCode == ACTIVITY_FILTER){
-            addFilter(data.getStringExtra(ChangeMode.FINAL_FILTER));
+            list.add(new Filter(data.getStringExtra(ChangeMode.FINAL_FILTER)));
+            updateListView();
         }
 
     }
 
-    /** Add a new filter to list and updates UI with view**/
+    /** Add a new filter to list **/
     private void addFilter(String filter) {
         list.add(new Filter(filter));
-        
+        updateListView();
+    }
+    /** updates Listview UI with view */
+    private void updateListView(){
         String[] array = new String[list.size()];
 
         for (int i = 0; i < array.length; i++) {
@@ -97,7 +119,6 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
                 ActivityRulesEdit.this.setListAdapter(listAdapter);
             }
         });
-
     }
 
     /** Updates Textview to show new filter and output**/
@@ -120,8 +141,7 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
                 break;
             case R.id.re_buttonAddFilter:
                 L.i("Send intent to start FilterSelection");
-                i = new Intent(ActivityRulesEdit.this, FilterMessage.class);
-                i.putExtra(ChangeMode.CURRENT_FILTER, getString(R.string.getLatestPost));
+                i = new Intent(ActivityRulesEdit.this, FilterStart.class);
                 startActivityForResult(i, ACTIVITY_FILTER);
                 break;
             case R.id.re_buttonSaveRule:

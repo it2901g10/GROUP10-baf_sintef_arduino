@@ -20,7 +20,7 @@ import no.ntnu.osnap.social.models.Model;
 
 /**
  * A filter contains information on what to request from a social service and what to compare the results to </br>
- * Example, the filter "getLatestPost:getSender:getName:=:David" checks if the creator of the latest post is called David
+ * Example, the filter "getLatestMessage:getSender:getName:=:David" checks if the creator of the latest post is called David
  *
  */
 
@@ -72,14 +72,16 @@ public class Filter implements Parcelable {
         
         String operator = segments[segments.length-2];
         String compare = segments[segments.length-1];
-
         if(operator.equals("!")){
             return !compare.equals(string);
             
         }
         else if(operator.equals("=")){
             return compare.equals(string);
-            
+        }
+
+        else if(operator.equals("contains")){
+            return string.contains(compare);
         }
         else {
             L.e("Err, invalid operator " + operator);
@@ -88,4 +90,13 @@ public class Filter implements Parcelable {
         return false;
     }
 
+    public String getOperator() {
+        if(segments.length > 2){
+            return segments[segments.length - 2];
+        }
+        L.e("Tried to get operator from filter that is too short");
+        return "ERROR NO FILTER";
+        
+        
+    }
 }

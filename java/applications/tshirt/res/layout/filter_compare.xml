@@ -1,68 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-        android:id="@+id/widget32"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/fc_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <TableLayout
+            android:id="@+id/fc_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-    <TextView
-            android:id="@+id/fc_labelCompare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:textStyle="bold"
-            android:text="Compare result"/>
-
-    <TextView
-            android:id="@+id/fc_labelCurrentMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Filter"
-            android:textStyle="bold"/>
-    <TextView
-            android:id="@+id/fc_labelCurrentFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="filter:filter"
-            android:textStyle="bold"/>
-    <View android:layout_height="2dip"/>
-    <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fc_radioGroupOperator">
-
-        <RadioButton
-                android:layout_width="fill_parent"
+        <TextView
+                android:id="@+id/fc_labelCompare"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/fc_radioEqual"
-                android:text="is equal to"/>
-        <RadioButton
-                android:layout_width="fill_parent"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:text="Compare result"/>
+
+        <TextView
+                android:id="@+id/fc_labelCurrentMode"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/fc_radioNotEqual"
-                android:text="is not equal to"
-                android:textSize="16sp"/>
-    </RadioGroup>
-    <EditText
-            android:id="@+id/fc_editComparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"/>
-    <View android:layout_height="2dip"/>
+                android:padding="5dp"
+                android:text="Filter"
+                android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/fc_labelCurrentFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="filter:filter"
+                android:textStyle="bold"/>
+        <View android:layout_height="2dip"/>
+        <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fc_radioGroupOperator">
 
-    <Button
-            android:id="@+id/fc_buttonSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:textStyle="bold"
-            android:height="50dp"
-            android:background="@drawable/button_shape"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fc_radioEqual"
+                    android:text="is equal to"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fc_radioNotEqual"
+                    android:text="is not equal to"
+                    android:textSize="16sp"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fc_radioContains"
+                    android:text="contains"
+                    android:textSize="16sp"/>
+        </RadioGroup>
+        <EditText
+                android:id="@+id/fc_editComparison"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"/>
+        <View android:layout_height="2dip"/>
 
-</TableLayout>
+        <Button
+                android:id="@+id/fc_buttonSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textSize="16sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"/>
+
+    </TableLayout>
+</ScrollView>

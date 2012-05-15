@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
  * 
  * */
 
-//This class use lots of recursion
+//This class makes use of recursion
  public class RuleArduinoTransfer {
     
     private Prototype prototype;
@@ -36,6 +36,11 @@ import java.util.concurrent.CountDownLatch;
         this.rule = rule;
         singleton = TshirtSingleton.getInstance(context);
         
+
+    }
+
+    /** Begins to check the filters, before grabbing the output text and finally push it to the arduino */
+    public void start(){
         isFiltersSatisfied();
     }
 
@@ -63,11 +68,14 @@ import java.util.concurrent.CountDownLatch;
             decrList[i] = list[i+1];
         }
 
-        if(filterPart.equals(context.getString(R.string.getLatestPost))){
+        if(filterPart.equals(context.getString(R.string.getLatestMessage))){
             getLatestMessageFromSocialService(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getSender))){
             getMessageSender(model, decrList);
+        }
+        else if(filterPart.equals(context.getString(R.string.getLoggedInUser))){
+            getLoggedInUser(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getMessage))){
             getMessageText(model);
@@ -78,6 +86,11 @@ import java.util.concurrent.CountDownLatch;
         else{
             L.e("ERR: Unknown filter " + filterPart);
         }
+    }
+
+    private void getLoggedInUser(String[] decrList) {
+        Request request = new Request(Request.RequestCode.SELF);
+        prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
     }
 
     /** Get the latest message in stream for user logged in given serviceName */
@@ -92,7 +105,6 @@ import java.util.concurrent.CountDownLatch;
             Request request = new Request(Request.RequestCode.PERSON_DATA, ((Message)model).getSenderAsPerson());
             prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
         }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
-
     }
 
     /** Get name of person in model */
@@ -119,14 +131,19 @@ import java.util.concurrent.CountDownLatch;
         if(linkedList.size() == 0){
             resultToOutput = result;
             L.i("Rule Passed: got output " + resultToOutput + " and sent to " + rule.getOutputDevice());
-            singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            if(singleton.isConnected()){
+                singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            }
+            else{
+                L.i("App is not connected to arduino");
+            }
             return;
 
         }
         
         Filter f = linkedList.poll();
         if(!f.isFilterValid(result)){
-            L.i("Rule " + rule.getName() + " was not satisfied with filter " + f + " compared to " + result);
+            L.i("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() +  " " + f);
             return;
         }
 
@@ -138,16 +155,13 @@ import java.util.concurrent.CountDownLatch;
         else{
             recursiveFiltering(linkedList.peek().filter.split(":"),null);
         }
-
-        
-        
     }
-
 
     private ResponseListener getNewResponseListener(final String[] decrList){
         return new ResponseListener() {
             @Override
             public void onComplete(Response response) {
+                L.e("GOT ONCOMPLETE");
                 if (response.getStatus() == Response.Status.COMPLETED) {
                     if(decrList.length == 0){
                         L.e("ERROR, FILTER IS NOT COMPLETE");

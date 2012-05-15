@@ -13,7 +13,7 @@ public class ChangeMode {
     final public static String CURRENT_FILTER = "CURRENT_FILTER";
     /** Final filter for **/
     final public static String FINAL_FILTER = "FINAL_FILTER";
-    /** If we don't want any comparison at end, used when we want field to send to arduino output */
+    /** If we don't want any comparison at end, used when we want field to sent to arduino output */
     final public static String NO_COMPARE= "FINAL_FILTER";
 
     static void changeActivityToMessage(Activity parent, String currentFilter){

@@ -29,8 +29,8 @@ public class ServiceDataFetcher extends Service {
     
     Timer timer;
     Prototype prototype;
-    ArrayList<String> list;
     TshirtSingleton singleton;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,46 +39,77 @@ public class ServiceDataFetcher extends Service {
 
     @Override
     public void onCreate() {
+
+
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
         singleton = TshirtSingleton.getInstance(this);
 
-        list = new ArrayList<String>();
+        prototype = new Prototype(this, "ServiceDataFetcher Connection");
+
+        //Dummy listener
+        prototype.discoverServices(null);
         L.i("ServiceTshirtApp started");
-        prototype = new Prototype(this, createConnectionListener());
-        prototype.discoverServices();
+        singleton.connect();
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                L.i("Timer initiates to fetch data from social service");
-                iterateRulesAndCallSocialService();
+                if(isClearToGo()){
+                    L.i("Timer initiates to fetch data from social service");
+                    iterateRulesAndCallSocialService();
+                }
             }
         };
         timer = new Timer();
-//        timer.schedule(task, 1000, 10000);
-        L.i("Timer to fetch data from social service is currently DISABLED");
+        timer.schedule(task, 1000, 10000);
+
+    }
+
+    private boolean isClearToGo() {
+
+        if(singleton.serviceActivated == false){
+            return false;
+        }
+
+        if(singleton.getServiceName() != null){
+            return true;
+        }
+        
+        L.i("No selected service to connect to");
+        return false;
     }
 
 
     private void iterateRulesAndCallSocialService() {
 
         Rule[] rules = singleton.database.getRules();
-
-        //TODO RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer()
-//        Rule[] rules = singleton.database.getRules();
-//        RuleArduinoTransfer ruleArduinoTransfer = new RuleArduinoTransfer(prototype, this, socialServiceList.get(0),rules[0]);
-
-
-
+        if(rules.length == 0){
+            L.i("There are no rules in database to check");
+            return;
+        }
+        for (int i = 0; i < rules.length; i++) {
+            Rule rule = rules[i];
+            activateRule(rule);
+        }
     }
 
-    private ConnectionListener createConnectionListener(){
-
-        return new ConnectionListener() {
+    private void activateRule(final Rule rule) {
+        Thread t = new Thread(new Runnable() {
             @Override
-            public void onConnected(String name) {
-                L.i("TshirtService found service " + name);
-                list.add(name);
+            public void run() {
+                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.getServiceName(), rule)).start();
             }
-        };
+        });
+        t.start();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        singleton.disconnect();
     }
 }

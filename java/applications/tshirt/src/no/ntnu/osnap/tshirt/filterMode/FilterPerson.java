@@ -22,7 +22,6 @@ public class FilterPerson extends Activity implements View.OnClickListener{
         currentFilter = getIntent().getStringExtra(ChangeMode.CURRENT_FILTER);
         ((TextView)findViewById(R.id.fp_labelCurrentOutput)).setText(currentFilter);
         ((Button)findViewById(R.id.fp_buttonGetName)).setOnClickListener(this);
-        ((Button)findViewById(R.id.fp_buttonGetAge)).setOnClickListener(this);
         ((Button)findViewById(R.id.fp_buttonGetID)).setOnClickListener(this);
     }
 
@@ -38,9 +37,6 @@ public class FilterPerson extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.fp_buttonGetAge:
-                ChangeMode.changeActivityToCompareResult(this, currentFilter + ":" + getString(R.string.getAge));
-                break;
             case R.id.fp_buttonGetName:
                 ChangeMode.changeActivityToCompareResult(this, currentFilter + ":" + getString(R.string.getName));
                 break;

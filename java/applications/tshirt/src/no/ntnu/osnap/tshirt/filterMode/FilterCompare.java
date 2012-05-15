@@ -50,7 +50,13 @@ public class FilterCompare extends Activity implements View.OnClickListener {
 
         Intent i = new Intent();
         String finalFilter = currentFilter + ":";
-        finalFilter += (operatorID == R.id.fc_radioEqual)?"=":"!";
+        switch(operatorID){
+            case R.id.fc_radioEqual: finalFilter+="="; break;
+            case R.id.fc_radioNotEqual: finalFilter+="!"; break;
+            case R.id.fc_radioContains: finalFilter+="contains"; break;
+
+
+        }
         finalFilter += ":" + editText.getText().toString();
         i.putExtra(ChangeMode.FINAL_FILTER, finalFilter);
         setResult(RESULT_OK, i);
