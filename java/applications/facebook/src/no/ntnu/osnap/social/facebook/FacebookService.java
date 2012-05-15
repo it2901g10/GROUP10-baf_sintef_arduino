@@ -301,7 +301,7 @@ public class FacebookService extends SocialService {
 				} else {
 					response.setStatus(Response.Status.MISSING_PARAMETERS);
 				}
-			} break;
+			} break; // Request.POST_GROUP_MESSAGE
 
 			default: {
 				response.setStatus(Response.Status.NOT_SUPPORTED);

@@ -26,10 +26,12 @@ import android.os.Messenger;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * oSNAP class for a Prototype Android application/service. This class is
- * intended to communicate with
+ * oSNAP class for a Prototype Android application.
+ * Sends asynchronous requests to {@link SocialServices}.
  *
  * @author Emanuele 'lemrey' Di Santo
  */
@@ -50,6 +52,7 @@ public class Prototype {
 	private final Context mContext;
 	/**
 	 * Used to receive messages.
+	 * Messages are processed one by one.
 	 */
 	private final Messenger mMessenger;
 	/**
@@ -70,14 +73,21 @@ public class Prototype {
 	private static int requestID = 0;
 
 	/**
-	 * Creates a prototype
-	 *
-	 * @param contex
-	 * @param listener the listener
+	 * Request constants.
 	 */
-	public Prototype(Context contex, ConnectionListener listener) {
+	private final int GET_REQUEST = 1;
+	private final int POST_REQUEST = 2;
+	
+	/**
+	 * Constructs a prototype.
+	 *
+	 * @param contex the context associated associated with the prototype
+	 * @param listener callback for SocialService discovery
+	 */
+	public Prototype(Context contex, String name) {
 		mContext = contex;
-		mConnection = listener;
+		//mConnection = listener;
+		mName = name;
 		mServices = new HashMap<String, Messenger>();
 		mListeners = new HashMap<Integer, ResponseListener>();
 		mMessenger = new Messenger(new Prototype.IncomingHandler());
@@ -115,17 +125,15 @@ public class Prototype {
 					if (msg.replyTo != null) {
 						String name = ((Bundle) msg.obj).getString("name");
 						Log.d(mName, "Discovered " + name);
-						/*
-						 * save service's name and messenger and fire the
-						 * connection callback
-						 */
+						// save service's name and fire callback
 						mServices.put(name, msg.replyTo);
-						mConnection.onConnected(name);
+						if (mConnection != null) {
+							mConnection.onConnected(name);
+						}
 					} else {
 						Log.e(mName, "Null messenger in discovery");
 					}
-				}
-				break;
+				} break;
 
 				case RESPONSE: {
 					Log.d(mName, "Response received(" + msg.arg1 + ")");
@@ -142,8 +150,7 @@ public class Prototype {
 						}
 						mListeners.remove(i);
 					}
-				}
-				break;
+				} break;
 
 				default:
 					super.handleMessage(msg);
@@ -152,10 +159,14 @@ public class Prototype {
 	}
 
 	/**
-	 * Broadcasts a service discovery message.
+	 * Broadcasts a service discovery message (asynchronous).
+	 * The prototype's {@link ConnectionListener} will be run upon discovery
+	 * of a {@link SocialService}.
 	 */
-	public void discoverServices() {
+	public void discoverServices(final ConnectionListener listener) {
 
+		mConnection = listener;
+		Timer discoveryTimeout = new Timer();
 		Intent intent = new Intent("android.intent.action.SOCIAL");
 
 		// bundle our Messenger class that will receive the reply
@@ -163,46 +174,50 @@ public class Prototype {
 
 		Log.d(mName, "Sending broadcast");
 		mContext.sendBroadcast(intent);
+		
+		discoveryTimeout.schedule(new TimerTask() {
+			public void run() {
+				if (mServices.isEmpty()) {
+					if (mConnection != null) {
+						mConnection.onConnectionFailed();
+					}
+				}
+			}
+		} , 3000);
 	}
 
 	/**
-	 * Sends a request to the specified Social service.
+	 * Sends an asynchronous request to the specified Social service.
 	 *
-	 * @param serviceName the name of the Social service to send the
+	 * @param serviceName the name of the SocialService to send the
 	 * {@link Request} to
 	 * @param req the {@link Request} to be sent
 	 * @param listener the {@link ResponseListener} listener that will receive
 	 * the {@link Response}. Can be {@code null} if you're not interested in
-	 * the {@link Response}
+	 * the {@link Response}.
 	 * 
 	 */
 	public void sendRequest(String serviceName, Request req,
 			ResponseListener listener) {
 
-		int what = 1;
 		Message msg;
 		
 		synchronized(this) {
 			Log.d(mName, "Sending request(" + requestID + ") "
-				+ req.getRequestCode().name() + " " + serviceName);
-				
+				+ req.getRequestCode().name() + " to " + serviceName);
 		}
-
-		if (req.getRequestCode() == Request.RequestCode.POST_MESSAGE) {
-			what = 2;
-		}
-
+		
 		if (mServices.containsKey(serviceName)) {
 
-			msg = Message.obtain(null, what, req.getBundle());
+			msg = Message.obtain(null, req.getRequestCode().isPostRequest() ?
+					POST_REQUEST : GET_REQUEST, req.getBundle());
 			msg.replyTo = mMessenger;
 
-			// 
 			synchronized (this) {
 				msg.arg1 = requestID;
 				mListeners.put(new Integer(requestID), listener);
 				requestID++;
-			};
+			}
 
 			try {
 				mServices.get(serviceName).send(msg);
@@ -210,6 +225,10 @@ public class Prototype {
 			} catch (Exception ex) {
 				Log.e(mName, ex.toString());
 			}
+			
+		} else { // We don't have a Messenger for that SocialService
+			Log.e(mName, "You're trying to send a Request to a SocialService"
+				+ " that has not been discovered. Did you call discoverServices?");
 		}
 	}
 }
