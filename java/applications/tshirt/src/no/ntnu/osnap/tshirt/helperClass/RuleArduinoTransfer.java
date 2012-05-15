@@ -7,6 +7,7 @@ import no.ntnu.osnap.social.Response;
 import no.ntnu.osnap.social.listeners.ResponseListener;
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
+import no.ntnu.osnap.social.models.Notification;
 import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.R;
 
@@ -77,15 +78,26 @@ import java.util.concurrent.CountDownLatch;
         else if(filterPart.equals(context.getString(R.string.getLoggedInUser))){
             getLoggedInUser(decrList);
         }
+        else if(filterPart.equals(context.getString(R.string.getLatestNotification))){
+            getLatestNotificationFromSocialService(decrList);
+        }
         else if(filterPart.equals(context.getString(R.string.getMessage))){
             getMessageText(model);
         }
         else if(filterPart.equals(context.getString(R.string.getName))){
             getPersonName(model);
         }
+        else if(filterPart.equals(context.getString(R.string.getLink))){
+            getPersonName(model);
+        }
         else{
             L.e("ERR: Unknown filter " + filterPart);
         }
+    }
+
+    private void getLatestNotificationFromSocialService(String[] decrList) {
+        Request request = new Request(Request.RequestCode.NOTIFICATIONS);
+        prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
     }
 
     private void getLoggedInUser(String[] decrList) {
@@ -104,7 +116,11 @@ import java.util.concurrent.CountDownLatch;
         if(model instanceof Message){
             Request request = new Request(Request.RequestCode.PERSON_DATA, ((Message)model).getSenderAsPerson());
             prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
-        }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
+        }
+        else if(model instanceof Notification){
+            Request request = new Request(Request.RequestCode.PERSON_DATA, ((Notification)model).getSenderAsPerson());
+            prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
+        } else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
     }
 
     /** Get name of person in model */
@@ -120,8 +136,23 @@ import java.util.concurrent.CountDownLatch;
         if(model instanceof Message){
             Message message = (Message)model;
             checkFilterInitNext(message.getText());
-        }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
+        }
+        else if(model instanceof Notification){
+            Notification notification = (Notification)model;
+            checkFilterInitNext(notification.getMessage());
+        }
+        else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
     }
+
+    private void getLink(Model model) {
+        if(model instanceof Notification){
+            Notification notification = (Notification)model;
+            checkFilterInitNext(notification.getLink().toString());
+        }
+        else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
+
+    }
+
 
     /** Compare filters to results from social service,
      * if all are satisfied, get */
@@ -140,7 +171,7 @@ import java.util.concurrent.CountDownLatch;
             return;
 
         }
-        
+
         Filter f = linkedList.poll();
         if(!f.isFilterValid(result)){
             L.i("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() +  " " + f);
@@ -161,13 +192,19 @@ import java.util.concurrent.CountDownLatch;
         return new ResponseListener() {
             @Override
             public void onComplete(Response response) {
-                L.e("GOT ONCOMPLETE");
                 if (response.getStatus() == Response.Status.COMPLETED) {
                     if(decrList.length == 0){
                         L.e("ERROR, FILTER IS NOT COMPLETE");
                         return;
                     }
-                    recursiveFiltering(decrList, response.getModel());
+
+                    L.i(response.toString());
+                    if(response.getModel() != null){
+                        recursiveFiltering(decrList, response.getModel());
+                    }
+                    else{
+                        L.e("Model received is empty");
+                    }
                 }
                 else{
                     L.e("Response from social service was not COMPLETED but " + response.getStatus().name());

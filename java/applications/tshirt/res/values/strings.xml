@@ -8,7 +8,7 @@
     <string name="getMessage">getMessage</string>
     <string name="getName">getName</string>
     <string name="getID">getID</string>
-    <string name="getAge">getAge</string>
+    <string name="getLink">getLink</string>
     <string name="getLatestMessage">getLatestMessage</string>
     <string name="getLatestNotification">getLatestNotification</string>
 

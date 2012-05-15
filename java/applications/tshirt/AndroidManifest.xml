@@ -17,6 +17,7 @@
         <activity android:name=".filterMode.FilterMessage"/>
         <activity android:name=".filterMode.FilterCompare"/>
         <activity android:name=".filterMode.FilterPerson"/>
+        <activity android:name=".filterMode.FilterNotification"/>
         <activity android:name=".filterMode.FilterStart"/>
 
         <service android:name=".ServiceDataFetcher"/>

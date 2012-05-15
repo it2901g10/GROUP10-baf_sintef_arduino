@@ -28,6 +28,13 @@ public class ChangeMode {
         i.putExtra(NO_COMPARE, parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false));
         parent.startActivityForResult(i, 0);
     }
+    public static void changeActivityToNotification(FilterStart parent, String currentFilter) {
+        Intent i = new Intent(parent, FilterNotification.class);
+        i.putExtra(CURRENT_FILTER,currentFilter);
+        i.putExtra(NO_COMPARE, parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false));
+        parent.startActivityForResult(i, 0);
+    }
+
     static void changeActivityToCompareResult(Activity parent, String currentFilter){
         if(parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false)){
             //If we dont want to compare filter to a string we return here

@@ -44,7 +44,7 @@ public class FilterStart extends Activity implements View.OnClickListener{
                 ChangeMode.changeActivityToMessage(this, getString(R.string.getLatestMessage));
                 break;
             case R.id.fs_buttonGetLatesNotification:
-                //ChangeMode.changeActivityToCompareResult(this, getString(R.string.getLatestNotification));
+                ChangeMode.changeActivityToNotification(this, getString(R.string.getLatestNotification));
                 break;
             case R.id.fs_buttonGetLoggedInUser:
                 ChangeMode.changeActivityToPerson(this, getString(R.string.getLoggedInUser));
