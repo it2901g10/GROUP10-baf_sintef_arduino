@@ -49,7 +49,6 @@ public class FacebookService extends SocialService {
 	 */
 	@Override
 	protected Response handleRequest(Request request) {
-        Log.d(TAG,"RESPONSE" + request.toString());
 		String buf;
 		
 		// our response object
@@ -301,7 +300,7 @@ public class FacebookService extends SocialService {
 				} else {
 					response.setStatus(Response.Status.MISSING_PARAMETERS);
 				}
-			} break;
+			} break; // Request.POST_GROUP_MESSAGE
 
 			default: {
 				response.setStatus(Response.Status.NOT_SUPPORTED);

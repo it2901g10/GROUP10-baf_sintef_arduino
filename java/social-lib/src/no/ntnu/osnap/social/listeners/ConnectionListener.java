@@ -14,10 +14,20 @@
 package no.ntnu.osnap.social.listeners;
 
 /**
- * An interface for prototype's connection callbacks.
+ * An interface for SocialService connection callbacks.
  
  * @author Emanuele 'lemrey' Di Santo
  */
 public interface ConnectionListener {
+	
+	/**
+	 * 
+	 * @param name 
+	 */
 	public void onConnected(String name);
+	
+	/**
+	 * 
+	 */
+	public void onConnectionFailed();
 }
