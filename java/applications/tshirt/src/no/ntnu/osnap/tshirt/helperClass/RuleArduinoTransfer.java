@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
  * 
  * */
 
-//This class use lots of recursion
+//This class makes use of recursion
  public class RuleArduinoTransfer {
     
     private Prototype prototype;
@@ -68,11 +68,14 @@ import java.util.concurrent.CountDownLatch;
             decrList[i] = list[i+1];
         }
 
-        if(filterPart.equals(context.getString(R.string.getLatestPost))){
+        if(filterPart.equals(context.getString(R.string.getLatestMessage))){
             getLatestMessageFromSocialService(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getSender))){
             getMessageSender(model, decrList);
+        }
+        else if(filterPart.equals(context.getString(R.string.getLoggedInUser))){
+            getLoggedInUser(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getMessage))){
             getMessageText(model);
@@ -83,6 +86,11 @@ import java.util.concurrent.CountDownLatch;
         else{
             L.e("ERR: Unknown filter " + filterPart);
         }
+    }
+
+    private void getLoggedInUser(String[] decrList) {
+        Request request = new Request(Request.RequestCode.SELF);
+        prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
     }
 
     /** Get the latest message in stream for user logged in given serviceName */
@@ -153,6 +161,7 @@ import java.util.concurrent.CountDownLatch;
         return new ResponseListener() {
             @Override
             public void onComplete(Response response) {
+                L.e("GOT ONCOMPLETE");
                 if (response.getStatus() == Response.Status.COMPLETED) {
                     if(decrList.length == 0){
                         L.e("ERROR, FILTER IS NOT COMPLETE");

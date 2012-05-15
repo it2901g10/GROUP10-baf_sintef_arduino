@@ -19,8 +19,9 @@ import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
 import no.ntnu.osnap.com.BluetoothConnection;
+import no.ntnu.osnap.com.ComLibException;
 import no.ntnu.osnap.com.ConnectionListener;
-import no.ntnu.osnap.com.UnsupportedHardwareException;
+import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.tshirt.R;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class TshirtSingleton {
     private Context context;
     public RulesDB database;
     private BluetoothConnection con;
+    public Prototype prototype;
 
     /**
      * What service we are working on (Example facebook) (If we have multiple)
@@ -51,7 +53,6 @@ public class TshirtSingleton {
         context = applicationContext;
         database = new RulesDB(context);
         database.open();
-
     }
 
     /**
@@ -59,15 +60,11 @@ public class TshirtSingleton {
      */
     public void initBTConnection(Activity activity) {
         try {
-            con = new BluetoothConnection("00:10:06:29:00:48", activity, getConnectionListener());
+            con = new BluetoothConnection("00:10:06:29:00:48", activity, getConnectionListener(activity));
             con.connect();
-        } catch (UnsupportedHardwareException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (ComLibException e) {
+            L.e(e.getMessage());
         }
-
-        this.con = con;
-
-
     }
 
     public static TshirtSingleton getInstance(Context context) {
@@ -76,18 +73,17 @@ public class TshirtSingleton {
         }
         return instance;
     }
-    //Connection
 
 
-    public String getServiceName() {
-        L.i("getName" + serviceName);
-        return serviceName;
+    /** Set social service to retrieve data from */
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
-    public void setServiceName(String serviceName) {
-        L.i("SetName" + serviceName);
-
-        this.serviceName = serviceName;
+    /** Get social service name to retrieve data from */
+    public String getServiceName() {
+        L.i("getName |" + serviceName + "|");
+        return serviceName;
     }
 
     public void toggleArduinoConnection() {
@@ -122,16 +118,30 @@ public class TshirtSingleton {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        Log.i("ARDUINO###############", " ## # LED" + text);
 
     }
 
     private void sendToLCDArduino(String text) {
-        Log.i("ARDUINO###############", " ## # " + text);
+
+        try {
+            con.print(text);
+        } catch (TimeoutException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
     }
 
     private void sendToVibratorArduino(String text) {
-        Log.i("ARDUINO###############", " ## # " + text);
+        try {
+            con.write(4, true, false);
+            Thread.sleep(1000);
+            con.write(4, false, false);
+        } catch (TimeoutException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
     }
 
     private void sendToSpeakerArduino(String text) {
@@ -140,29 +150,43 @@ public class TshirtSingleton {
         } catch (TimeoutException e) {
             L.e(e.getMessage());
         }
-        Log.i("ARDUINO###############", " ## # " + text);
     }
 
 
-    public ConnectionListener getConnectionListener() {
+    public ConnectionListener getConnectionListener(final Activity activity) {
         return new ConnectionListener() {
             public void onConnect(BluetoothConnection bluetoothConnection) {
+                quickToast("Connected");
                 L.i("Connected! (" + con.toString() + ")");
             }
 
             public void onConnecting(BluetoothConnection bluetoothConnection) {
+                quickToast("Connecting");
                 L.i("Connecting");
             }
 
             public void onDisconnect(BluetoothConnection bluetoothConnection) {
+                quickToast("Disconnected");
                 L.i("Disconnected");
+            }
+            private void quickToast(final String message){
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         };
     }
 
     public void disconnect() {
-        if(con != null || !con.isConnected()){
-            con.disconnect();
+        if(con != null && !con.isConnected()){
+            try {
+                con.print("Disconnected from app");
+                con.disconnect();
+            } catch (TimeoutException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
     }
 
@@ -170,6 +194,11 @@ public class TshirtSingleton {
     public void connect() {
         if(con != null && con.isConnected()){
             con.connect();
+            try {
+                con.print("Connected to App");
+            } catch (TimeoutException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
     }
     

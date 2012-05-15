@@ -22,12 +22,10 @@
                 android:textStyle="bold"/>
         <Button
                 android:id="@+id/os_buttonSetFilter"
-                android:padding="5dp"
                 android:text="Set Output Filter"
                 android:textSize="16sp"
                 android:typeface="sans"
                 android:textStyle="bold"
-                android:height="50dp"
                 android:background="@drawable/button_shape"/>
 
         <TextView

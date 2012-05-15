@@ -72,7 +72,6 @@
                 android:textSize="16sp"
                 android:typeface="sans"
                 android:textStyle="bold"
-                android:height="50dp"
                 android:background="@drawable/button_shape"/>
 
     </TableLayout>

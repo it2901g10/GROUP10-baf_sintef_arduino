@@ -24,12 +24,15 @@ import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ActivityStartWindow extends Activity implements View.OnClickListener{
 
     TshirtSingleton singleton;
     ArrayList<String> socialServiceList;
     Prototype prototype;
+    Timer timer;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -38,8 +41,29 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
         setContentView(R.layout.start_window);
         singleton = TshirtSingleton.getInstance(this);
         socialServiceList = new ArrayList<String>();
+        timer = new Timer();
         initComp();
+        checkConnection();
     }
+
+    private void checkConnection() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                
+                final String message = singleton.isConnected()? "Is connected to Arduino": "Not connected to Arduino";
+                ActivityStartWindow.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        TextView tv= (TextView)findViewById(R.id.sw_labelConnectionStatus);
+                        tv.setText(message);
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 1000, 10000);
+    }
+    
+    
 
     private void initComp() {
         setOnClickListeners();
@@ -128,8 +152,13 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 startActivity(i);
                 break;
             case R.id.sw_buttonConnection:
-                singleton.setServiceName(socialServiceList.get(0));
-                singleton.initBTConnection(this);
+                if(singleton.getServiceName() != null){
+                    singleton.setServiceName(singleton.getServiceName());
+                    singleton.initBTConnection(this);
+                }
+                else{
+                    quickToastMessage("Please search for a service first");
+                }
                 break;
             case R.id.sw_toggleButtonActiveService:
 
@@ -156,11 +185,23 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                         socialServiceList.add(name);
                         updateServiceListView();
                     }
+
+                    @Override
+                    public void onConnectionFailed() {
+                        L.i("Activity found no service");
+
+                    }
                 };
-                prototype = new Prototype(ActivityStartWindow.this, listener);
-                prototype.discoverServices();
+                prototype = new Prototype(ActivityStartWindow.this, "Service Discovery");
+                prototype.discoverServices( listener);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        checkConnection();
     }
 
     private void quickToastMessage(final String message) {

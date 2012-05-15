@@ -36,12 +36,10 @@
             android:gravity="center" />
     <Button
             android:id="@+id/re_buttonSetOutput"
-            android:padding="5dp"
             android:text="Set Output"
             android:textSize="16sp"
             android:typeface="sans"
             android:textStyle="bold"
-            android:height="50dp"
             android:background="@drawable/button_shape"/>
     <TextView
             android:id="@+id/re_labelFilters"
@@ -60,22 +58,18 @@
             android:text="No filters added"/>
     <Button
             android:id="@+id/re_buttonAddFilter"
-            android:padding="5dp"
             android:text="Add Filter"
             android:textSize="16sp"
             android:typeface="sans"
             android:textStyle="bold"
-            android:height="50dp"
             android:background="@drawable/button_shape"/>
 
     <Button
             android:id="@+id/re_buttonSaveRule"
-            android:padding="5dp"
             android:text="Save Rule"
             android:textSize="16sp"
             android:typeface="sans"
             android:textStyle="bold"
-            android:height="50dp"
             android:background="@drawable/button_shape"/>
 </TableLayout>
     </ScrollView>
