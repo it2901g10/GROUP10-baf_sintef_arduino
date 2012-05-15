@@ -2,7 +2,7 @@
 
 ComputerSerial comp;
 
-void* analogTemp(byte flag, byte content[], byte contentSize){
+void* analogTemp(byte flag, byte content[], word contentSize){
 	int *status = (int*)malloc(sizeof(int));
 	*status = analogRead(flag < 2 ? flag : 0);
 	return status;
