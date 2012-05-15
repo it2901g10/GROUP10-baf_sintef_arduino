@@ -49,7 +49,6 @@ public class FacebookService extends SocialService {
 	 */
 	@Override
 	protected Response handleRequest(Request request) {
-        Log.d(TAG,"RESPONSE" + request.toString());
 		String buf;
 		
 		// our response object
