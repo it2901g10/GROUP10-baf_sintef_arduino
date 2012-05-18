@@ -1,0 +1,41 @@
+\section{Conclusion}
+\begin{itemize}
+\item what did we learn?
+\item was the customer statisfied?
+\item what pitfalls and problems did we encounter (late meetings, bad hardware, etc.)
+\item what would we do different in the future?
+\item specializing for Android vs portability
+\end{itemize}
+
+\section{Further Work}
+This section describes ideas, code and features we did not have time or resources to
+finish at the project deadline. The section can also describe various interesting concepts 
+that we visualized that we might have explored given more time.
+
+\subsection{Supporting more communication technologies in ComLib}
+Currently the ComLib only supports Bluetooth connection. Further work would be
+to add support for additional communication technologies such as WiFi and Near Field 
+Communication (NFC). The ComLib has been implemented so that this work should
+be as easy as possible. Simply extend the Protocol class and implement the input and
+output communication and the implementation should be fully forward and backwards
+compatible with other versions of the ComLib.
+
+\subsection{Supporting additional Social networks}
+The SocialLib currently supports Twitter and Facebook. Support for additional social
+networks like Google Plus, LinkedIn or MySpace was planned as future work. Also the
+SocialLib has been implemented to accomodate this process as simple as possible
+for the developer.
+
+\subsection{Multi-Platform}
+The Bluetooth part of the ComLib has been implemented using Android SDK. This means 
+the Bluetooth part of the library will only run on an Android platform. The ComLib protcol
+itself however, has been designed to support any type of platform. This means the ComLib
+could be expanded to support other types of platform such as Bluetooth on iOS. This
+should preferably be implemented as a common interface, so the developer only has to use
+Bluetooth and the ComLib itself figures out if to use the Android version or the iOS version of
+the Bluetooth Protocol.
+
+\subsection{Security}
+Currently the ComLib offers no level of security. Anyone with the mac address can connect
+and have access to the full functionality of each prototype device. A future possibility could
+be to define a security standard in the ComLib protocol like authentication with a password.

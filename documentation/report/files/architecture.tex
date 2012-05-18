@@ -268,23 +268,36 @@ For completeness we present the previous application use case in figure \ref{fig
 \label{sec:prototypes}
 Three different prototypes will be produced for the project. Their purpose is to serve as proof of concept and
 to show that the libraries and can effectively simplify the prototyping of Arduino-based T.U.I.
-One of the prototypes, the T-shirt, is significantly bigger and more complex than the other two.
-The T-shirt is the main prototype of the project; the purpose of the other two
+One of the prototypes, the OSNAP Jacket (formerly the T-Shirt), is significantly bigger and more complex than the other two.
+The OSNAP Jacket is the main prototype of the project; the purpose of the other two
 is just to show that the libraries can be use for other applications and in different contexts.
 
-\subsection{Prototype 1: The social Jacket}
-	
-\begin{figure}
-	\begin{center}
-	\includegraphics[scale=0.2]{img/design-tshirtproto}
-	\end{center}
-	\caption{Concept drawing of the Jacket Prototype}
-	\label{fig:design-TShirt}
-\end{figure}
-	
+\subsection{Prototype 1: The OSNAP Jacket}
 This is our main prototype and will showcase a lot features.
-It consists of aJacket connected to a Lilypad Arduino that will feature
-several displays and indicators which will receive social data from an Android phone.
+It consists of a Jacket connected to an Arduino Fio (figure \ref{fig:design-arduinofio}). The original prototype featured a different
+Arduino micro-controller called the Arduino Lilypad (figure \ref{fig:design-arduinolilypad}). The Lilypad is optimized for sewing into 
+clothing in both size and structure in addition to being washable. We discarded the Lilypad after we changed from T-Shirt to Jacket,
+since in the Jacket we did not need to sew the components using conductive thread and washing was not a priority. In addition the 
+Arduino Fio offered additional advantages such as connector for a battery pack, smaller size, better prototyping and a charger.
+
+%the following magic allows images to be drawn side by side
+\begin{figure}[H]
+	\begin{minipage}[b]{0.5\linewidth}
+		\centering
+		\includegraphics[scale=0.35]{img/design-arduinofio}
+		\caption{The Arduino Fio \cite{link:arduino-fio}}
+		\label{fig:design-arduinofio}
+	\end{minipage}
+		\hspace{0.5cm}
+	\begin{minipage}[b]{0.5\linewidth}
+		\centering
+		\includegraphics[scale=1.50]{img/design-arduinolilypad}
+		\caption{The Arduino Lilypad \cite{link:arduino-lilypad}}
+		\label{fig:design-arduinolilypad}
+	\end{minipage}
+\end{figure}
+
+The application of this prototype will feature several displays and indicators which will receive social data through an Android phone.
 The shirt features different tangible interfaces (see figure \ref{fig:design-TShirt}):
 	
 \begin{itemize}
@@ -293,12 +306,20 @@ The shirt features different tangible interfaces (see figure \ref{fig:design-TSh
 	\item Sound speaker
 	\item Vibration module
 \end{itemize}
+
+\begin{figure}[H]
+	\begin{center}
+	\includegraphics[scale=0.2]{img/design-tshirtproto}
+	\end{center}
+	\caption{Concept drawing of the Jacket Prototype}
+	\label{fig:design-TShirt}
+\end{figure}
 	
 Any of these can be mapped to a fair deal of concepts found in social network.
 So a "Poke" from Facebook could become a vibration on the Jacket. When someone "Likes" your post a small sound effect
 could be played, a LED blinking on status updates from Twitter, etc. The Jacket is connected to the social networks
 through a wireless connection to an Android mobile. Specifically, the mobile Android is connected to the Internet
-and carried in the pocket of the person using the Jacket and is connected wirelessly with the Arduino Lilypad through Bluetooth.
+and carried in the pocket of the person using the Jacket and is connected wirelessly with the Arduino Fio through Bluetooth.
 
 	
 \subsection{Prototype 2: Temperature Sensor for Android}
@@ -321,7 +342,7 @@ figure~\ref{fig:prototype2-gui} ) to make it more user friendly and visually app
 \begin{figure}[H]
 \centering 
 \includegraphics[width=1.0\textwidth]{img/prototype2-paper.png}
-\caption{Paperprototype for the temperature sensor.}
+\caption{Paper Prototype for the temperature sensor.}
 \label{fig:prototype2-paper}
 \end{figure}
 
@@ -384,6 +405,9 @@ Below is a brief description of the most important ones.
 	\item \textbf{no.ntnu.osnap.mockups}  \newline
 		Stubs and 'driver' applications used for testing purposes.
 		Example applications for third-party developers.
+	\item \textbf{no.ntnu.osnap.app} \newline
+		This package contains Android applications (called Activities in the Android terminology) for the three prototypes
+		we have implemented. Activity resources (graphics, sounds and activity manifest) is also included in this package.
 \end{itemize}
 
 \subsection{Arduino C code}
