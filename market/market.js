@@ -2,7 +2,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Model
 ////////////////////////////////////////////////////////////////////////////////
-var isAndroid = ( navigator.userAgent.toLowerCase().indexOf("android") >= 0 );
 
 var market = {
     "apps": [{
@@ -19,7 +18,7 @@ var market = {
         "url": "apk/Tshirt.apk",
         "about": "This is our main prototype and will showcase a lot features. It consists of a T-Shirt or sweater connected to a Lilypad Arduino that will feature several displays and indicators which will receive social data from the Android phone.",
         "deps": [0, 4, 5]
-    }, {
+    }, ...{
         "id": 2,
         "title": "TemperatureApp",
         "icon": "icon/temp/icon128.png",
@@ -57,6 +56,8 @@ var market = {
 ////////////////////////////////////////////////////////////////////////////////
 //  Controller
 ////////////////////////////////////////////////////////////////////////////////
+
+var isAndroid = ( navigator.userAgent.toLowerCase().indexOf("android") >= 0 );
 
 function generateApp(app, market) {
 
