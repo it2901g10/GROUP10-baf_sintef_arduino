@@ -1,35 +1,21 @@
 
 Testing is an integral part of every development process.
-Many different testing approaches have been proposed during the history of
-software development, but they all suggest that testing has to be performed
-continuously during the development process. This is of particular importance to
-our process since it follows an iterative approach. Testing should be planned in
-the early stages of each iteration for each testable unit that is going to be
-implemented and performed as soon as it is completed. As the system evolves so
-does the testing. It should be more comprehensive and cover each module and the
-system itself as a whole.
-
-\section{Customer feedback}
-Customer feedback was an important part of the testing approach for our project.
-Working prototypes and/or documentation were produced for each meeting with the
-customer in order to test the features implemented, receive a general acceptance
-on our iteration goals and plan the next iteration. Receiving a constant
-feedback from the user was very important as the project didn't really have a
-specific set of requirements from the beginning, so acquiring feedback from the
-customer allowed us to understand the most common use case scenarios and from
-those obtain a set of requirements used to design the system and plan test cases.
+In iterative software development processes, testing is usually planned in the
+early stages of each iteration and planned as soon as the iteration itself is
+complete. As the system evolves so does the testing; it should be more
+comprehensive and cover not only modules but also the system itself as a whole.
 
 \section{Testing approach}
 Testing can be performed in a top-down or bottom-up fashion.
 
 The top-down approach consists in integrating modules incrementally, moving
-downward in the hierarchy in either a breadth-first or depth-first fashion.
-Subordinate dummy modules are substituted one at time with the real ones and
-tested. Regression testing follows each integration increment.
+downward in the hierarchy in either a breadth-first or depth-first fashion. \newline
+Subordinate dummy modules (stubs) are substituted one at time with the real ones
+and tested. Regression testing follows each integration increment.
 
 On the other side the bottom-up approach begins testing atomic modules,
 sometimes combining them into clusters, and moves upward in the program
-structure. Sometimes 'driver' programs are produced in order to test
+structure. Sometimes 'driver' programs are produced in order to test \newline
 non-standalone components like libraries. This approach eliminates the need for
 dummy modules, but the system as whole doesn't exist as an "entity" until the
 last module is integrated.
@@ -40,16 +26,39 @@ mockup applications that acted as 'drivers' in order to demonstrate and test the
 functionalities of the libraries. Stubs (or dummy modules) were also coded
 to supply functionalities not yet fully implemented.
 
+Some of these 'driver' programs were included in the source coded repository.
+
 \todo {
 	mention that mockups have their own package: no.ntnu.osnap.mockups
 	add a link to package structure maybe?
 }
 
+\section{Customer feedback}
+Receiving a constant feedback from the customer was very important as the
+project didn't really have a specific set of requirements from the beginning.
+Many prototypes were presented during meetings with the customer in order to
+test the features implemented so far, receive a general acceptance on our
+iteration goals and plan the next iteration. Feedback from the customer
+allowed us to understand the most common use case scenarios and from those
+obtain a set of requirements used to design the system and plan test cases.
+Customer's feedback and proved to be very valuable for the project.
+
 \section{Unit testing}
 Unit testing involves testing small portions of code or of the system itself
 (modules). Where possible, functions have been tested indipendetly. In order to
-test non indipendent system modules, such as the libraries, mockup applications
-were coded.
+test non indipendent system modules, such as the libraries, mockup (driver)
+applications were coded.
+
+\section{Integration testing}
+Once the system modules were completed they were integrated one by one into the
+final system. After each stub/driver had been swapped with its correspective
+module, it was tested again to ensure it was working properly.
+
+\section{System testing}
+System testing constists in testing the system as a whole.
+In our case this consisted in testing our final prototype, performing a series
+of tests involving all the parts of the system from the Android applications
+to the hardware components.
 
 \section{User interface testing}
 Since our product encompassed various Android applications, we performed some
@@ -57,19 +66,8 @@ user interface testing. To make sure the user interfaces are understandable and
 easy to use, we have delegated their testing to group members that have not been
 involved in their design and coding.
 
-\section{Integration testing}
-Once the system modules were completed they were integrated one by one into the
-final system. After each stub had been swapped with its correspective module,
-it was tested again to ensure it was working properly.
-
-\section{System testing}
-System testing constists in testing the system as a whole.
-In our case this consisted in testing our final prototype, performing a series
-of tests involving all the parts of the system from the Social applications to
-the Prototype application and lastly to the Arduino board on the jacket.
-
 \section{Functional requirement testing}
-Since the project is a combination of proof-of-concept and research project,
+Since the project a combination of proof-of-concept and research project,
 tests are planned in order to support a run of the system, not to test for
 particular scenarios or more specific use. The unit tests is planned to see if
 we have fulfilled the functional requirements from packages F1-F7.
