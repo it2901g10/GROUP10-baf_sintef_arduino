@@ -10,85 +10,104 @@ for the various parts of the project.
 	\hline                        
 	\bf{Requirement} & \bf{Priority} \\
 	\hline
-	F1: SocialLib				& Very High \\
-	F2: ComLib					& Very High \\
-	F5: T-Shirt Prototype		& High \\
-	F4: T-Shirt App				& Medium \\
-	F3: Facebook App			& Medium \\
-	F6: Temperature Prototype	& Low \\
-	F7: LED Matrix Prototype	& Low \\
+	F1:  SocialLib					& Very High \\
+	F2:  ComLib						& Very High \\
+	F7:  T-Shirt Prototype			& High \\
+	F4:  T-Shirt application		& Medium \\
+	F3:  oSNAP application			& Medium \\
+	F5:  Facebook application		& Medium \\
+	F6:  Twitter application		& Medium \\
+	F8:  Temperature application 	& Low \\
+	F10: LED matrix application		& Low \\
+	F9:  Temperature Prototype		& Low \\
+	F11: LED matrix Prototype		& Low \\
 	\hline  
 \end{tabular}
 \end{table}
 
-	\subsection{F1: Social library}
-	\begin{description}
-		\item[Network support:] The library shall support at least two social networks.
-		One is OpenSocial and the other is Facebook.
-		\item[Abstractions:] The library shall provide abstractions for concepts found
-		in social networks.
-	\end{description}
+\subsection{F1: Social library}
+\begin{description}
+	\item[Network support:] The library shall support at least two social
+	networks. One shall be Facebook.
+	\item[Abstractions:] The library shall provide abstractions for concepts
+	found in social networks, and simplify Android's IPC mechanisms
+	between social services and TUI prototypes applications.
+\end{description}
 	
-	\subsection{F2: Communication library}
-	\begin{description}
-		\item[Wireless connectivity:] Since the product will target a user-base with
-		no technical background, the customer required all connections between
-		devices to be wireless, so that connecting the User Interface to the Android
-		mobile will be as easy as possible for the end-users. For this reason, the technical
-		details of the connection should be hidden to the end-user so that the product can
-		be easily operated.
-		\item[Two-way communication:] The communication shall be two-way: from the
-		Arduino device to Android and vice-versa.
-	\end{description}
+\subsection{F2: Communication library}
+\begin{description}
+	\item[Wireless connectivity:] Since the product will target a user-base
+	with no technical background, the customer required all connections
+	between devices to be wireless, so that connecting the User Interface
+	to the Android mobile will be as easy as possible for the end-users.
+	For this reason, the technical details of the connection should be
+	hidden to the end-user so that the product can be easily operated.
+	\item[Two-way communication:] The communication shall be two-way:
+	from the Arduino device to Android and vice-versa.
+\end{description}
 
-	\newpage
+\newpage
 
-	\subsection{F3: Facebook application}
+\subsection{F3: oSNAP application}
+\begin{description}
+	\item[?] ?
+	\item[Libraries:] The application shall use the Communication library
+	to communicate with TUI prototypes.
+\end{description}
 
-	\begin{description}
-		\item[Login (Authentication):] The application shall handle the authentication with Facebook.
-		\item[Logoff:] The user shall be able to log off once logged in.
-		\item[Facebook connectivity:] The application shall fetch and push data
-		from/to Facebook as requested, even when the mobile itself is idle (not operated).
-		\item[Libraries:] The application shall use the Social library to send and receive
-		data to/from the T-Shirt application
-		\item[User input:] Once the user is authenticated, no further user action is required.
-	\end{description}
+\subsection{F4: T-Shirt application}
+\begin{description}
+	\item[On and Off:] The user shall be able to turn the application On
+	and Off. When the application is not running, no social data will be
+	forwarded to the T-Shirt prototype.
+	\item[Libraries:] The application shall use the Communication library to
+	communicate with the T-Shirt prototype and the Social library to
+	receive and send data from/to social services.
+	\item[Rules:] The application shall let the user setup a set of rules
+	to control the behavior of the T-Shirt. Rules can be created and deleted.
+	\item[User interaction:] The application shall continue to work
+	when the mobile itself is idle.
+\end{description}
 
-	\subsection{F4: T-Shirt application}
-	
-	\begin{description}
-		\item[On and Off:] The user shall be able to turn the application On and Off.
-		When the application is not running, no social data will be forwarded
-		\item[Libraries:] The application shall use the Communication Library to
-		communicate with the T-Shirt prototype and the Social library to
-		receive and send data from/to the Social Application.
-		\item[Rules:] The application shall let the user setup a set of rules
-		to control the behavior of the T-Shirt. Rules can be created and deleted.
-		\item[User interaction:] The application shall continue to work
-		when the mobile itself is idle.
-	\end{description}
+\subsection{F5: Facebook application}
+\begin{description}
+	\item[Login (Authentication):] The application shall handle the
+	authentication with Facebook.
+	\item[Logoff:] The user shall be able to log off once logged in.
+	\item[Facebook connectivity:] The application shall fetch and push data
+	from/to Facebook as requested, even when the mobile itself is idle
+	(not operated).
+	\item[Libraries:] The application shall use the Social library to
+	communicate with TUI prototype applications.
+	\item[User input:] Once the user is authenticated, no further user action
+	should be required.
+\end{description}
 
-	
-	\subsection{F5: T-Shirt prototype}
+\subsection{F6: Twitter application}
+\begin{description}
+	\item[?] ?
+	\item[Libraries:] The application shall use the Social library to
+	communicate with TUI prototype applications.
+\end{description}
 
-	\begin{description}
-		\item[Features:] The prototype shall map some social content
-		to various embedded electronic devices.
-		\item[Libraries:] The prototype shall use both the Social and
-		Communication libraries.
-		\item[User input:] Once the rules for the T-Shirt are set,
-		no further user input shall be required.
-	\end{description}
+\subsection{F7: T-Shirt prototype}
+\begin{description}
+	\item[Features:] The prototype shall map some social content to various
+	embedded electronic devices.
+	\item[Libraries:] The prototype shall use both the Social and Communication
+	libraries.
+	\item[User input:] Once the rules for the T-Shirt are set, no further user
+	input shall be required.
+\end{description}
 
-	\subsection{F6: Temperature prototype}
-	\begin{description}
-		\item[Features:] The prototype shall read the temperature
-		using an Arduino sensor and push it to Facebook.
-		\item[Libraries:] The prototype shall use both the Social and
-		Communication libraries.
-		\item[]
-	\end{description}
+\subsection{F8: Temperature prototype}
+\begin{description}
+	\item[Features:] The prototype shall read the temperature using an Arduino
+	sensor and send it to Facebook.
+	\item[Libraries:] The prototype shall use both the Social and Communication
+	libraries.
+	\item[?] ?
+\end{description}
 	
 	\subsection{F7:  LED matrix prototype}
 	\begin{description}
@@ -98,7 +117,17 @@ for the various parts of the project.
 		\item[]
 	\end{description}
 
+\subsection{F10: Temperature application}
+\begin{description}
+	\item[?] ?
+\end{description}
 
+\subsection{F11: LED matrix application}
+\begin{description}
+	\item[?] ?
+\end{description}
+
+\newpage
 
 \section{Non functional requirements}
 
@@ -110,26 +139,25 @@ For the sake of simplicity they will be listed together.
 \begin{description}
 	\item[Extensibility:] The library shall have a modular design
 	in order to be easily extended. The software that will be developed for
-	this project will serve as a proof-of-concept and possibly as a starting point
-	for other research projects. For this reason a flexible, modular software
-	architecture is an important requirement for our customer. The code shall be
-	developed in independent, thus reusable modules so that adding new functionality
-	will be fairly easy for new developers.
+	this project will serve as a proof-of-concept and possibly as a starting
+	point for other research projects. For this reason a flexible, modular
+	software architecture is an important requirement for our customer. The code
+	shall be developed in independent, thus reusable modules so that adding new
+	functionality will be fairly easy for new developers.
 	\item[Target platform:] The library shall be compatible with the Android
-	system starting from version 2.2. This will place restrictions on the software
-	and on the programming languages that will be adopted.
+	system starting from version 2.2. This will place restrictions on the
+	existing software and on the programming languages that will be adopted.
 	\item[Documentation:] The library shall be documented using Javadoc.
 	Since the product is going to be further developed by other people and is
-	mainly designed for easier application development then proper research and usage
-	documentation is important. Proper documentation or tutorials should describe how
-	the end-user can easily use the libraries without any technical knowledge of how
-	the library works.
-	\item[Licensing:] The library shall be released under the Apache License 2.0 \footnote{See 
-           http://www.apache.org/licenses/LICENSE-2.0.html for more information on the Apache 2.0 license}.
-	The customer made clear that all the software developed needs to be released
-	under a permissive, Apache software license. This implies that pre-existing
-	software that will eventually be adopted and incorporated in the project must
-	have a compatible license.
+	mainly designed to simplify application development, a good documentation is
+	important. Proper documentation and tutorials should be available to
+	third-party developers.
+	\item[Licensing:] The library shall be released under the Apache License 2.0
+	\footnote{See http://www.apache.org/licenses/LICENSE-2.0.html for more
+	information on the Apache 2.0 license}. The customer made clear that all the
+	software developed needs to be released under a permissive, Apache software
+	license. This implies that pre-existing software that will eventually be
+	adopted and incorporated in the project must have a compatible license.
 \end{description}
 
 
@@ -137,20 +165,16 @@ For the sake of simplicity they will be listed together.
 
 Non-functional prototypes' requirements.
 
-
-
-
 \subsection{Applications}
 
 All the applications share some non functional requirements.
 For the sake of simplicity they will be listed below:
 
 \begin{description}
-	\item[Target platform:] The applications shall be compatible with the Android
-	system starting from version 2.2. This will place restrictions on the software
-	and on the programming languages that will be adopted.
+	\item[Target platform:] The applications shall be compatible with the
+	Android system starting from version 2.2. This will place restrictions on
+	the software and on the programming languages that will be adopted.
 	\item[Documentation:] The applications shall be documented using Javadoc.
-	\item[Licensing:] The applications shall be released under the Apache License 2.0.
+	\item[Licensing:] The applications shall be released under the Apache
+	License 2.0.
 \end{description}
-
-
