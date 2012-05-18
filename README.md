@@ -4,11 +4,13 @@ Group 10's repo for the course IT2901 at NTNU (Spring 2012).
 
 ## Contents ##
 
-arduino/:	Arduino related code and firmware
+arduino/:   Arduino related code and firmware
 
-java/:		Java related code
+java/:      Java related code
 
-report/:	Project report
+market/:    The OSNAP market code
+
+report/:    Project report
 
 ## Dependencies ##
 
