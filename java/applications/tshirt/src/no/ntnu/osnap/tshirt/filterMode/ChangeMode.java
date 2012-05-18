@@ -13,7 +13,7 @@ public class ChangeMode {
     final public static String CURRENT_FILTER = "CURRENT_FILTER";
     /** Final filter for **/
     final public static String FINAL_FILTER = "FINAL_FILTER";
-    /** If we don't want any comparison at end, used when we want field to send to arduino output */
+    /** If we don't want any comparison at end, used when we want field to sent to arduino output */
     final public static String NO_COMPARE= "FINAL_FILTER";
 
     static void changeActivityToMessage(Activity parent, String currentFilter){
@@ -28,6 +28,13 @@ public class ChangeMode {
         i.putExtra(NO_COMPARE, parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false));
         parent.startActivityForResult(i, 0);
     }
+    public static void changeActivityToNotification(FilterStart parent, String currentFilter) {
+        Intent i = new Intent(parent, FilterNotification.class);
+        i.putExtra(CURRENT_FILTER,currentFilter);
+        i.putExtra(NO_COMPARE, parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false));
+        parent.startActivityForResult(i, 0);
+    }
+
     static void changeActivityToCompareResult(Activity parent, String currentFilter){
         if(parent.getIntent().getBooleanExtra(ChangeMode.NO_COMPARE, false)){
             //If we dont want to compare filter to a string we return here

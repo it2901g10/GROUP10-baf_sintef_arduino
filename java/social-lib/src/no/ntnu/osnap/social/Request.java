@@ -97,6 +97,12 @@ public class Request {
 		 * in their response.
 		 */
 		MESSAGE_STREAM,
+		/**
+		 * Request to obtain a message's data.
+		 * The message whose data is to be retrieved must be bundled with the
+		 * request. Social services shall bundle one Message model with their
+		 * response.
+		 */
 		MESSAGE_DATA,
 		/**
 		 * Request to obtain the list of notifications for the logged-in user.
@@ -125,7 +131,17 @@ public class Request {
 		 * post a message must be bundled with the request. Parameters as
 		 * required by the network.
 		 */
-		POST_GROUP_MESSAGE
+		POST_GROUP_MESSAGE;
+		
+		/**
+		 * Returns {@code true} if this request is a POST request, false
+		 * otherwise.
+		 */
+		public final boolean isPostRequest() {
+			boolean ret = this.equals(POST_MESSAGE);
+			ret = ret || this.equals(POST_GROUP_MESSAGE);
+			return ret;
+		}
 	}
 
 	private Request() {
@@ -133,7 +149,57 @@ public class Request {
 	}
 
 	/**
-	 * Constructs a {@link Request} from an incoming {@link Message}.
+	 * Constructs a request with a given {@link RequestCode}.
+	 *
+	 * @param reqCode the code of the request
+	 */
+	public Request(RequestCode reqCode) {
+
+		mBundle = new Bundle();
+		mBundle.putString("request-code", reqCode.name());
+	}
+
+	/**
+	 * Constructs a request and bundles a model with it.
+	 *
+	 * @param reqCode code of the request
+	 * @param model model to be bundled. Can be {@code null}.
+	 */
+	public Request(RequestCode reqCode, Model model) {
+
+		mBundle = new Bundle();
+
+		mBundle.putString("request-code", reqCode.name());
+
+		if (model != null) {
+			mBundle.putString("model", model.toString());
+		}
+	}
+
+	/**
+	 * Constructs a request and bundles a model and parameters with it.
+	 *
+	 * @param reqCode the request code
+	 * @param model model to be bundled with the request. Can be {@code null}.
+	 * @param params parameters for the request. Can be {@code null}.
+	 */
+	public Request(RequestCode reqCode, Model model, Bundle params) {
+
+		mBundle = new Bundle();
+		mBundle.putString("request-code", reqCode.name());
+
+		if (model != null) {
+			mBundle.putString("model", model.toString());
+		}
+
+		if (params != null) {
+			mBundle.putBundle("params", params);
+		}
+	}
+	
+	/**
+	 * Helper function.
+	 * Constructs a {@link Request} from an incoming Android {@link Message}.
 	 *
 	 * @param msg the message from which to build the {@link Request}
 	 */
@@ -154,60 +220,19 @@ public class Request {
 	}
 
 	/**
-	 * Constructs a request with a given {@link RequestCode}.
-	 *
-	 * @param reqCode the code of the request
-	 */
-	public Request(RequestCode reqCode) {
-
-		mBundle = new Bundle();
-		mBundle.putString("request-code", reqCode.name());
-	}
-
-	/**
-	 * Constructs a request and bundles a model with it.
-	 *
-	 * @param reqCode the code of the request
-	 * @param model the model to be bundled
-	 */
-	public Request(RequestCode reqCode, Model model) {
-
-		mBundle = new Bundle();
-
-		mBundle.putString("request-code", reqCode.name());
-
-		if (model != null) {
-			mBundle.putString("model", model.toString());
-		}
-	}
-
-	/**
-	 * Constructs a request and bundles a model and parameters with it.
-	 *
-	 * @param reqCode the request code
-	 * @param model model to be bundled with the request
-	 * @param params parameters for the request
-	 */
-	public Request(RequestCode reqCode, Model model, Bundle params) {
-
-		mBundle = new Bundle();
-		mBundle.putString("request-code", reqCode.name());
-
-		if (model != null) {
-			mBundle.putString("model", model.toString());
-		}
-
-		if (params != null) {
-			mBundle.putBundle("params", params);
-		}
-	}
-
-	/**
 	 * Returns the {@link RequestCode} of this request.
+	 * If the request has an invalid request code, {@link RequestCode#SELF}
+	 * is returned.
 	 */
 	public RequestCode getRequestCode() {
+		RequestCode ret = RequestCode.SELF;
 		String buf = mBundle.getString("request-code");
-		return RequestCode.valueOf(buf);
+		try {
+			ret = RequestCode.valueOf(buf);
+		} catch (IllegalArgumentException ex) {
+			Log.e(TAG, ex.toString());
+		}
+		return ret;
 	}
 
 	/**

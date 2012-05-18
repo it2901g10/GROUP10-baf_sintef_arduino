@@ -23,8 +23,7 @@ import android.util.Log;
  * oSNAP class representing a Social service, which is an Android service that
  * handles prototypes requests. To use it, extend it and implement
  * {@link #handleRequest(Request )} and {@link #handlePostRequest(Request )}.
- * SocialService will invoke these methods to obtain a {@link Response} to send
- * back.
+ * Requests are processed one at a time.
  *
  * @author Emanuele 'lemrey' Di Santo
  */
@@ -42,6 +41,15 @@ public class SocialService extends Service {
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
+	/**
+	 * BroadcastReceiver for discovery intents.
+	 */
+	private BroadcastReceiver broadcastRcv;
+	/**
+	 * Constants for Android messages
+	 */
+	private final int DISCOVERY_REPLY = 0;
+	private final int RESPONSE = 1;
 
 	/**
 	 * Called by the system when the service is first started. Subclasses must
@@ -52,8 +60,15 @@ public class SocialService extends Service {
 		TAG = this.getClass().getSimpleName();
 		Log.d(TAG, "Started");
 
-		registerReceiver(new BroadcastRcv(),
+		broadcastRcv = new BroadcastRcv();
+		registerReceiver(broadcastRcv,
 				new IntentFilter("android.intent.action.SOCIAL"));
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(broadcastRcv);
 	}
 
 	/**
@@ -67,7 +82,7 @@ public class SocialService extends Service {
 
 	/**
 	 * Sets the Social service name, which is used by prototypes to identify the
-	 * service.
+	 * service and send requests to it.
 	 *
 	 * @param name the name to be published to prototypes
 	 */
@@ -80,10 +95,11 @@ public class SocialService extends Service {
 	 */
 	private class IncomingHandler extends Handler {
 
+		private final int GET_REQUEST = 1;
+		private final int POST_REQUEST = 2;
+
 		@Override
 		public void handleMessage(Message msg) {
-
-			//Log.d(TAG, "handleMessage()");
 
 			Message reply;
 			Response response = null;
@@ -94,12 +110,12 @@ public class SocialService extends Service {
 
 			switch (msg.what) {
 
-				case 1: { // Request (GET)
+				case GET_REQUEST: { // Request (GET)
 					response = handleRequest(req);
 				}
 				break;
 
-				case 2: { // Request (POST)
+				case POST_REQUEST: { // Request (POST)
 					response = handlePostRequest(req);
 				}
 				break;
@@ -110,7 +126,7 @@ public class SocialService extends Service {
 
 			// send back the response
 			if (response != null) {
-				reply = Message.obtain(null, 1, response.getBundle());
+				reply = Message.obtain(null, RESPONSE, response.getBundle());
 				reply.arg1 = msg.arg1; //copy the id
 				try {
 					msg.replyTo.send(reply);
@@ -124,9 +140,9 @@ public class SocialService extends Service {
 	/**
 	 * This method is invoked by the SocialService to handle incoming requests
 	 * to fetch data from the social network. This method should return an
-	 * appropriate {@link Response} object to be returned to the Prototype who
-	 * made the request. Only non-{@code null} {@link Response} objects are sent
-	 * back to the Prototype. If a request is not supported by the
+	 * appropriate {@link Response} object to be returned to the {@link Prototype}
+	 * who made the request. Only non-{@code null} {@link Response} objects are
+	 * sent back to the Prototype. If a request is not supported by the
 	 * SocialService, this function should return a response with status
 	 * NOT_SUPPORTED. Only one request is processed at a time.
 	 *
@@ -134,7 +150,9 @@ public class SocialService extends Service {
 	 * @return a {@link Response} containing the data requested
 	 */
 	protected Response handleRequest(Request req) {
-		return null;
+		Response ret = new Response();
+		ret.setStatus(Response.Status.NOT_SUPPORTED);
+		return ret;
 	}
 
 	/**
@@ -145,7 +163,9 @@ public class SocialService extends Service {
 	 * @return a {@link Response}
 	 */
 	protected Response handlePostRequest(Request req) {
-		return null;
+		Response ret = new Response();
+		ret.setStatus(Response.Status.NOT_SUPPORTED);
+		return ret;
 	}
 
 	/**
@@ -164,16 +184,14 @@ public class SocialService extends Service {
 				Log.d(TAG, "Discovered");
 				Bundle bundle = new Bundle();
 				Bundle extras = intent.getExtras();
+
+				// get the messenger to reply to
 				Messenger messenger = extras.getParcelable("replyTo");
 
-				/*
-				 * craft a Message object containg our Messenger and service
-				 * name and send it back to the Messenger bundled with the
-				 * broadcast
-				 */
+				//send a Message object containg our Messenger and service
 				try {
 					bundle.putString("name", mName);
-					Message msg = Message.obtain(null, 0, bundle);
+					Message msg = Message.obtain(null, DISCOVERY_REPLY, bundle);
 					msg.replyTo = SocialService.this.mMessenger;
 					messenger.send(msg);
 				} catch (RemoteException ex) {

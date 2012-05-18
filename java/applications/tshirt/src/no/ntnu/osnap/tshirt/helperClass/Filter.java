@@ -20,7 +20,7 @@ import no.ntnu.osnap.social.models.Model;
 
 /**
  * A filter contains information on what to request from a social service and what to compare the results to </br>
- * Example, the filter "getLatestPost:getSender:getName:=:David" checks if the creator of the latest post is called David
+ * Example, the filter "getLatestMessage:getSender:getName:=:David" checks if the creator of the latest post is called David
  *
  */
 

@@ -7,6 +7,7 @@ import no.ntnu.osnap.social.Response;
 import no.ntnu.osnap.social.listeners.ResponseListener;
 import no.ntnu.osnap.social.models.Message;
 import no.ntnu.osnap.social.models.Model;
+import no.ntnu.osnap.social.models.Notification;
 import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.R;
 
@@ -18,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
  * 
  * */
 
-//This class use lots of recursion
+//This class makes use of recursion
  public class RuleArduinoTransfer {
     
     private Prototype prototype;
@@ -68,11 +69,17 @@ import java.util.concurrent.CountDownLatch;
             decrList[i] = list[i+1];
         }
 
-        if(filterPart.equals(context.getString(R.string.getLatestPost))){
+        if(filterPart.equals(context.getString(R.string.getLatestMessage))){
             getLatestMessageFromSocialService(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getSender))){
             getMessageSender(model, decrList);
+        }
+        else if(filterPart.equals(context.getString(R.string.getLoggedInUser))){
+            getLoggedInUser(decrList);
+        }
+        else if(filterPart.equals(context.getString(R.string.getLatestNotification))){
+            getLatestNotificationFromSocialService(decrList);
         }
         else if(filterPart.equals(context.getString(R.string.getMessage))){
             getMessageText(model);
@@ -80,9 +87,22 @@ import java.util.concurrent.CountDownLatch;
         else if(filterPart.equals(context.getString(R.string.getName))){
             getPersonName(model);
         }
+        else if(filterPart.equals(context.getString(R.string.getLink))){
+            getPersonName(model);
+        }
         else{
             L.e("ERR: Unknown filter " + filterPart);
         }
+    }
+
+    private void getLatestNotificationFromSocialService(String[] decrList) {
+        Request request = new Request(Request.RequestCode.NOTIFICATIONS);
+        prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
+    }
+
+    private void getLoggedInUser(String[] decrList) {
+        Request request = new Request(Request.RequestCode.SELF);
+        prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
     }
 
     /** Get the latest message in stream for user logged in given serviceName */
@@ -96,8 +116,11 @@ import java.util.concurrent.CountDownLatch;
         if(model instanceof Message){
             Request request = new Request(Request.RequestCode.PERSON_DATA, ((Message)model).getSenderAsPerson());
             prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
-        }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
-
+        }
+        else if(model instanceof Notification){
+            Request request = new Request(Request.RequestCode.PERSON_DATA, ((Notification)model).getSenderAsPerson());
+            prototype.sendRequest(serviceName,request,getNewResponseListener(decrList));
+        } else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
     }
 
     /** Get name of person in model */
@@ -113,8 +136,23 @@ import java.util.concurrent.CountDownLatch;
         if(model instanceof Message){
             Message message = (Message)model;
             checkFilterInitNext(message.getText());
-        }else {L.e("Err, model was not instance of Message but " + model.getClass()); }
+        }
+        else if(model instanceof Notification){
+            Notification notification = (Notification)model;
+            checkFilterInitNext(notification.getMessage());
+        }
+        else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
     }
+
+    private void getLink(Model model) {
+        if(model instanceof Notification){
+            Notification notification = (Notification)model;
+            checkFilterInitNext(notification.getLink().toString());
+        }
+        else {L.e("Err, model was not instance of Message or Notification but " + model.getClass()); }
+
+    }
+
 
     /** Compare filters to results from social service,
      * if all are satisfied, get */
@@ -124,11 +162,16 @@ import java.util.concurrent.CountDownLatch;
         if(linkedList.size() == 0){
             resultToOutput = result;
             L.i("Rule Passed: got output " + resultToOutput + " and sent to " + rule.getOutputDevice());
-            singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            if(singleton.isConnected()){
+                singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
+            }
+            else{
+                L.i("App is not connected to arduino");
+            }
             return;
 
         }
-        
+
         Filter f = linkedList.poll();
         if(!f.isFilterValid(result)){
             L.i("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() +  " " + f);
@@ -143,11 +186,7 @@ import java.util.concurrent.CountDownLatch;
         else{
             recursiveFiltering(linkedList.peek().filter.split(":"),null);
         }
-
-        
-        
     }
-
 
     private ResponseListener getNewResponseListener(final String[] decrList){
         return new ResponseListener() {
@@ -158,7 +197,14 @@ import java.util.concurrent.CountDownLatch;
                         L.e("ERROR, FILTER IS NOT COMPLETE");
                         return;
                     }
-                    recursiveFiltering(decrList, response.getModel());
+
+                    L.i(response.toString());
+                    if(response.getModel() != null){
+                        recursiveFiltering(decrList, response.getModel());
+                    }
+                    else{
+                        L.e("Model received is empty");
+                    }
                 }
                 else{
                     L.e("Response from social service was not COMPLETED but " + response.getStatus().name());

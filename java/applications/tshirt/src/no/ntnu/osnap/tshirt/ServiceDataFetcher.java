@@ -29,7 +29,6 @@ public class ServiceDataFetcher extends Service {
     
     Timer timer;
     Prototype prototype;
-    ArrayList<String> list;
     TshirtSingleton singleton;
 
 
@@ -40,12 +39,22 @@ public class ServiceDataFetcher extends Service {
 
     @Override
     public void onCreate() {
+
+
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
         singleton = TshirtSingleton.getInstance(this);
 
-        list = new ArrayList<String>();
+        prototype = new Prototype(this, "ServiceDataFetcher Connection");
+
+        //Dummy listener
+        prototype.discoverServices(null);
         L.i("ServiceTshirtApp started");
-        prototype = new Prototype(this, createConnectionListener());
-        prototype.discoverServices();
+        singleton.connect();
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -57,7 +66,7 @@ public class ServiceDataFetcher extends Service {
         };
         timer = new Timer();
         timer.schedule(task, 1000, 10000);
-        L.i("Timer to fetch data from social service is currently DISABLED");
+
     }
 
     private boolean isClearToGo() {
@@ -78,12 +87,13 @@ public class ServiceDataFetcher extends Service {
     private void iterateRulesAndCallSocialService() {
 
         Rule[] rules = singleton.database.getRules();
-
+        if(rules.length == 0){
+            L.i("There are no rules in database to check");
+            return;
+        }
         for (int i = 0; i < rules.length; i++) {
             Rule rule = rules[i];
             activateRule(rule);
-            
-            
         }
     }
 
@@ -91,21 +101,15 @@ public class ServiceDataFetcher extends Service {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.serviceName, rule)).start();
+                (new RuleArduinoTransfer(prototype, ServiceDataFetcher.this, singleton.getServiceName(), rule)).start();
             }
         });
         t.start();
     }
 
-    private ConnectionListener createConnectionListener(){
-
-        return new ConnectionListener() {
-            @Override
-            public void onConnected(String name) {
-                L.i("TshirtService found service " + name);
-                list.add(name);
-            }
-        };
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        singleton.disconnect();
     }
 }

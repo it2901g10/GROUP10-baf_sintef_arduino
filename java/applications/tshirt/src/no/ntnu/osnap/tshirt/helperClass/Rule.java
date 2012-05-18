@@ -29,10 +29,10 @@ public class Rule implements Parcelable{
     public String name;
     private String outputFilter;
     private String outputDevice;
-    private int id;
+    private long id;
     private Filter[] filters;
 
-    public Rule(String name, String outputFilter, String outputDevice, Filter[] filters, int id) {
+    public Rule(String name, String outputFilter, String outputDevice, Filter[] filters, long id) {
         this.name = name;
         this.outputFilter = outputFilter;
         this.outputDevice = outputDevice;
@@ -44,7 +44,7 @@ public class Rule implements Parcelable{
         name = in.readString();
         outputFilter = in.readString();
         outputDevice = in.readString();
-        id = in.readInt();
+        id = in.readLong();
         Parcelable[] par = in.readParcelableArray(Filter.class.getClassLoader());
         filters = new Filter[par.length];
         for (int i = 0; i < par.length; i++) {
@@ -62,7 +62,7 @@ public class Rule implements Parcelable{
         parcel.writeString(name);
         parcel.writeString(outputFilter);
         parcel.writeString(outputDevice);
-        parcel.writeInt(id);
+        parcel.writeLong(id);
         parcel.writeParcelableArray(filters, 0);
 
     }
@@ -89,7 +89,7 @@ public class Rule implements Parcelable{
         return outputDevice;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

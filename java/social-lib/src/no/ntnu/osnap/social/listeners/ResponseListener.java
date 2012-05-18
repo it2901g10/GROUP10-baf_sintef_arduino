@@ -16,7 +16,7 @@ package no.ntnu.osnap.social.listeners;
 import no.ntnu.osnap.social.Response;
 
 /**
- * An interface for prototype's requests callbacks.
+ * An interface for SocialService incoming {@link Response} objects.
  
  * @author Emanuele 'lemrey' Di Santo
  */

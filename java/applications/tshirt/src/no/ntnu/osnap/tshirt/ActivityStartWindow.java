@@ -14,44 +14,65 @@
 package no.ntnu.osnap.tshirt;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.listeners.ConnectionListener;
 import no.ntnu.osnap.tshirt.helperClass.L;
-import no.ntnu.osnap.tshirt.helperClass.Rule;
-import no.ntnu.osnap.tshirt.helperClass.RuleArduinoTransfer;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ActivityStartWindow extends Activity implements View.OnClickListener{
 
     TshirtSingleton singleton;
     ArrayList<String> socialServiceList;
     Prototype prototype;
+    Timer timer;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_window);
         singleton = TshirtSingleton.getInstance(this);
-        
         socialServiceList = new ArrayList<String>();
-        
+        timer = new Timer();
         initComp();
+        checkConnection();
     }
 
-    private void initComp() {
+    private void checkConnection() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                
+                final String message = singleton.isConnected()? "Is connected to Arduino": "Not connected to Arduino";
+                ActivityStartWindow.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        TextView tv= (TextView)findViewById(R.id.sw_labelConnectionStatus);
+                        tv.setText(message);
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 1000, 10000);
+    }
+    
+    
 
+    private void initComp() {
         setOnClickListeners();
         ToggleButton toggleButton = (ToggleButton)findViewById(R.id.sw_toggleButtonActiveService);
         toggleButton.setChecked(singleton.serviceActivated);
+        
+        if(singleton.getServiceName() != null){
+            updateSelectedServiceView(singleton.getServiceName());
+        }
     }
 
     private void setOnClickListeners() {
@@ -67,24 +88,59 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
         ToggleButton toggleButton = (ToggleButton)findViewById(R.id.sw_toggleButtonActiveService);
         toggleButton.setOnClickListener(this);
     }
-
+    /** Displays radioButtons for found social services */
     private void updateServiceListView() {
-        final TextView view = (TextView)findViewById(R.id.sw_labelFoundServicesList);
+        final TextView selectedService = (TextView)findViewById(R.id.sw_labelServiceSelect);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(socialServiceList.size() == 0){
-                    view.setText("No service found");
+                    selectedService.setText("No service found");
                     return;
                 }
-
-                String services = "";
-                for (int i = 0; i < socialServiceList.size(); i++) {
-                    services += socialServiceList.get(i) + ((i < socialServiceList.size()-1)?"\n":"");
+                if(singleton.getServiceName() != null){
+                    updateSelectedServiceView(singleton.getServiceName());
                 }
-                view.setText(services);
+                else{
+                    selectedService.setText("No selected Service");
+                }
+
+                RadioGroup group = (RadioGroup)findViewById(R.id.sw_radioGroupService);
+                group.clearCheck();
+                group.removeAllViews();
+                for (int i = 0; i < socialServiceList.size(); i++) {
+                    RadioButton button = new RadioButton(ActivityStartWindow.this);
+                    button.setText(socialServiceList.get(i));
+                    button.setOnClickListener(getRadioOnClickListener(socialServiceList.get(i)));
+                    LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(
+                            RadioGroup.LayoutParams.WRAP_CONTENT,
+                            RadioGroup.LayoutParams.WRAP_CONTENT);
+                    group.addView(button, i, layoutParams);
+                }
             }
         });
+    }
+
+    /** Updates TextView */
+    private void updateSelectedServiceView(final String serviceName){
+        ActivityStartWindow.this.runOnUiThread(new Runnable() {
+            public void run() {
+                TextView selectedService = (TextView)findViewById(R.id.sw_labelServiceSelect);
+                selectedService.setText("App will get data from " + serviceName);
+            }
+        });
+    };
+
+    /** Listener for RadioButtons */
+    private View.OnClickListener getRadioOnClickListener(final String serviceName) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                singleton.setServiceName(serviceName);
+                updateSelectedServiceView(serviceName);
+
+            }
+        };
     }
 
     @Override
@@ -96,8 +152,13 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 startActivity(i);
                 break;
             case R.id.sw_buttonConnection:
-                singleton.setServiceName(socialServiceList.get(0));
-                singleton.toggleArduinoConnection();
+                if(singleton.getServiceName() != null){
+                    singleton.setServiceName(singleton.getServiceName());
+                    singleton.initBTConnection(this);
+                }
+                else{
+                    quickToastMessage("Please search for a service first");
+                }
                 break;
             case R.id.sw_toggleButtonActiveService:
 
@@ -124,11 +185,30 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                         socialServiceList.add(name);
                         updateServiceListView();
                     }
+
+                    @Override
+                    public void onConnectionFailed() {
+                        L.i("Activity found no service");
+
+                    }
                 };
-                prototype = new Prototype(ActivityStartWindow.this, listener);
-                prototype.discoverServices();
+                prototype = new Prototype(ActivityStartWindow.this, "Service Discovery");
+                prototype.discoverServices( listener);
                 break;
         }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        checkConnection();
+    }
+
+    private void quickToastMessage(final String message) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(ActivityStartWindow.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

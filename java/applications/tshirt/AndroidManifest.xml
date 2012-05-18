@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="no.ntnu.osnap.tshirt">
-    <application android:theme="@android:style/Theme.Light">
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <application android:theme="@android:style/Theme.Light"
+            android:icon="@drawable/icon128">
         <activity android:name=".ActivityStartWindow" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,6 +17,8 @@
         <activity android:name=".filterMode.FilterMessage"/>
         <activity android:name=".filterMode.FilterCompare"/>
         <activity android:name=".filterMode.FilterPerson"/>
+        <activity android:name=".filterMode.FilterNotification"/>
+        <activity android:name=".filterMode.FilterStart"/>
 
         <service android:name=".ServiceDataFetcher"/>
 

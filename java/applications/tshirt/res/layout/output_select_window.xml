@@ -1,80 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        android:id="@+id/os_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView
-            android:id="@+id/os_labelFilterOptions"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/os_scrollView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:text="Filter Options"
-            android:textSize="16sp"/>
-    <TextView
-            android:id="@+id/os_labelCurrentFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="No filter set yet"
-            android:textStyle="bold"/>
-    <Button
-            android:id="@+id/os_buttonSetFilter"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <TableLayout
+            android:id="@+id/os_layout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Set Output Filter"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:textStyle="bold"
-            android:height="50dp"
-            android:background="@drawable/button_shape"/>
-
-    <TextView
-            android:id="@+id/os_labelOutput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/dark_gray"
-            android:padding="5dp"
-            android:text="Output"
-            android:textSize="16sp"/>
-    <RadioGroup
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/os_radioGroupOutput">
-        <RadioButton
-                android:id="@+id/os_radioLED"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="LED"/>
-        <RadioButton
-                android:id="@+id/os_radioLCD"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="LCD Display"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/os_labelFilterOptions"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Filter Options"
                 android:textSize="16sp"/>
-        <RadioButton
-                android:id="@+id/os_radioVibrator"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Vibrator"/>
-        <RadioButton
-                android:id="@+id/os_radioSpeaker"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Speaker"/>
-    </RadioGroup>
-    <Button
-            android:id="@+id/os_buttonSaveOutput"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Save Output Settings"
-            android:textSize="16sp"
-            android:typeface="sans"
-            android:textStyle="bold"
-            android:height="50dp"
-            android:background="@drawable/button_shape"/>
-</LinearLayout>
+        <TextView
+                android:id="@+id/os_labelCurrentFilter"
+                android:padding="5dp"
+                android:text="No filter set yet"
+                android:textStyle="bold"/>
+        <Button
+                android:id="@+id/os_buttonSetFilter"
+                android:text="Set Output Filter"
+                android:textSize="16sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"/>
+
+        <TextView
+                android:id="@+id/os_labelOutput"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Output"
+                android:textSize="16sp"/>
+        <RadioGroup
+                android:id="@+id/os_radioGroupOutput">
+            <RadioButton
+                    android:id="@+id/os_radioLED"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LED"/>
+            <RadioButton
+                    android:id="@+id/os_radioLCD"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LCD Display"/>
+            <RadioButton
+                    android:id="@+id/os_radioVibrator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Vibrator"/>
+            <RadioButton
+                    android:id="@+id/os_radioSpeaker"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Speaker"/>
+        </RadioGroup>
+        <Button
+                android:id="@+id/os_buttonSaveOutput"
+                android:text="Save Output Settings"
+                android:textSize="16sp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"/>
+    </TableLayout>
+</ScrollView>

@@ -51,12 +51,14 @@ public class RuleListAdapter extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
-        //layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT, 1));
 
         TextView textView = new TextView(context);
         textView.setText(rules[i].name);
+        textView.setPadding(5,5,5,5);
+        textView.setTextSize(18);
 
         layout.addView(textView);
         return layout;
     }
+
 }

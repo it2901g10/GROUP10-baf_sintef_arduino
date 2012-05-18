@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import no.ntnu.osnap.social.*;
 import no.ntnu.osnap.social.listeners.*;
@@ -18,7 +18,8 @@ public class SampleActivity extends Activity implements View.OnClickListener {
 
 	private final String TAG = "Sample-Activity";
 	private TextView mText;
-	private Button mButton;
+	private Button mButtonRead;
+	private Button mButtonDiscovery;
 	private Prototype mPrototype;
 	private ArrayList<String> mServices;
 
@@ -33,45 +34,92 @@ public class SampleActivity extends Activity implements View.OnClickListener {
 		mServices = new ArrayList<String>();
 
 		mText = (TextView) findViewById(R.id.txt);
-		mButton = (Button) findViewById(R.id.read);
-		mButton.setOnClickListener(this);
+
+		mButtonRead = (Button) findViewById(R.id.read);
+		mButtonDiscovery = (Button) findViewById(R.id.discovery);
+
+		mButtonRead.setOnClickListener(this);
+		mButtonDiscovery.setOnClickListener(this);
 
 		// Init the prototype
-		mPrototype = new Prototype(this, new ServiceListener());
-		mPrototype.setPrototypeName("SamplePrototype");
+		mPrototype = new Prototype(this, "SamplePrototype");
 
-		// Send a discovery message
-		mPrototype.discoverServices();
 	}
 
+	private int counter;
 	// Handle clicks on activity's components
-	public void onClick(View arg0) {
+	public void onClick(View button) {
 
-		Request r = new Request(Request.RequestCode.FRIENDS);
-		mPrototype.sendRequest("Facebook", r, new FriendsListener());
-		r = new Request(Request.RequestCode.MESSAGE_STREAM);
-		mPrototype.sendRequest("Facebook", r, new MessageListener());
-		r = new Request(Request.RequestCode.MESSAGES);
-		mPrototype.sendRequest("Facebook", r, new MessageListener());
+		switch (button.getId()) {
+
+			case R.id.read: {
+				Request r = new Request(Request.RequestCode.SELF);
+				mPrototype.sendRequest("Facebook", r, new SelfListener());
+				
+				Bundle param = new Bundle();
+				param.putString("message", "hi there! this test " + counter++);
+				r = new Request(Request.RequestCode.POST_MESSAGE, null, param);
+				
+				mPrototype.sendRequest("Facebook", r, null);
+				
+				//r = new Request(Request.RequestCode.MESSAGE_STREAM);
+				//mPrototype.sendRequest("Facebook", r, new MessageListener());
+			} break;
+
+			case R.id.discovery: {
+				// Send a discovery message
+				LinearLayout linearLayout =
+							(LinearLayout)findViewById(R.id.services);
+				linearLayout.removeAllViews();
+				mPrototype.discoverServices(new ServiceListener());
+			} break;
+		}
 	}
 
-	// Here we handle a discovery reply
-	// The service replies with it's name
+	// The discovery callback
 	private class ServiceListener implements ConnectionListener {
 
+		// the service replies with its name
 		public void onConnected(final String name) {
+			
+			// add the service to our service list
 			mServices.add(name);
+			
 			SampleActivity.this.runOnUiThread(new Runnable() {
 
 				public void run() {
-					mText.setText("Found: " + name);
-					mButton.setVisibility(View.VISIBLE);
+					LinearLayout linearLayout =
+							(LinearLayout)findViewById(R.id.services);
+					
+					TextView serviceFound = new TextView(SampleActivity.this);
+					serviceFound.setText(name);
+					
+					linearLayout.addView(serviceFound);
+					mButtonRead.setVisibility(View.VISIBLE);
+				}
+			});
+		}
+
+		// no service replied within 3 seconds
+		public void onConnectionFailed() {
+			SampleActivity.this.runOnUiThread(new Runnable() {
+
+				public void run() {
+					LinearLayout linearLayout =
+							(LinearLayout)findViewById(R.id.services);
+					
+					TextView serviceFound = new TextView(SampleActivity.this);
+					serviceFound.setText("No service found");
+					
+					linearLayout.addView(serviceFound);
+					mButtonRead.setVisibility(View.INVISIBLE);
 				}
 			});
 		}
 	}
 
-	// Here we listen for the response
+	// Response listeners
+	
 	private class SelfListener implements ResponseListener {
 
 		public void onComplete(Response response) {

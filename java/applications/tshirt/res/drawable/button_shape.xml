@@ -4,6 +4,7 @@
     <!-- pressed -->
     <item android:state_pressed="true" >
         <shape>
+            <size android:height="50dp"/>
             <stroke android:width="6px" android:color="#555" />
             <corners android:radius="16dp" />
             <gradient android:startColor="@color/blue" android:endColor="@color/dark_blue" android:angle="270" />
@@ -13,6 +14,7 @@
     <!-- focused -->
     <item android:state_focused="true" >
         <shape>
+            <size android:height="50dp"/>
             <stroke android:width="6px" android:color="#DDD" />
             <corners android:radius="17dp" />
             <gradient android:startColor="@color/light_blue" android:endColor="@color/blue" android:angle="270" />
@@ -22,8 +24,8 @@
     <item android:state_checkable="true" >
 
         <shape>
+            <size android:height="50dp"/>
             <stroke android:width="6px" android:color="#DDD" />
-
             <corners android:radius="17dp" />
             <gradient android:startColor="@color/light_blue" android:endColor="@color/blue" android:angle="270" />
         </shape>
@@ -31,6 +33,7 @@
     <!-- default -->
     <item>
         <shape>
+            <size android:height="50dp"/>
             <stroke android:width="6px" android:color="#0000"/>
             <corners android:radius="17dp" />
             <gradient android:startColor="@color/light_blue" android:endColor="@color/blue" android:angle="270" />

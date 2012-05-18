@@ -56,6 +56,8 @@ public class RulesDB {
     private final Context mCtx;
 
 
+
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context) {
@@ -88,6 +90,13 @@ public class RulesDB {
             db.execSQL("DROP TABLE IF EXISTS filters");
             onCreate(db);
         }
+    }
+    
+    public void clearDatabase(){
+            mDb.execSQL("DROP TABLE IF EXISTS rules");
+            mDb.execSQL("DROP TABLE IF EXISTS filters");
+            mDb.execSQL(DATABASE_CREATE_FILTER);
+            mDb.execSQL(DATABASE_CREATE_RULES);
     }
 
     /**
@@ -135,7 +144,7 @@ public class RulesDB {
 
         return rowId;
     }
-    public Cursor fetchAllRules() {
+    private Cursor fetchAllRules() {
         return mDb.query(DATABASE_TABLE_RULES, new String[] {KEY_ROWID, KEY_RULE, KEY_FILTER,
                 KEY_OUTPUT}, null, null, null, null, null);
     }
@@ -182,25 +191,22 @@ public class RulesDB {
         
     }
 
-    public boolean updateRule(long row, String rule, String output, String[] filters) {
-        ContentValues values = new ContentValues();
+    private boolean updateRule(long row, String rule, String outputDevice, String outputFilter, Filter[] filters) {
+        ContentValues values;
         deleteFiltersConnectedTo(row);
 
         for (int i = 0; i < filters.length; i++) {
             values = new ContentValues();
-            values.put(KEY_FILTER, filters[i]);
-
+            values.put(KEY_FILTER, filters[i].filter);
             values.put(KEY_CONNECTION, row);
-
             mDb.insert(DATABASE_TABLE_FILTERS, null, values);
-
 
         }
         values = new ContentValues();
+        values.put(KEY_ROWID, row);
         values.put(KEY_RULE, rule);
-        values.put(KEY_OUTPUT, output);
-
-
+        values.put(KEY_FILTER, outputFilter);
+        values.put(KEY_OUTPUT, outputDevice);
 
         return mDb.update(DATABASE_TABLE_RULES, values, KEY_ROWID + "=" + row, null) > 0;
     }
@@ -209,7 +215,7 @@ public class RulesDB {
         return mDb.delete(DATABASE_TABLE_FILTERS, KEY_CONNECTION + "=" + row,null) > 0;
     }
 
-    public Cursor fetchAllFiltersFromRule(long ruleID) {
+    private Cursor fetchAllFiltersFromRule(long ruleID) {
         return mDb.query(DATABASE_TABLE_FILTERS, new String[] {KEY_ROWID,
                 KEY_FILTER}, KEY_CONNECTION + "=" + ruleID, null, null, null, null);
     }
@@ -232,5 +238,8 @@ public class RulesDB {
         L.i("Inserted new rule (" + rule + ") in database");
         return rowId;
 
+    }
+    public void updateRule(Rule rule) {
+        updateRule(rule.getId(), rule.getName(), rule.getOutputDevice(), rule.getOutputFilter(), rule.getFilters());
     }
 }
