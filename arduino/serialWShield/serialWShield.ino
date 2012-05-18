@@ -1,4 +1,4 @@
-//#define LCD 0
+#define LCD 0
 #define LCD_LINES 2
 #define LCD_COLUMNS 16
 
@@ -13,7 +13,7 @@
 #include <ComputerSerial.h>
 
 #if LCD==0
-	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+	LiquidCrystal lcd(8, 7, 12, 11, 10, 9);
 #elif LCD==1
 	DogLcd lcd(12, 11, 9, 10);
 #elif LCD==2
@@ -33,7 +33,7 @@ void* text(byte flag, byte content[], byte contentSize){
 	digitalWrite(13, toggle ? HIGH : LOW);
 	toggle = !toggle;
 #endif
-}
+} 
 
 void* buttons(byte flag, byte content[], byte contentSize){
 	int *status = (int*)malloc(sizeof(int));
@@ -41,16 +41,26 @@ void* buttons(byte flag, byte content[], byte contentSize){
 	return status;
 }
 
+void* data(byte flag, byte content[],byte contentSize){
+	lcd.setCursor(7, 0);
+	lcd.print("         ");
+	lcd.setCursor(7,0);
+	lcd.print(content[0]);
+}
+
 static unsigned long bytes = 0;
 void setup(){
 	comp.begin(9600);
 	comp.attachFunction(comp.OPCODE_TEXT, &text);
 	comp.attachFunction(comp.OPCODE_SENSOR, &buttons);
-
-        comp.setDeviceInfo("{NAME:\"Anders Arduino Module\", VERSION:\"1.2.0\","
-         "SERVICES:[\"SERVICE_LED_LAMP\", \"SERVICE_LCD_SCREEN\", \"SERVICE_RGB_LAMP\"],"
-         "LINKS:[{\"DEFAULT\":\"No download link\"}]}");
+	comp.attachFunction(comp.OPCODE_DATA, &data);
 	
+	
+	//comp.setDeviceName("Derp");
+	//comp.setDeviceVersion("0.1");
+	//comp.addDeviceService("LED", "good");
+	//comp.addDeviceDownloadLink("DerpOS", "http://google.com");
+
   	pinMode(13, OUTPUT);
 	
 #if LCD==0

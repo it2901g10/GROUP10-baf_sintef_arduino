@@ -46,18 +46,19 @@ public class ProtocolInstruction {
 	}
 	
 	public byte[] getInstructionBytes(){
-		int size = content.length + 3;
+		int size = content.length;
 		
-		byte[] instruction = new byte[size + 1];
+		byte[] instruction = new byte[size + 5];
 		
+		//Packet header
 		instruction[0] = START_BYTE;
-		instruction[1] = (byte)size;
-		instruction[2] = opcode.value;
-		instruction[3] = flag;
+		instruction[1] = (byte) (size >> 8);
+		instruction[2] = (byte) (size & 0xFF);
+		instruction[3] = opcode.value;
+		instruction[4] = flag;
 		
-		for (int i = 4; i < size + 1; ++i){
-			instruction[i] = content[i - 4];
-		}
+		//Payload
+		System.arraycopy(content, 0, instruction, 5, content.length);
 		
 		return instruction;
 	}

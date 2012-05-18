@@ -18,7 +18,8 @@
 
 #include "ComputerSerial.h"
 
-void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], uint8_t contentSize) {
+void* ComputerSerial::placeHolder(uint8_t flag, uint8_t content[], word contentSize)
+{
 	return NULL;
 }
 
@@ -31,12 +32,13 @@ ComputerSerial::ComputerSerial(int baud)
 void ComputerSerial::begin(int baud){
 	Serial.begin(baud);
 
-	for (int i = 0; i < NUM_OPCODES; ++i){
+	for (int i = 0; i < NUM_OPCODES; ++i)
+    {
 		attachFunction(i, &ComputerSerial::placeHolder);
 	}
 }
 
-void ComputerSerial::commandHandler(uint8_t size, uint8_t opcode, uint8_t flag, uint8_t content[]) {
+void ComputerSerial::commandHandler(word size, uint8_t opcode, uint8_t flag, uint8_t content[]) {
 	switch (opcode) {
 		case OPCODE_PING:
 			ping();
@@ -76,29 +78,39 @@ void ComputerSerial::setDeviceVersion(const String &version)
     deviceVersion = version;
 }
 
-void ComputerSerial::addDeviceService(const String &service, const String &pin)
+void ComputerSerial::addDeviceService(const char service[], const char pin[])
 {
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceServices.length() > 0) deviceServices += ", ";
 
     //Append element to array
-    //deviceServices += "\"" + service + "\"";
-	deviceServices += "{ \"id\": \"" + service + "\", \"pins\" :\"" + pin + "\"}";
+	deviceServices += "{ \"id\": \"";
+	deviceServices += service;
+	deviceServices += "\", \"pins\" :\"";
+
+	//Append pins
+	if(sizeof(pin) > 0)  deviceServices += pin;
+	else                 deviceServices += "-1";
+
+    //the end
+	deviceServices += "\"}";;
 
 	// sample: {"name":"service",
 	//			"pins":"1,2,3" }
 
 }
 
-void ComputerSerial::addDeviceDownloadLink(const String &link, const String &platform)
+void ComputerSerial::addDeviceDownloadLink(const char link[], const char platform[])
 {
     //Is the first element in the JSon array? If not we need to add a comma seperator
     if(deviceDownloadLinks.length() > 0) deviceDownloadLinks += ", ";
 
     //Append element to array
-    //deviceDownloadLinks += "{" + platform + ": \"" + link + "\"}";
-
-	deviceDownloadLinks += "{\"" + platform + "\": \"" + link + "\"}";
+	deviceDownloadLinks += "{\"name\":\"";
+    deviceDownloadLinks += platform;
+    deviceDownloadLinks += "\", \"link\":\"";
+    deviceDownloadLinks += link;
+    deviceDownloadLinks += "\"}";
 
 	// sample: {"platform":"link"}
 }
@@ -108,59 +120,66 @@ void ComputerSerial::getDeviceInfo(){
     String deviceInfo;
 
     //Device name
-    //deviceInfo += "{NAME:\"" + deviceName + "\", ";
-	deviceInfo += "{\"name\":\"" + deviceName + "\",";
+	deviceInfo += "{\"name\":\"";
+	deviceInfo += deviceName;
+	deviceInfo += "\",";
 
     //Device version
-    //deviceInfo += "VERSION:\"" + deviceVersion + "\", ";
-	deviceInfo += "\"version\":\"" + deviceVersion + "\",";
+    deviceInfo += "\"version\":\"";
+    deviceInfo += deviceVersion;
+    deviceInfo += "\",";
 
     //Device services
-    //deviceInfo += "SERVICES:[" + deviceServices + "], ";
-	deviceInfo += "\"services\": [" + deviceServices + "],";
+	deviceInfo += "\"services\": [";
+	deviceInfo += deviceServices;
+	deviceInfo += "],";
 
     //Device links
-    //deviceInfo += "LINKS:[" + deviceDownloadLinks + "]}";
-	deviceInfo += "\"links\": [" + deviceName + "]";
+	deviceInfo += "\"links\": [";
+	deviceInfo += deviceDownloadLinks;
+	deviceInfo += "]}";
 
-	deviceInfo += "}";
-
-    //send string representation of device info
-	char response[deviceInfo.length()];
-	deviceInfo.toCharArray(response, deviceInfo.length());
+    word len = deviceInfo.length();
 
     //send response back
-	ack(OPCODE_DEVICE_INFO, (uint8_t*)response, deviceInfo.length());
+	Serial.write(START_BYTE);
+	Serial.write(highByte(len));
+	Serial.write(lowByte(len));
+	Serial.write(OPCODE_RESPONSE);
+	Serial.write(OPCODE_DEVICE_INFO);
+
+    for(word i = 0; i < len; i++)
+    {
+        Serial.write(deviceInfo[i]);
+    }
 }
 
-void ComputerSerial::ack(uint8_t opcode){
+void ComputerSerial::ack(uint8_t opcode, uint8_t content[], word contentSize)
+{
+    //Packet header
 	Serial.write(START_BYTE);
-	Serial.write(4);
+	Serial.write(highByte(contentSize));
+	Serial.write(lowByte(contentSize));
 	Serial.write(OPCODE_RESPONSE);
 	Serial.write(opcode);
-	Serial.write(NULL_BYTE);
-}
 
-void ComputerSerial::ack(uint8_t opcode, uint8_t content[], uint8_t contentSize){
-	Serial.write(START_BYTE);
-	Serial.write(contentSize + 3);
-	Serial.write(OPCODE_RESPONSE);
-	Serial.write(opcode);
-	for (int i = 0; i < contentSize; ++i){
+	//Packet Payload
+	for (int i = 0; i < contentSize; i++)
+    {
 		Serial.write(content[i]);
 	}
 }
 
-void ComputerSerial::ping() {
+void ComputerSerial::ping()
+{
 	// Send ping response
-	//Serial.write((byte)0x00);
-	//Serial.write((byte)0xFF);
 	ack(OPCODE_PING);
 }
 
-void ComputerSerial::text(uint8_t size, uint8_t flag, uint8_t content[]) {
+void ComputerSerial::text(word size, uint8_t flag, uint8_t content[])
+{
 	// Print content on display(flag)
-	functions[OPCODE_TEXT](flag, content, size-3);
+	functions[OPCODE_TEXT](flag, content, size);
 	ack(OPCODE_TEXT);
 }
 
@@ -177,8 +196,8 @@ void ComputerSerial::sensor(uint8_t number) {
 	free(status);
 }
 
-void ComputerSerial::data(uint8_t size, uint8_t flag, uint8_t content[]) {
-	functions[OPCODE_DATA](flag, content, size-3);
+void ComputerSerial::data(word size, uint8_t flag, uint8_t content[]) {
+	functions[OPCODE_DATA](flag, content, size);
 	ack(OPCODE_DATA);
 }
 
@@ -202,52 +221,68 @@ void ComputerSerial::reset() {
 }
 
 void ComputerSerial::attachFunction(uint8_t opcode,
-	void* (*handler)(uint8_t flag, uint8_t content[], uint8_t contentSize)){
-		functions[opcode] = handler;
+	void* (*handler)(uint8_t flag, uint8_t content[], word contentSize))
+{
+    functions[opcode] = handler;
 }
 
-void ComputerSerial::serialEvent(){
-	static long time = millis();
-	static int state = STATE_START;
-
-	static uint8_t size = 0;
+void ComputerSerial::serialEvent() {
+    static int state = STATE_START;
+	static long time = 0;
+	static word size = 0;
 	static uint8_t opcode = 0;
 	static uint8_t flag = 0;
-	static uint8_t content[CONTENT_SIZE];
+	static uint8_t *content = NULL;
 	static uint8_t content_counter = 0;
 
-	if (millis() - time > TIMEOUT && state != STATE_START){
+    //Check if there is a timeout
+	if (millis() > time && state != STATE_START) {
 		state = STATE_START;
 	}
-	time = millis();
+	time = millis() + TIMEOUT;
 
-	while(Serial.available()){
-
-		switch (state){
+    //Recieved new data?
+	while(Serial.available())
+    {
+		switch (state)
+		{
 			case STATE_START:
-				if (Serial.read() == START_BYTE){
-					state = STATE_SIZE;
-				}
+				if (Serial.read() == START_BYTE)
+                {
+                    state = STATE_SIZE_HIGH;
+                    if(content != NULL) free(content);
+                }
 				break;
-			case STATE_SIZE:
-				size = Serial.read();
-				if (size > CONTENT_SIZE + 3){
-					state = STATE_START;
-				}
+
+			case STATE_SIZE_HIGH:
+				size = Serial.read() << 8;    //get high byte
+				state = STATE_SIZE_LOW;
+				break;
+
+            case STATE_SIZE_LOW:
+				size |= Serial.read() & 0xFF; //get low byte
 				state = STATE_OPCODE;
-				break;
+
+				//Try to allocate memory for the payload
+				content = (uint8_t*)malloc(size);
+				if(content == NULL) state = STATE_START;
+                break;
+
 			case STATE_OPCODE:
 				opcode = Serial.read();
 				state = STATE_FLAG;
 				break;
+
 			case STATE_FLAG:
 				flag = Serial.read();
 				state = STATE_CONTENT;
 				break;
+
 			case STATE_CONTENT:
 				content[content_counter] = Serial.read();
 				content_counter++;
-				if (content_counter+3 == size) {
+				if (content_counter >= size)
+                {
 					commandHandler(size, opcode, flag, content);
 					content_counter = 0;
 					state = STATE_START;
