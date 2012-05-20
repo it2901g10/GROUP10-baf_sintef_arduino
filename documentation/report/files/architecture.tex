@@ -107,36 +107,29 @@ The T-shirt application requests the list of friends from Facebook whose age is 
 
 \section{Libraries}
 
-\subsection{The social library}
-This library provides abstractions for many common concepts found in different
-social networks like Facebook, Twitter and OpenSocial. This is done so that the developers
-have the possibility to use these concepts seamlessly between any network and extend them to
-possibily support others. It also defines and implements a sort of 'protocol' to allow Android
-applications and services to exchange social data. This mechanism is based on Android's' native
-inter-process communication API.
+\subsection{The Social library}
+The Social library is the link between the Android applications that control the
+behavior of T.U.I. prototypes and social networks. It provides abstractions for
+many common concepts found in different social networks like Facebook, Twitter
+and OpenSocial allowing third-party developers to use these concepts seamlessly
+between different social networks and extend them to possibily support others.
+It also defines and implements a set of classes to allow Android applications
+and services to exchange such data models. This mechanism is based on Android's
+native inter-process communication API (both intents, and message-based \newline
+communication). The following figures illustrate the most relevant classes
+of the library.
 
-\todo {
-	just cut one the 'first approach'?
-}
+\begin{figure}[h!]
+	\centering \includegraphics[scale=0.8]{img/architecture-socialclasses.png}
+	\caption{Social library core classes}
+	\label{fig:social-classes}
+\end{figure}
 
-\subsubsection{First approach}
-Our first design approach consisted in a library that would handle the connection to social networks
-such as Facebook, Twitter, LinkedIn, etc. This would allow the developers to write full-fledged
-social 'multi-network' clients. It would also provide abstractions for common concepts
-found in these networks such as Post, User, Comment and so on.
-
-\subsubsection{Revised approach}
-The big difference in the new approach is that the Social library won't provide any means
-of connecting to social networks. Instead it will focus on establishing a communication interface,
-using Android's inter-process communication, between Social applications and the Android-Arduino applications
-to allow the exchange of social data. It will still provide abstractions for common concepts
-found in social networks. This revised approach was made necessary after the first meetings with the customer
-as we misunderstood the project scope, and went on to solve a very ambitious and unneeded task.
-Some of the code and documentation we produced for the previous design was re-used, but some could not.
-
-\todo {
-	a class diagram maybe?
-}
+\begin{figure}[h!]
+	\centering \includegraphics[scale=0.8]{img/architecture-modelclasses.png}
+	\caption{Social library data models}
+	\label{fig:model-classes}
+\end{figure}
 
 
 \subsection{The Communication library}
@@ -169,7 +162,7 @@ information in the "Content" field. An overview of the current instructions in t
 		\hline
 		Ping & 0x00 & N/A & N/A & Pings the arduino, to check that it's there \\
 		\hline
-		Text & 0x01 & N/A & Text to send & Sends text to the arduino, which then displays it depending on the implementation on the ardunio \\
+		Text & 0x01 & N/A & Text to send & Sends text to the arduino, which then displays it depending on the implementation on the Arduino \\
 		\hline
 		Sensor & 0x02 & Sensor number & N/A & Requests sensor information from the arduino \\
 		\hline
@@ -219,27 +212,28 @@ The following figure illustrates the Arduino automata.
 \end{table}
 
 
-\section{Applications and Services}
-The OSNAP project consists of two libraries (ComLib and SocialLib) and various Android applications. This section describes
-the Android software in detail. We have two types of Android software, Applications and Services. An Application is an active
-program with a user interface while a Service is a background process that provides functionality for applications.
+\section{Applications}
+The oSNAP project consists of two libraries (ComLib and Social library) and
+various Android applications. This section describes the Android software in detail.
 
-\subsection{OSNAP Generic Prototyping Application}
+\subsection{oSNAP Generic Application}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-generic}
 \end{wrapfigure}
-This application allows the user to scan a QR code and connect via Bluetooth to a remote device. It will then retrieve additional
-metadata from the remote device and build a list of all the functionality the remote device supports. The user can then test each
-function with the click of a button. There is also a download link to the OSNAP market on the internet that allows the user to
-download a specialized application for the OSNAP product in question. The idea is that the user can use this application to
-scan various OSNAP products and retrieve additional information or software for that specific product.
+This application allows the user to scan a QR code and connect via Bluetooth to a remote device (Arduino).
+It will then retrieve additional metadata from the remote device and use it to present a list of all the
+functionality the remote device supports. The user can then test each function with the click of a button,
+and also download the prototype specific application from a link to the oSNAP market.
+The idea is that the user can use this application to scan various oSNAP products and retrieve
+additional information or software for that specific product. This application was initially used to test
+the T.U.I. prototypes that was later converted to a 'real' application by client's request.
 
-\subsection{OSNAP Jacket Application} \label{section:app-jacket}
+\subsection{oSNAP Jacket Application} \label{section:app-jacket}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-jacket}
 \end{wrapfigure}
-This application was developed to use and test the full functionality of both the ComLib and SocialLib in combination with the
-Jacket Prototype. It connects to the Jacket via Bluetooth and uses any Social Network service installed and running on the
+This application was developed to use and test the full functionality of both the ComLib and Social library in combination with the
+Jacket Prototype. It connects to the Jacket via Bluetooth and uses any Social service installed and running on the
 Android system. It will retrieve any status updates from these services and can via rules set up by the user output something
 on the Jacket. One example could be a rule to play a sound effect through the Jacket speaker whenever something happens
 on a twitter feed.
@@ -260,13 +254,13 @@ For completeness we present the previous application use case in figure \ref{fig
 	\label{fig:design-tshirtappusecase1}
 \end{figure}
 
-\subsection{Facebook Service} \label{section:service-fb}
+\subsection{Facebook application} \label{section:service-fb}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-fb}
 \end{wrapfigure}
-This service will keep an active connection with Facebook with a specific user account that has been logged in previously. It will
-broadcast status updates using intents according to the rules set up by for example the OSNAP Jacket Application (see section 
-\ref{section:app-jacket}).
+The Facebook application is an Android application that that replies
+T.U.I. prototype applications' requests by providing a Social library's 'Social service'
+Facebook-specific implementation.
 
 As discussed in chapter \ref{sec:system-design} the Facebook application design had to be reviewed after roughly one month.
 
@@ -284,7 +278,7 @@ For completeness we present the previous application use case in figure \ref{fig
 	\label{fig:design-socialappusecase1}
 \end{figure}
 
-\subsection{OSNAP Temperature Measure Application}
+\subsection{oSNAP Temperature Measure Application}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-temp}
 \end{wrapfigure}
@@ -302,22 +296,22 @@ This application uses ComLib to connect ot the third prototype, the LED Matrix (
 to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated
 into any application.
 
-\subsection{Twitter Service}
+\subsection{Twitter application}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-twitter}
 \end{wrapfigure}
-Similar to the Facebook Service (see section \ref{section:service-fb}), this background process monitors a Twitter feed for
-any changes and broadcasts these to any listening applications.
+Similar to the Facebook application (see section \ref{section:service-fb}),
+except that it is a Twitter specific implementation that is able to read NTNU's public Twitter page.
 
 \section{Prototypes}
 \label{sec:prototypes}
 Three different prototypes will be produced for the project. Their purpose is to serve as proof of concept and
 to show that the libraries and can effectively simplify the prototyping of Arduino-based T.U.I.
-One of the prototypes, the OSNAP Jacket (formerly the T-Shirt), is significantly bigger and more complex than the other two.
-The OSNAP Jacket is the main prototype of the project; the purpose of the other two
+One of the prototypes, the oSNAP Jacket (formerly the T-Shirt), is significantly bigger and more complex than the other two.
+The oSNAP Jacket is the main prototype of the project; the purpose of the other two
 is just to show that the libraries can be use for other applications and in different contexts.
 
-\subsection{Prototype 1: The OSNAP Jacket}
+\subsection{Prototype 1: The oSNAP Jacket}
 This is our main prototype and will showcase a lot features.
 It consists of a Jacket connected to an Arduino Fio (figure \ref{fig:design-arduinofio}). The original prototype featured a different
 Arduino micro-controller called the Arduino Lilypad (figure \ref{fig:design-arduinolilypad}). The Lilypad is optimized for sewing into 
@@ -437,9 +431,9 @@ Below is a brief description of the most important ones.
 		protocol.
 	\item \textbf{no.ntnu.osnap.social}\newline
 		Social library main classes.
-	\item \textbf{no.ntnu.osnap.models}\newline
+	\item \textbf{no.ntnu.osnap.social.models}\newline
 		Social library data models.
-	\item \textbf{no.ntnu.osnap.listeners}\newline
+	\item \textbf{no.ntnu.osnap.social.listeners}\newline
 		Social library listeners.
 	\item \textbf{no.ntnu.osnap.tshirt}\newline
 		T-shirt application classes.
@@ -459,10 +453,3 @@ Below is a brief description of the most important ones.
 All the Arduino code is in one class, and there is therefore no package structure to speak of.
 The class consists of a header file and a source file. This is then to be included in Arduino projects
 that want to use our protocol for communication.
-
-
-\subsection{Hardware}
-
-\todo {
-	schematics? Pics of Arduino boards, thoughs.
-}
