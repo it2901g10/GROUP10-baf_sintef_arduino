@@ -206,7 +206,7 @@ The following figure illustrates the Arduino automata.
 	\label{fig:arduino_states}
 \end{figure}
 
-\begin{table}
+\begin{table}[H]
 	\begin{tabular}{c|c|c|c|c|c|}
 		\cline{2-6}
 		& \textbf{Start-byte} & \textbf{Size} & \textbf{Opcode} & \textbf{Flag} & \textbf{Content} \\
@@ -220,10 +220,29 @@ The following figure illustrates the Arduino automata.
 
 
 \section{Applications and Services}
+The OSNAP project consists of two libraries (ComLib and SocialLib) and various Android applications. This section describes
+the Android software in detail. We have two types of Android software, Applications and Services. An Application is an active
+program with a user interface while a Service is a background process that provides functionality for applications.
 
-\subsection{oSNAP application}
+\subsection{OSNAP Generic Prototyping Application}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-generic}
+\end{wrapfigure}
+This application allows the user to scan a QR code and connect via Bluetooth to a remote device. It will then retrieve additional
+metadata from the remote device and build a list of all the functionality the remote device supports. The user can then test each
+function with the click of a button. There is also a download link to the OSNAP market on the internet that allows the user to
+download a specialized application for the OSNAP product in question. The idea is that the user can use this application to
+scan various OSNAP products and retrieve additional information or software for that specific product.
 
-\subsection{T-shirt application}
+\subsection{OSNAP Jacket Application} \label{section:app-jacket}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-jacket}
+\end{wrapfigure}
+This application was developed to use and test the full functionality of both the ComLib and SocialLib in combination with the
+Jacket Prototype. It connects to the Jacket via Bluetooth and uses any Social Network service installed and running on the
+Android system. It will retrieve any status updates from these services and can via rules set up by the user output something
+on the Jacket. One example could be a rule to play a sound effect through the Jacket speaker whenever something happens
+on a twitter feed.
 
 As discussed in chapter \ref{sec:system-design} the T-shirt application design had to be reviewed after roughly one month.
 
@@ -241,11 +260,17 @@ For completeness we present the previous application use case in figure \ref{fig
 	\label{fig:design-tshirtappusecase1}
 \end{figure}
 
-\subsection{Facebook application}
+\subsection{Facebook Service} \label{section:service-fb}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-fb}
+\end{wrapfigure}
+This service will keep an active connection with Facebook with a specific user account that has been logged in previously. It will
+broadcast status updates using intents according to the rules set up by for example the OSNAP Jacket Application (see section 
+\ref{section:app-jacket}).
 
 As discussed in chapter \ref{sec:system-design} the Facebook application design had to be reviewed after roughly one month.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering \includegraphics[scale=0.35]{img/design-socialappusecase2}
 	\caption{Use case for the Social application}
 	\label{fig:design-socialappusecase2}
@@ -253,16 +278,36 @@ As discussed in chapter \ref{sec:system-design} the Facebook application design 
 
 For completeness we present the previous application use case in figure \ref{fig:design-socialappusecase1}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering \includegraphics[scale=0.35]{img/design-socialappusecase1}
 	\caption{Initial use case for the Social application}
 	\label{fig:design-socialappusecase1}
 \end{figure}
 
-\subsection{Twitter application}
-\subsection{Temperature application}
-\subsection{LED matrix application}
+\subsection{OSNAP Temperature Measure Application}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-temp}
+\end{wrapfigure}
+This application allows the user to connect to an Arduino thermometer device wirelessly through Bluetooth (read more about the 
+temperature prototype in section \ref{section:prototype-temp}). This is done by scanning a QR code to retrieve the mac address
+ of the remote device. The application can then retrieve temperature updates to display them directly on the Android or automatically 
+upload temperature updates to Facebook through the ComLib. This application is a proof-of-concept that the libraries work independently
+ and are not hard-coded for one application. It also shows that the ComLib supports two-way communication.
 
+\subsection{BlingLED Application}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-led}
+\end{wrapfigure}
+This application uses ComLib to connect ot the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user
+to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated
+into any application.
+
+\subsection{Twitter Service}
+\begin{wrapfigure}{l}{20mm}
+	\centering \includegraphics[scale=1]{img/app-twitter}
+\end{wrapfigure}
+Similar to the Facebook Service (see section \ref{section:service-fb}), this background process monitors a Twitter feed for
+any changes and broadcasts these to any listening applications.
 
 \section{Prototypes}
 \label{sec:prototypes}
@@ -322,7 +367,7 @@ through a wireless connection to an Android mobile. Specifically, the mobile And
 and carried in the pocket of the person using the Jacket and is connected wirelessly with the Arduino Fio through Bluetooth.
 
 	
-\subsection{Prototype 2: Temperature Sensor for Android}
+\subsection{Prototype 2: Temperature Sensor for Android} \label{section:prototype-temp}
 This prototype will primarily showcase the communication from Arduino to Android using our libraries. 
 Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
 prototype with an Android device connected wirelessy through bluetooth to the Arduino board. The 
@@ -354,7 +399,7 @@ figure~\ref{fig:prototype2-gui} ) to make it more user friendly and visually app
 \end{figure}
 
 	
-\subsection{Prototype 3: Wearable Pictures}
+\subsection{Prototype 3: LED Matrix} \label{section:prototype-led}
 This prototype was first planned to be LED lights (Figure \ref{fig:design-ledmatrix}) showing what mood you had on MySpace.
 Red LED lights would be angry, green would be happy and so on. We discovered that MySpace had removed this feature from their pages,
 even if it was still supported by the API. It would be a fools errand to pursue something you could not test properly
