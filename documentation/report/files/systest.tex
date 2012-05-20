@@ -43,24 +43,26 @@ allowed us to understand the most common use case scenarios and from those
 obtain a set of requirements used to design the system and plan test cases.
 Customer's feedback and proved to be very valuable for the project.
 
-\section{Unit testing}
+\section{Testing strategy}
+
+\subsection{Unit testing}
 Unit testing involves testing small portions of code or of the system itself
 (modules). Where possible, functions have been tested indipendetly. In order to
 test non indipendent system modules, such as the libraries, mockup (driver)
 applications were coded.
 
-\section{Integration testing}
+\subsection{Integration testing}
 Once the system modules were completed they were integrated one by one into the
 final system. After each stub/driver had been swapped with its correspective
 module, it was tested again to ensure it was working properly.
 
-\section{System testing}
+\subsection{System testing}
 System testing constists in testing the system as a whole.
 In our case this consisted in testing our final prototype, performing a series
 of tests involving all the parts of the system from the Android applications
 to the hardware components.
 
-\section{User interface testing}
+\subsection{User interface testing}
 Since our product encompassed various Android applications, we performed some
 user interface testing. To make sure the user interfaces are understandable and
 easy to use, we have delegated their testing to group members that have not been
@@ -68,215 +70,19 @@ involved in their design and coding.
 
 \section{Functional requirement testing}
 Since the project a combination of proof-of-concept and research project,
-tests are planned in order to support a run of the system, not to test for
-particular scenarios or more specific use. The unit tests is planned to see if
-we have fulfilled the functional requirements from packages F1-F7.
+tests are planned in order to test the functionality of the various parts of the
+system against their own requirements and not for particular scenarios or more
+specific use cases.
 
-\section{Testing order}
-Since some of the packages are connected, we need to test them in order.
+Tests were performed in order: the hardware and libraries were tested first
+(the Android applications depended on both) and then integrated into more
+complete tests involving all the parts of the T.U.I. prototype: Android
+applications, libraries and the Arduino hardware.
 
-Testing of hardware packages F5-F7 involves checking added components (sound,
-light, vibration, etc) and confirm that they are functional. Software that is
-connected to hardware (F3, F4) is tested with the relevant packages so we have
-shown a proof of concept.
-
-Packages SocialLib F1 is tested together with F3 and F4 as the social protocol
-between the applications. Package ComLib F2 is a part of all test that includes
-a wireless connection from cell phone to Arduino board.
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F5] T-shirt prototype. \\
-\hline Purpose: &		Test that all components connected to the Arduino board
-						work as expected. \\
-\hline Precondition: &	The Arduino is connected to a PC via USB, all components
-						are connected to the Arduino board. The Arduino board is
-						on.\\
-\hline
-Steps:
- & 1: Toggle a LED status. \\
- & 2: Send a signal to the vibrator module. \\
- & 3: Print some text to LCD display. \\
- & 4: Send sound to speaker.\\
-\hline
-Expected result:
- & 1: LED is toggled on/off.\\
- & 2: Vibrator works. \\ 
- & 3: Correct text is displayed on LCD. \\ 
- & 4: A sound is emitted by the speaker. \\
-\hline
-Actual Result:
- & Passed. \\
-\hline
-\end{tabular}
-\caption{Test F5}
-\label{tbl:f5test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F6] Temperature prototype. \\
-\hline Purpose: &		Test temperature prototype functionality. \\
-\hline Precondition: &	The Arduino board is connected to a PC via USB. The
-						Arduino board is on. The temperature sensor and a LCD
-						screen are connected to the Arduino.\\
-\hline
-Steps:
- & 1: Press a button. \\
-\hline
-Expected result:
- & Temperature is displayed on Arduino's LCD.\\ 
-\hline
-Actual Result:
- & Passed \\
-\hline
-\end{tabular}
-\caption{Test F6}
-\label{tbl:f6test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F7] LED matrix. \\
-\hline Purpose: &		Test LED matrix prototype. \\
-\hline Precondition: &	The Arduino is connected to a PC via USB. The Arduino
-						board is on. The LED matrix is connected to the
-						Arduino. \\
-\hline
-Steps:
- & 1: Send sample data to Arduino. \\
-\hline
-Expected result:
- & Correct LED light up according to sample data.\\ 
-\hline
-Actual Result:
- & Passed \\
-\hline
-\end{tabular}
-\caption{Test F7}
-\label{tbl:f7test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F7] Led Matrix / [F2] Comm. library \\
-\hline Purpose: &		Test pushing data to Arduino board from cell phone. \\
-\hline Precondition: &	Cell phone is on and Arduino board is powered. \\
-\hline
-Steps:
- & 1: Pair cell phone with Arduino board using Android OS.\\ 
- & 2: Start LED application on cell phone. \\ 
- & 3: Press 'Choose a picture' button. \\
- & 4: Browse gallery and select a picture. \\
- & 5: Press 'Send to LED matrix' button. \\
-\hline
-Alternative steps:
- & 1: Pair cell phone with Arduino board using Android OS.\\
- & 2: Start LED application on cell phone. \\ 
- & 3: Press 'Take a picture' button. \\
- & 4: User takes a picture with the mobile phone. \\
- & 5: Press 'Send to LED matrix' button. \\
-\hline
-Expected result:
- & 1: Data is sent to from cell phone to Arduino board.\\ 
- & 2: Correct LED lights up. \\ 
-\hline
-Actual Result: &  result \\
-\hline
-\end{tabular}
-\caption{Test F7/F2}
-\label{tbl:f7f2test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F1] Social lib. / [F2] Comm. lib. / [F3] Facebook App /
-						[F4] T-shirt app. / [F5] T-shirt TUI prototype. \\
-\hline Purpose: &		Test both the libraries to send social messages between app
-						and push them to T-shirt.  \\
-\hline Precondition: &	The two applications are installed and the T-shirt is on and paired with cell phone. \\
-\hline
-Steps:
-  & 1: Start Facebook application.\\ 
-  & 2: Press 'Log in' button. \\ 
-  & 3: Start t-shirt app. \\ 
-  & 4: Select a social network from a list of available social services. \\
-  & 5: Set up rules to define the behavior of the tshirt. \\
-  & 6: Return to cell phone desktop. \\
-  & 7: Send a sample Facebook message on PC. \\
-\hline
-Expected result:
-   & Depending on the rules that have been set, the correct text is displayed,
-   or the correct LED lights up.. and so on.\\ 
-\hline
-Actual Result:
-  &  result \\
-\hline
-\end{tabular}
-\caption{Test F1/F3/F4/F5}
-\label{tbl:f1f3f4f5test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: & F6 Temperature/F1 Social Lib/F2 ComLib. \\ 
-\hline Purpose: & Test pushing data from Arduino board to a social network.  \\ 
-\hline Context: & End to end Test with Facebook application and simple app to retrieve data from Arduino board. \\ 
-\hline Precondition: & The two apps are installed and Arduino board is powered and paired. \\ 
-\hline
-Steps:
-  & 1: Start Facebook application. \\
-  & 2: Prestt 'Log in' button\\ 
-  & 3: Start prototype's application. \\ 
-  & 4: Press the 'On' button. \\
-  & 5: Press button on the Arduino board to send temperature. \\ 
-\hline
-Expected result:
-  & Temperature is posted on Facebook wall. \\ 
-\hline
-Actual Result:
-  & result \\
-\hline
-\end{tabular}
-\caption{Test F6/F1/F2}
-\label{tbl:f6f1f2test}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F?] oSNAP app. / [F2] Comm. lib \\
-\hline Purpose: &		Test connecting to the Jacket TUI prototype using the
-						Comm. lib and oSNAP application. \\
-\hline Precondition: &	The oSNAP app is installed on an Android phone. The
-						Arduino board is installed in the Jacket and powered. \\
-\hline
-Steps:
- & 1: Start oSNAP application \\
- & 2: Press 'Scan QR code' button \\
- & 3: Scan QR code on the Jacket. \\
- & 4: Press 'Toggle LED' button (turn on) \\
- & 5: Press 'Toggle LED' button (turn off) \\
- & 6: Press 'Play sound' button \\
- & 7: Press 'Print "Hello world" button' \\
- & 8: Press 'Vibrate' button \\
-\hline
-Expected result:
- & The oSNAP application connects to the Arduino. \\
- & Led is toggle on and then off. \\
- & A sound is played. \\
- & The vibration module vibrates. \\
- & The 'Hello world' string is printed on the LCD \\
-\hline
-Actual Result:
- & Passed \\
-\hline
-\end{tabular}
-\caption{Test ?}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F1] Social lib. / [F3] Facebook app. / [F?] Twitter app.\\
+\hline Test ID: &		[F1] Social lib. / [F5] Facebook app. / [F6] Twitter app.\\
 \hline Purpose: &		Testing the Social library and social applications
 						functionality \\
 \hline Precondition: &	A mockup TUI prototype application is installed on an
@@ -295,14 +101,209 @@ Steps:
 \hline
 Expected result:
  & User is correctly authenticated (Facebook) \\
- & The Facebook social service is discovered by the mockup app. \\
- & The Twitter social service is discovered by the mockup app. \\
- & The mockup app. receives the correct response based on the request made \\
+ & The Facebook social service is discovered by the mockup app \\
+ & The Twitter social service is discovered by the mockup app \\
+ & The mockup app. receives the correct response based on the request made by
+	both social networks \\
 \hline
 Actual Result:
  & Passed \\
 \hline
 \end{tabular}
-\caption{Test ?}
+\caption{Test F1/F5/F6}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F7] T-shirt prototype \\
+\hline Purpose: &		Test T-shirt prototype functionality \\
+\hline Preconditions: & The Arduino is connected to a PC via USB, all components
+						are connected to the Arduino board; the Arduino board is
+						on.\\
+\hline
+Steps:
+ & 1: Toggle a LED status \\
+ & 2: Send a signal to the vibrator module \\
+ & 3: Print some text to LCD display \\
+ & 4: Send sound to speaker \\
+\hline
+Expected result:
+ & LED is toggled on/off \\
+ & Vibrator works \\
+ & Correct text is displayed on LCD \\
+ & A sound is emitted by the speaker \\
+\hline
+Actual Result:
+ & Passed \\
+\hline
+\end{tabular}
+\caption{Test F7}
+\label{tbl:f7test}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F9] Temperature prototype \\
+\hline Purpose: &		Test temperature prototype functionality \\
+\hline Precondition: &	The Arduino board is connected to a PC via USB and
+						turned on; the temperature sensor and a LCD screen are
+						connected to the Arduino \\
+\hline
+Steps:
+ & 1: Press a hardware button \\
+\hline
+Expected result:
+ & Temperature is displayed on Arduino's LCD \\
+\hline
+Actual Result:
+ & Passed \\
+\hline
+\end{tabular}
+\caption{Test F9}
+\label{tbl:f9test}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F11] LED matrix. \\
+\hline Purpose: &		Test LED matrix prototype functionality \\
+\hline Precondition: &	The Arduino is connected to a PC via USB, and turned on;
+						the LED matrix is connected to the Arduino. \\
+\hline
+Steps:
+ & 1: Send sample data to Arduino \\
+\hline
+Expected result:
+ & Correct LED light up according to sample data \\
+\hline
+Actual Result:
+ & Passed \\
+\hline
+\end{tabular}
+\caption{Test F11}
+\label{tbl:f11test}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F11] LED matrix prototype / [F10] LED matrix app. /
+						[F2] Comm. library \\
+\hline Purpose: &		Testing the LED matrix prototype and application \\
+\hline Precondition: &	LED matrix applications is installed on the mobile and
+						the Arduino board is powered \\
+\hline
+Steps:
+ & 1: Pair cell phone with Arduino board using Android OS \\
+ & 2: Start LED matrix application \\
+ & 3:  \\
+ & 4: Press '' button \\
+\hline
+Expected result:
+ & 1: Correct LEDs are lighted up \\
+\hline
+Actual Result: &  result \\
+\hline
+\end{tabular}
+\caption{Test F11/F10/F2}
+\label{tbl:f11f10f2test}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F8] Temperature app. / [F1] Social Lib / [F2] Comm. lib \\
+\hline Purpose: &		Test the Temperature prototype and application
+						functionality  \\
+\hline Precondition: &	The two apps are installed and Arduino board is powered
+						and paired. \\
+\hline
+Steps:
+  & 1: Start Facebook application \\
+  & 2: Press 'Log in' button \\
+  & 3: Exit the Facebook application \\
+  & 3: Start prototype's application \\
+  & 4: Tap the screen to read the temperature\\
+  & 5: Press button on the Arduino board to send temperature \\
+\hline
+Expected result:
+  & Temperature is corretly read by the prototype and posted on the logged-in
+	user's Facebook wall \\
+\hline
+Actual Result:
+  & Passed \\
+\hline
+\end{tabular}
+\caption{Test F8/F1/F2}
+\label{tbl:f8f1f2test}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F3] oSNAP app. / [F2] Comm. lib \\
+\hline Purpose: &		Test connecting to the T-shirt TUI prototype using the
+						Comm. lib and oSNAP application \\
+\hline Precondition: &	The oSNAP app is installed on an Android phone; the
+						Arduino board is installed in the T-shirt and powered. \\
+\hline
+Steps:
+ & 1: Start oSNAP application \\
+ & 2: Press 'Scan QR code' button \\
+ & 3: Scan QR code on the T-Shirt \\
+ & 4: Press 'Toggle LED' button (turn on) \\
+ & 5: Press 'Toggle LED' button (turn off) \\
+ & 6: Press 'Play sound' button \\
+ & 7: Press 'Print "Hello world" button' \\
+ & 8: Press 'Vibrate' button \\
+\hline
+Expected result:
+ & The oSNAP application connects to the Arduino \\
+ & Led is toggle on and then off \\
+ & A sound is emitted \\
+ & The vibration module vibrates \\
+ & The 'Hello world' string is printed on the LCD \\
+\hline
+Actual Result:
+ & Passed \\
+\hline
+\end{tabular}
+\caption{Test F3/F2}
+\end{table}
+
+
+\begin{table}[h!]
+\begin{tabular}{|l|p{10cm}|}
+\hline Test ID: &		[F1] Social lib. / [F2] Comm. lib. / [F4] T-shirt app. /
+						[F5] Facebook App / [F7] T-shirt TUI prototype \\
+\hline Purpose: &		Test T-shirt prototype functionality \\
+\hline Precondition: &	The two applications are installed and the T-shirt T.U.I.
+						is on and paired with cell phone \\
+\hline
+Steps:
+  & 1: Start Facebook application \\
+  & 2: Press 'Log in' button \\
+  & 3: Exit the Facebook application \\
+  & 4: Start T-shirt app \\
+  & 5: Press 'Discover services' button \\
+  & 6: Select 'Facebook' from the list of available social services \\
+  & 7: Set up rules to define the behavior of the tshirt \\
+  & 8: Press 'Connect to Arduino' button \\
+  & 9: Press 'Enable service' button \\
+  &10: Exit the T-shirt application \\
+\hline
+Expected result:
+   & Depending on the rules that have been set, the correct text is displayed,
+   or the correct LED lights up.. and so on \\
+\hline
+Actual Result:
+  &  Passed \\
+\hline
+\end{tabular}
+\caption{Test F1/F2/F4/F5/F7}
+\label{tbl:f1f2f4f5f7test}
 \end{table}
 
