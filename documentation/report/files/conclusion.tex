@@ -25,10 +25,10 @@ from when we initially ordered the hardware and until we received them. The two 
 for the hardware to arrive meant that in that period we could not do any integration and testing.
 This was a major setback to our plans and this time was mostly spent writing documentation, planning
 and testing the libraries for bugs. In addition the hardware we received was either wrong or not
-optimal for our specifications. This was caused because of miscommunication inside the group. In
+optimal for our specifications. This was caused by miscommunication within the project group. In
 addition we had not ordered backup or spare parts, so when for example the LCD screen broke,
 we had to find other workarounds to solve this issue. In hindsight we should have made sure that
-the list of hardware order was correct and ordered additional spare parts in case something broke
+the list of hardware orders was correct and ordered additional spare parts in case something broke
 or malfunctioned.
 
 \subsection{Group meetings}
@@ -37,15 +37,7 @@ the group would meet hours later than the agreed or planned time. This was somew
 the meetings later in the day and working into the late hours of the night.
 
 \subsection{Limiting project scope}
-Another problem caused by an early design choice was the level of portability. Initially we coded our libraries 
-to support as wide range of platforms as possible (PC, Android, iOS, etc.). This caused various generalizations
-and concepts that worked not very well with Android. One prevalent example was callbacks and threads
-inside the Android system. While our library was based on multi-threading and callbacks through an observer
-pattern, this does not work on Android Java the same way one would expect on a PC. Since every prototype
-and testing software we coded was based on the Android platform this caused major problems and we had
-to spend a lot of time rewriting and redesigning libraries. So our choice of portability caused many problems
-considering the customer explicitly stated that we only needed to support Android. While portability is usually a
-good thing, the product quality should not suffer if it is not a high priority requirement.
+Another problem caused by an early design choice was the level of portability. Initially we coded our libraries to support as wide range of platforms as possible (PC, Android, iOS, etc.). This caused various generalizations and concepts that worked not very well with Android. One prevalent example was callbacks and threads inside the Android system. While our library was based on multi-threading and callbacks through an observer pattern, this does not work on Android Java the same way one would expect on a PC. Since every prototype and testing software we coded was based on the Android platform this caused major problems and we had to spend a lot of time rewriting and redesigning libraries. So our choice of portability caused many problems considering the customer explicitly stated that we only needed to support Android. While portability is usually a good thing, the product quality should not suffer if it is not a high priority requirement.
 
 \section{Further Work}
 This section describes ideas, code and features we did not have time or resources to
@@ -53,7 +45,7 @@ finish at the project deadline. The section can also describe various interestin
 that we visualized that we might have explored given more time.
 
 \subsection{Supporting more communication technologies in ComLib}
-Currently the ComLib only supports Bluetooth connection. Further work would be
+Currently the ComLib only supports Bluetooth connections. Further work would be
 to add support for additional communication technologies such as WiFi and Near Field 
 Communication (NFC). The ComLib has been implemented so that this work should
 be as easy as possible. Simply extend the Protocol class and implement the input and
