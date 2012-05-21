@@ -453,3 +453,53 @@ Below is a brief description of the most important ones.
 All the Arduino code is in one class, and there is therefore no package structure to speak of.
 The class consists of a header file and a source file. This is then to be included in Arduino projects
 that want to use our protocol for communication.
+
+\section{oSNAP Market}
+As we approached the final sprint, it became apparent that we needed a way to simplify the end user experience. The oSNAP Market is a simple market made for the purpose of prototyping oSNAP compatible apps' distribution and interaction. It follows a simple MVC scheme, where each part can easily be changed.
+
+The market does not currently rely on any server side scripting. For the purpose of internal testing, the market (see figure \ref{fig:market-screen}) is currently being hosted at \newline http://folk.ntnu.no/svarvaa/utils/pro2www.
+
+\subsection{Model}
+The model is a simple JSON object with some required data fields. The model, or backend, can be swapped out with anything, as long as it supplies the view with a JSON object following the pattern in the source code exerpt below.
+\javacode
+\begin{lstlisting}
+var market = {
+    "apps": [{
+        // Required
+        "id": 0,
+        // Required
+        "title": "OSNAP(app)",
+        // Optional
+        "icon": "icon/osnap/icon128.png",
+        // Optional
+        "url": "apk/OsnapApp.apk",
+        // Required
+        "about": "Generic app for testing OSNAP-compatible arduino products.",
+        // Optional
+        "deps": [50]
+    }, {
+        "id": 1,
+        "title": "JacketApp",
+        "icon": "icon/jacket/icon128.png",
+        "url": "apk/Tshirt.apk",
+        "about": "This is our main prototype and will showcase a lot features...",
+        "deps": [0, 4, 5]
+    },
+        ...
+    }]
+};
+\end{lstlisting}
+
+\subsection{Controller}
+The controller recieves an app, and the model from the view. It will then generate HTML for that app, while figuring out it's dependencies.
+
+\subsection{View}
+The view loops through every app in the model and generates a view using the controller. The resulting view is then insterted into the appList element's html, which is just an empty ul html element.
+
+\begin{figure}
+	\begin{center}
+	\includegraphics[scale=0.4]{img/market-screen.png}
+	\end{center}
+	\caption{Screenshot of the oSNAP Market running on an Android 4.0 device.}
+	\label{fig:market-screen}
+\end{figure}
