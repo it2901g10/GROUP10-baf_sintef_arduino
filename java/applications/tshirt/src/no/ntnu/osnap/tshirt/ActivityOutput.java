@@ -24,11 +24,7 @@ import no.ntnu.osnap.tshirt.filterMode.FilterStart;
 import no.ntnu.osnap.tshirt.helperClass.L;
 
 /**
- * Created by IntelliJ IDEA.
- * User: goldsack
- * Date: 19.04.12
- * Time: 22:31
- * To change this template use File | Settings | File Templates.
+ * Activity to control output settings to arduino
  */
 public class ActivityOutput extends Activity implements View.OnClickListener {
     /**

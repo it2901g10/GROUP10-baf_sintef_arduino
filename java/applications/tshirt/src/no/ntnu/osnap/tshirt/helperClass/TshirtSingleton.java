@@ -180,13 +180,11 @@ public class TshirtSingleton {
     }
 
     public void disconnect() {
-        if(con != null && !con.isConnected()){
-            try {
-                con.print("Disconnected from app");
-                con.disconnect();
-            } catch (TimeoutException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+        if(con != null && con.isConnected()){
+           con.disconnect();
+        }
+        else{
+            L.i("Unable to disconnect");
         }
     }
 

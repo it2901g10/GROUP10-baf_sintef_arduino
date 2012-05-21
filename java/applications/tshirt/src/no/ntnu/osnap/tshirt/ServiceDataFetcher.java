@@ -106,10 +106,4 @@ public class ServiceDataFetcher extends Service {
         });
         t.start();
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        singleton.disconnect();
-    }
 }

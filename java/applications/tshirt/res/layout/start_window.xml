@@ -13,28 +13,6 @@
 
             >
         <TextView
-                android:id="@+id/sw_labelConnection"
-                android:background="@color/dark_gray"
-                android:padding="5dp"
-                android:text="Connection Status"
-                android:textSize="16sp"
-                />
-        <TextView
-                android:text="Not connected to Arduino"
-                android:id="@+id/sw_labelConnectionStatus"
-                android:padding="5dp"
-                android:typeface="sans"
-                android:textStyle="bold"
-                android:gravity="center"/>
-        <Button
-                android:text="Connect to Arduino"
-                android:id="@+id/sw_buttonConnection"
-                android:layout_marginBottom="5dp"
-                android:typeface="sans"
-                android:textStyle="bold"
-                android:background="@drawable/button_shape"
-                />
-        <TextView
                 android:text="SocialServices"
                 android:id="@+id/sw_labelSocialServices"
                 android:background="@color/dark_gray"
@@ -78,9 +56,13 @@
                 android:id="@+id/sw_labelOption"
                 android:background="@color/dark_gray"
                 android:padding="5dp"
-                android:text="Options"
+                android:text="Activate"
                 android:layout_marginBottom="5dp"
                 android:textSize="16sp"/>
+        <TextView
+                android:text="Enable jacketapp service to read rules and send specified output to Ardunio on a timed interval."
+                android:id="@+id/sw_labelFoundService"
+                android:padding="5dp"/>
         <ToggleButton
                 android:id="@+id/sw_toggleButtonActiveService"
                 android:textOn="Service Enabled"
@@ -89,5 +71,36 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/toggle_shape"/>
+
+        <TextView
+                android:id="@+id/sw_labelConnection"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Arduino Connection"
+                android:textSize="16sp"
+                />
+        <TextView
+                android:text="Not connected to Arduino"
+                android:id="@+id/sw_labelConnectionStatus"
+                android:padding="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:gravity="center"/>
+        <Button
+                android:text="Connect to Arduino"
+                android:id="@+id/sw_buttonConnection"
+                android:layout_marginBottom="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"
+                />
+        <Button
+                android:text="Disconnect"
+                android:id="@+id/sw_buttonDisconnection"
+                android:layout_marginBottom="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"
+                />
     </TableLayout>
 </ScrollView>

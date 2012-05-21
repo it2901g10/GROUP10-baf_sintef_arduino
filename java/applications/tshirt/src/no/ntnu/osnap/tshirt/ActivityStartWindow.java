@@ -78,15 +78,19 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
     private void setOnClickListeners() {
         Button setRulesButton = (Button)findViewById(R.id.sw_buttonSetRules);
         setRulesButton.setOnClickListener(this);
-        
+
         Button arduinoConnectionButton = (Button)findViewById(R.id.sw_buttonConnection);
         arduinoConnectionButton.setOnClickListener(this);
+
+        Button disconnect = (Button)findViewById(R.id.sw_buttonDisconnection);
+        disconnect.setOnClickListener(this);
 
         Button searchSSButton = (Button)findViewById(R.id.sw_buttonSearchSocialServices);
         searchSSButton.setOnClickListener(this);
 
         ToggleButton toggleButton = (ToggleButton)findViewById(R.id.sw_toggleButtonActiveService);
         toggleButton.setOnClickListener(this);
+
     }
     /** Displays radioButtons for found social services */
     private void updateServiceListView() {
@@ -159,6 +163,9 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 else{
                     quickToastMessage("Please search for a service first");
                 }
+                break;
+            case R.id.sw_buttonDisconnection:
+                singleton.disconnect();
                 break;
             case R.id.sw_toggleButtonActiveService:
 

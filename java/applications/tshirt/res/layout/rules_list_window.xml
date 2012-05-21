@@ -14,7 +14,7 @@
                 android:id="@+id/rl_labelRulesList"
                 android:background="@color/dark_gray"
                 android:padding="5dp"
-                android:text="RulesList"
+                android:text="Rules List"
                 android:textSize="16sp"/>
         <ListView
                 android:id="@android:id/list"
@@ -23,7 +23,7 @@
         <TextView
                 android:id="@android:id/empty"
                 android:padding="5dp"
-                android:text="No rules set"/>
+                android:text="No rules yet"/>
         <Button
                 android:id="@+id/rl_buttonAddRule"
                 android:layout_marginBottom="5dp"
@@ -31,10 +31,14 @@
                 android:typeface="sans"
                 android:textStyle="bold"
                 android:background="@drawable/button_shape"/>
+        <TextView
+        android:id="@+id/rl_labelInstruction"
+        android:padding="5dp"
+        android:text="If all filters in a rule is true, a message will be sent to the arduino according to the output settings."/>
         <Button
                 android:id="@+id/rl_buttonClearDB"
                 android:layout_marginBottom="5dp"
-                android:text="Clear Database"
+                android:text="Remove all rules"
                 android:typeface="sans"
                 android:textStyle="bold"
                 android:background="@drawable/button_shape"/>

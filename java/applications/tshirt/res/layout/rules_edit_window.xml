@@ -21,6 +21,7 @@
             android:padding="5dp"
             android:text="RuleName"
             android:textSize="18sp" />
+
     <TextView
             android:id="@+id/re_labelOutput"
             android:background="@color/dark_gray"
@@ -36,7 +37,7 @@
             android:gravity="center" />
     <Button
             android:id="@+id/re_buttonSetOutput"
-            android:text="Set Output"
+            android:text="Set Output Settings"
             android:textSize="16sp"
             android:typeface="sans"
             android:textStyle="bold"
@@ -63,7 +64,6 @@
             android:typeface="sans"
             android:textStyle="bold"
             android:background="@drawable/button_shape"/>
-
     <Button
             android:id="@+id/re_buttonSaveRule"
             android:text="Save Rule"
@@ -71,5 +71,6 @@
             android:typeface="sans"
             android:textStyle="bold"
             android:background="@drawable/button_shape"/>
+
 </TableLayout>
     </ScrollView>
