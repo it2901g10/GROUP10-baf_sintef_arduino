@@ -67,19 +67,19 @@ specifying the behavior of the T-shirt. This scenario is illustrated in figure \
 
 This new scenario made clear that the T-shirt and social applications had to be re-designed so:
 
-\begin{itemize}
+\begin{description}
 
-	\item [T-shirt application] A user interface, implemented as an Android application,
+	\item [T-shirt application:] A user interface, implemented as an Android application,
 	that the user would to setup the rules for the T-shirt. The application needed also a
 	background component (such as an Android service or Thread) that would 'ask' the required information
 	to the social service.
 
-	\item [Social application] An Android service that would run in the background, without user interaction,
+	\item [Social application:] An Android service that would run in the background, without user interaction,
 	to fetch data from the social networks and return it to the T-shirt application.
 	The service should also have a user interface in order to let the user authenticate and
 	enable/disable the service itself.
 
-	\end{itemize}
+\end{description}
 
 It also implied that a mechanism to request and exchange social content, as well as the necessary
 data models abstractions had to be provided by the Social library. The figure \ref{fig:design-reqresp}
@@ -95,7 +95,7 @@ The T-shirt service is now 'asking' the social service for a specific content.
 This happens in the background, without user interaction.
 
 \subsubsection{Sequence diagram}
-This sequence diagram show in figure \ref{fig:design-sequence} shows a sample communication between the social and T-shirt applications.
+This sequence diagram shown in figure \ref{fig:design-sequence} shows a sample communication between the social and T-shirt applications.
 The T-shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
 
 \begin{figure}[h!]
@@ -109,7 +109,7 @@ The T-shirt application requests the list of friends from Facebook whose age is 
 
 \subsection{The Social library}
 The Social library is the link between the Android applications that control the
-behavior of T.U.I. prototypes and social networks. It provides abstractions for
+behavior of TUI prototypes and social networks. It provides abstractions for
 many common concepts found in different social networks like Facebook, Twitter
 and OpenSocial allowing third-party developers to use these concepts seamlessly
 between different social networks and extend them to possibily support others.
