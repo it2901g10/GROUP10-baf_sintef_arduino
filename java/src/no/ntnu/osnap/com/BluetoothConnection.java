@@ -20,6 +20,8 @@ package no.ntnu.osnap.com;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -57,6 +59,7 @@ public class BluetoothConnection extends Protocol {
 	protected BluetoothAdapter bluetooth;	
 	
 	private volatile ConnectionState connectionState;
+	private boolean connectionRequested = false;
 		
 	/**
 	 * An enumeration describing the different connection states a BluetoothConnection can be
@@ -68,9 +71,6 @@ public class BluetoothConnection extends Protocol {
 		/** The device is trying to establish a connection. */
 		STATE_CONNECTING,
 		
-		/** We are connected to the device, but we are waiting for a Ping */
-		STATE_FINALIZE_CONNECTION,
-		
 		/** A valid open connection is established to the remote device. */
 		STATE_CONNECTED
 	}
@@ -81,7 +81,7 @@ public class BluetoothConnection extends Protocol {
 	 * Is useful for connecting to a specific device through discovery mode
 	 * @see BluetoothConnection(String address, Activity parentActivity)
 	 */
-	public BluetoothConnection(BluetoothDevice device, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException {
+	public BluetoothConnection(BluetoothDevice device, Activity parentActivity, ConnectionListener listener) throws ComLibException, IllegalArgumentException {
 		this(device.getAddress(), parentActivity, listener);
 	}
 	
@@ -90,10 +90,10 @@ public class BluetoothConnection extends Protocol {
 	 * Default constructor for creating a new BluetoothConnection to a remote device.
 	 * @param address The Bluetooth MAC address of the remote device
 	 * @param parentActivity The Activity that wants exclusive access to the BluetoothConnection
-	 * @throws UnsupportedHardwareException is thrown if the Android device does not support Bluetooth
+	 * @throws ComLibException is thrown if the Android device does not support Bluetooth
 	 * @throws IllegalArgumentException is thrown if the specified address/remote device is invalid or if ConnectionListener is null
 	 */
-	public BluetoothConnection(String address, Activity parentActivity, ConnectionListener listener) throws UnsupportedHardwareException, IllegalArgumentException{
+	public BluetoothConnection(String address, Activity parentActivity, ConnectionListener listener) throws ComLibException, IllegalArgumentException{
 		
 		//Validate the address
 		if( !BluetoothAdapter.checkBluetoothAddress(address) ){
@@ -108,7 +108,7 @@ public class BluetoothConnection extends Protocol {
 		//Make sure this device has bluetooth
 		bluetooth = BluetoothAdapter.getDefaultAdapter();
 		if( bluetooth == null ){
-			throw new UnsupportedHardwareException("No bluetooth hardware found");
+			throw new ComLibException("No bluetooth hardware found");
 		}		
 		
 		this.connectionListener = listener;
@@ -116,16 +116,61 @@ public class BluetoothConnection extends Protocol {
 		connectionState = ConnectionState.STATE_DISCONNECTED;
 		device = bluetooth.getRemoteDevice(address);
 		
-		//Register broadcast receivers
-		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
+		//Ensure that we disconnect and free resources on exit
+		Runtime.getRuntime().addShutdownHook(new Thread(){
+			@Override
+			public void run(){
+				disconnect();
+			}
+		});
 	}	
+	
+	/**
+	 * Ensures that we have a valid bluetooth socket
+	 */
+	private boolean validateSocket() {
+		//Already created a valid socket?
+		if(socket != null) return true;
+		
+		//Bluetooth must be enabled to create a socket
+		if(bluetooth.getState() != BluetoothAdapter.STATE_ON) return false;
+				
+		//Create a socket through a hidden method (normal method does not work on all devices like Samsung Galaxy SII)
+		try {
+			Method m  = device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+			if(m == null) Log.e("ERROR", "method is null!");
+			socket = (BluetoothSocket) m.invoke(device, Integer.valueOf(1));
+		}
+		catch(InvocationTargetException ex){
+			Log.e(getClass().getSimpleName(), "Unable to create socket: " + ex.getTargetException());
+			return false;
+		}
+		catch (Exception ex){
+			Log.e(getClass().getSimpleName(), "Unable to create socket: " + ex);
+			return false;
+		}
+		
+		//Get input and output streams
+		try {
+	    	output = new BufferedOutputStream(socket.getOutputStream());
+	    	input = new BufferedInputStream(socket.getInputStream());	
+		} catch (IOException ex) {
+			Log.e(getClass().getSimpleName(), "Unable to get input/output stream: " + ex.getMessage());
+			return false;
+		}	
+		
+		return true;
+	}
 	
 	/**
 	 * Changes the connection state of this BluetoothConnection. Package visible.
 	 * @param setState the new ConnectionState of this BluetoothConnection
 	 */
 	void setConnectionState(ConnectionState setState) {
+		//Nothing to change?
+		if(connectionState == setState) return;
+		
+		//Change the state
 		connectionState = setState;
 		
 		//Tell listener about any connection changes
@@ -148,22 +193,8 @@ public class BluetoothConnection extends Protocol {
 		}
 		
 	}
-		
-	/**
-	 * Private connection method. This actually creates a new thread that established the connection to
-	 * the remote device. This method does not have any safeguards to check if Bluetooth or remote device 
-	 * is valid.
-	 */
-    private synchronized final void establishConnection() {
-    	
-    	//Never establish connections when in discovery mode
-		if( bluetooth.isDiscovering() ) return;
-    	
-		//Start an asynchronous connection and return immediately so we do not interrupt program flow
-		new ConnectionThread(this).start();
-    }
-    
-    /**
+	
+	/**	
      * Establishes a connection to the remote device. Note that this function is asynchronous and returns
      * immediately after starting a new connection thread. Use isConnected() or getConnectionState() to
      * check when the connection has been established. disconnect() can be called to stop trying to get an 
@@ -176,27 +207,22 @@ public class BluetoothConnection extends Protocol {
 			Log.w("BluetoothConnection", "Trying to connect to the same device twice!");
 			return;
 		}
-		
-		//Start connecting
-    	setConnectionState(ConnectionState.STATE_CONNECTING);
+    	
+		//Register broadcast receivers
+		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+		parentActivity.registerReceiver(mReceiver, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));    	
 		
 		//Make sure bluetooth is enabled
 		if( !bluetooth.isEnabled() ) {
 			//wait until Bluetooth is enabled by the OS
 			Log.v("BluetoothConnection", "BluetoothDevice is DISABLED. Asking user to enable Bluetooth");
 			parentActivity.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BT);
+			connectionRequested = true;
 			return;
 		}
 		
-		//Stop discovery when connecting
-		if( bluetooth.isDiscovering() ){
-			//wait until discovery has finished before connecting
-			Log.v("BluetoothConnection", "BluetoothDevice is in discovery mode. Waiting for discovery to finish before connecting");
-			return;
-		}
-		
-		//All is good!
-		establishConnection();
+		//Start an asynchronous connection and return immediately so we do not interrupt program flow
+		if(validateSocket()) new ConnectionThread(this).start();
 	}
 
 	/**
@@ -226,7 +252,15 @@ public class BluetoothConnection extends Protocol {
 	 * @return true if there is a connection, false otherwise
 	 */
 	public boolean isConnected() {
-		return connectionState == ConnectionState.STATE_CONNECTED || connectionState == ConnectionState.STATE_FINALIZE_CONNECTION;
+		return connectionState == ConnectionState.STATE_CONNECTED;
+	}
+	
+	/**
+	 * Checks if this BluetoothConnection is paired or not
+	 * @return true if we are already paired (false otherwise)
+	 */
+	public boolean isPaired() {
+		return bluetooth.getBondedDevices().contains(device);
 	}
 	
 	/**
@@ -234,23 +268,26 @@ public class BluetoothConnection extends Protocol {
 	 * remote device can be done again.
 	 */
 	public void disconnect() {
-				
-		//Close socket only if we are connected or trying to connect
-		if(getConnectionState() != ConnectionState.STATE_DISCONNECTED) {
-			setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			super.disconnect();
-			if(socket != null) {
-				try {
-					socket.close();
-					socket = null;
-					input = null;
-					output = null;
-					Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
-				} catch (IOException e) {
-					Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
-				}
-			}
-			return;
+		if(connectionState != ConnectionState.STATE_DISCONNECTED) Log.v(getClass().getSimpleName(), "Bluetooth connection closed: " + device.getAddress());
+		
+		setConnectionState(ConnectionState.STATE_DISCONNECTED);
+		
+		//Disconnect superclass
+		super.disconnect();
+
+    	//Make sure activity is unregistered
+		try {
+			parentActivity.unregisterReceiver(mReceiver);
+		}
+		catch(IllegalArgumentException ex) {
+			//oh ok... the receiver is already unregistered so no harm done here
+		}
+		
+		//Disconnect socket
+		try {
+			if(socket != null) socket.close();
+		} catch (IOException e) {
+			Log.e(getClass().getSimpleName(), "Failed to close Bluetooth socket: " + e.getMessage());
 		}
 		
 	}
@@ -280,8 +317,11 @@ public class BluetoothConnection extends Protocol {
             		//Bluetooth is Enabled and ready
             		case BluetoothAdapter.STATE_ON:
             			//automatically connect if we are waiting for a connection
-            			if( getConnectionState() == ConnectionState.STATE_CONNECTING ) {
-            				establishConnection();
+            			if(connectionRequested) {
+            				connectionRequested = false;
+            				
+            				//Start an asynchronous connection and return immediately so we do not interrupt program flow
+            				if(validateSocket()) new ConnectionThread(BluetoothConnection.this).start();
             			}
             		break;         		            		
             	}
@@ -291,34 +331,23 @@ public class BluetoothConnection extends Protocol {
             //Discovery mode has finished
             else if( action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED) ) {
     			//automatically connect if we are waiting for a connection
-    			if( getConnectionState() == ConnectionState.STATE_CONNECTING ) {
-    				establishConnection();
+    			if(connectionRequested) {
+    				connectionRequested = false;
+    				//Start an asynchronous connection and return immediately so we do not interrupt program flow
+    				if(validateSocket()) new ConnectionThread(BluetoothConnection.this).start();
     			}            	
             }
             
         }
         
-    };	
-		
-    @Override
-    public void finalize() throws Throwable {
-    	
-    	//Make sure activity is unregistered
-    	parentActivity.unregisterReceiver(mReceiver);
-    	
-    	//make sure that the Bluetooth connection is terminated on object destruction
-    	disconnect();
-    	
-    	//Allow deconstruction
-		super.finalize();
-    }
+    };
 
 
 	@Override
 	protected void sendBytes(byte[] data) throws IOException {
 		
 		//Make sure we are connected before sending data
-		if( !isConnected() ){
+		if( connectionState == ConnectionState.STATE_DISCONNECTED ){
 			throw new IOException("Trying to send data while Bluetooth is not connected!");
 		}
 		

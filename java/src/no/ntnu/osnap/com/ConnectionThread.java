@@ -16,16 +16,12 @@
 */
 package no.ntnu.osnap.com;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeoutException;
 
 import no.ntnu.osnap.com.BluetoothConnection.ConnectionState;
 
 
-import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 /**
@@ -48,22 +44,25 @@ class ConnectionThread extends Thread {
 		this.connection = connection;
 		connectionSuccessful = false;
 		
-		if( connection.getConnectionState() == ConnectionState.STATE_CONNECTED ) {
+		if( connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ) {
 			throw new IllegalArgumentException("The specified BluetoothConnection is already connected!");
 		}
+		
+		//Start connecting
+    	connection.setConnectionState(ConnectionState.STATE_CONNECTING);
 				
 		setDaemon(true);
 		setName("Connection Thread: " + connection.device.getName() + " (" + connection.device.getAddress() + ")");
 	}
 	
 	/**
-	 * This thread monitors and polls for new data recieved from the remote device
+	 * This thread monitors and polls for new data received from the remote device
 	 */
 	private class PollingThread extends Thread {
 		public void run() {			
 			
 			//Keep listening bytes from the stream
-			while( connection.isConnected() ){
+			while( connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ){
 				try {
 					int readByte = connection.input.read();
 					if( readByte != -1 ) {
@@ -73,7 +72,7 @@ class ConnectionThread extends Thread {
 						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				} catch (IOException e) {
-					Log.e("ConnectionThread", "Read error: " + e.getMessage());
+					Log.w(getClass().getSimpleName(), "Could not read byte from socket: " + e.getMessage());
 					connection.disconnect();
 				}			
 			}
@@ -83,24 +82,21 @@ class ConnectionThread extends Thread {
 	}
 	
 	@Override
-	public void run() {
+	public void run() {	
+		long timeout;
+		boolean discoveryMode = false;
 		
-		//Wait until bluetooth is finished discovering
-		while( connection.bluetooth.isDiscovering() && connection.getConnectionState() != ConnectionState.STATE_DISCONNECTED ) {
-			try {
-				wait(250);
-			} catch (InterruptedException e) {}
-		}
-		
-		//Create a socket through a hidden method (normal method does not work on all devices like Samsung Galaxy SII)
-		try {
-			Method m  = connection.device.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-			connection.socket = (BluetoothSocket) m.invoke(connection.device, Integer.valueOf(1));
-		}
-		catch (Exception ex){
-			Log.e("ConnectionThread", "Unable to create socket: " + ex.getMessage());
-			connection.setConnectionState(ConnectionState.STATE_DISCONNECTED);
-			return;
+		//Stop discovery when connecting
+		while( connection.bluetooth.isDiscovering() ) {
+			
+			//wait until discovery has finished before connecting
+			if(!discoveryMode) {
+				Log.v("BluetoothConnection", "BluetoothDevice is in discovery mode. Waiting for discovery to finish before connecting");
+				discoveryMode = true;
+			}
+
+			//Wait 250 ms
+			try { wait(250); } catch (InterruptedException e) {/*do nothing*/}
 		}
 		
 		//Open socket in new thread because socket.connect() is blocking
@@ -117,29 +113,24 @@ class ConnectionThread extends Thread {
 			}
 		};
 		
+		socketThread.start();	
+		
+		//30 extra seconds to respond if we are not paired already
+		if(!connection.isPaired()) timeout = System.currentTimeMillis() + 30000;
+		else					   timeout = System.currentTimeMillis() + 4000;
+
 		//Wait until connection is successful or TIMEOUT milliseconds has passed
-		socketThread.start();		
-		long timeout = System.currentTimeMillis() + Protocol.TIMEOUT;
 		while(!connectionSuccessful) {
 			if(System.currentTimeMillis() > timeout) {
+				Log.e(getClass().getSimpleName(), "Bluetooth socket connection timeout (remote device used too long time to respond)");
 				connection.disconnect();
 				return;
 			}			
-			try {Thread.sleep(10); } catch (InterruptedException e) {}
-		}
-				
-		//Get input and output streams
-		try {
-	    	connection.output = new BufferedOutputStream(connection.socket.getOutputStream());
-	    	connection.input = new BufferedInputStream(connection.socket.getInputStream());	
-		} catch (IOException ex) {
-			Log.e("ConnectionThread", "Unable to get input/output stream: " + ex.getMessage());
-			connection.disconnect();
-			return;
+			//try {Thread.sleep(25); } catch (InterruptedException e) {}
 		}
 
 		//Start the super protocol thread loop
-		connection.setConnectionState(ConnectionState.STATE_FINALIZE_CONNECTION);
+		Log.i(getClass().getSimpleName(), "Basic connection established! Requesting Metadata to finish handshake procedure.");
 		new Thread(connection).start();
 		new PollingThread().start();
 				
@@ -147,7 +138,7 @@ class ConnectionThread extends Thread {
 		try {
 			connection.handshakeConnection();
 		} catch (TimeoutException e) {
-			Log.e("ConnectionThread", "Failed to setup connection: Could not retrieve ConnectionMetadata (" + e + ")");
+			Log.e(getClass().getSimpleName(), "Failed to setup connection: Could not retrieve ConnectionMetadata (" + e + ")");
 			connection.disconnect();
 			return;
 		}

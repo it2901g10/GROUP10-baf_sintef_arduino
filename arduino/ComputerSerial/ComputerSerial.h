@@ -27,17 +27,6 @@
 class ComputerSerial{
     //static const int HEADER_BYTE_SIZE = 4;
 
-	// SerialEvent state enum
-	typedef enum
-	{
-		STATE_START,
-		STATE_SIZE_HIGH,
-		STATE_SIZE_LOW,
-		STATE_OPCODE,
-		STATE_FLAG,
-		STATE_CONTENT
-	};
-
 	void commandHandler(word size, uint8_t opcode, uint8_t flag, uint8_t content[]);
 	void ack(uint8_t opcode, uint8_t content[] = NULL_BYTE, word contentSize = 0);
 	void ping();
@@ -80,6 +69,18 @@ public:
 	};
 
 private:
+
+	// SerialEvent state enum
+	typedef enum
+	{
+		STATE_START,
+		STATE_SIZE_HIGH,
+		STATE_SIZE_LOW,
+		STATE_OPCODE,
+		STATE_FLAG,
+		STATE_CONTENT
+	};
+
 	static const uint8_t NUM_OPCODES = 7;
 	void* (*functions[NUM_OPCODES]) (uint8_t flag, uint8_t content[], word contentSize);
 

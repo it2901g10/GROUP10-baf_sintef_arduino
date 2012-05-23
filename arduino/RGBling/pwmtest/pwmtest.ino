@@ -84,17 +84,21 @@ ComputerSerial comp;
 static unsigned long bytes = 0;
 unsigned char maxBrightness = 255;
 unsigned char pwmFrequency = 75;
-int numRegisters = 2;
-int numRGBleds = 5;
+int numRegisters = 24;
+int numRGBleds = 27;
 
 void* data(byte flag, byte content[], byte contentSize){
-  if(contentSize < 15) return NULL;
+  if(contentSize < 27) return NULL;
   
   ShiftPWM.SetRGB(0,content[0],content[1],content[2]);
   ShiftPWM.SetRGB(1,content[3],content[4],content[5]);
   ShiftPWM.SetRGB(2,content[6],content[7],content[8]);
   ShiftPWM.SetRGB(3,content[9],content[10],content[11]);
   ShiftPWM.SetRGB(4,content[12],content[13],content[14]);
+  ShiftPWM.SetRGB(5,content[15],content[16],content[17]);
+  ShiftPWM.SetRGB(6,content[18],content[19],content[20]);
+  ShiftPWM.SetRGB(7,content[21],content[22],content[23]);
+  ShiftPWM.SetRGB(8,content[24],content[25],content[26]);
 }
 
 

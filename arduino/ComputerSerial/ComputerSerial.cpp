@@ -139,7 +139,7 @@ void ComputerSerial::getDeviceInfo(){
 	deviceInfo += deviceDownloadLinks;
 	deviceInfo += "]}";
 
-    int len = deviceInfo.length();
+    word len = deviceInfo.length();
 
     //send response back
 	Serial.write(START_BYTE);
@@ -148,7 +148,7 @@ void ComputerSerial::getDeviceInfo(){
 	Serial.write(OPCODE_RESPONSE);
 	Serial.write(OPCODE_DEVICE_INFO);
 
-    for(int i = 0; i < len; i++)
+    for(word i = 0; i < len; i++)
     {
         Serial.write(deviceInfo[i]);
     }
@@ -226,10 +226,9 @@ void ComputerSerial::attachFunction(uint8_t opcode,
     functions[opcode] = handler;
 }
 
-void ComputerSerial::serialEvent(){
-	static long time = millis();
-	static int state = STATE_START;
-
+void ComputerSerial::serialEvent() {
+    static int state = STATE_START;
+	static long time = 0;
 	static word size = 0;
 	static uint8_t opcode = 0;
 	static uint8_t flag = 0;
@@ -237,15 +236,14 @@ void ComputerSerial::serialEvent(){
 	static uint8_t content_counter = 0;
 
     //Check if there is a timeout
-	if (millis() - time > TIMEOUT && state != STATE_START){
+	if (millis() > time && state != STATE_START) {
 		state = STATE_START;
 	}
-	time = millis();
+	time = millis() + TIMEOUT;
 
     //Recieved new data?
 	while(Serial.available())
     {
-
 		switch (state)
 		{
 			case STATE_START:
@@ -268,7 +266,6 @@ void ComputerSerial::serialEvent(){
 				//Try to allocate memory for the payload
 				content = (uint8_t*)malloc(size);
 				if(content == NULL) state = STATE_START;
-
                 break;
 
 			case STATE_OPCODE:
@@ -284,7 +281,7 @@ void ComputerSerial::serialEvent(){
 			case STATE_CONTENT:
 				content[content_counter] = Serial.read();
 				content_counter++;
-				if (content_counter == size)
+				if (content_counter >= size)
                 {
 					commandHandler(size, opcode, flag, content);
 					content_counter = 0;

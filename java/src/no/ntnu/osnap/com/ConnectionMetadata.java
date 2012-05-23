@@ -16,6 +16,7 @@
 */
 package no.ntnu.osnap.com;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -26,33 +27,20 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class ConnectionMetadata {
+	
+	private String deviceVersion;
 	private String name;
 	private String address;
+	
 	private HashMap<String, String> applicationDownloadLinks;
+	
 	private HashSet<String> servicesSupported;
 	private HashMap<String, HashSet<Integer>> servicePin;
 	
 	public interface Service {
 		String name();
 	}
-	
-	public interface Platform {
-		String name();		
-	}
-	
-	/**
-	 * List of default platforms the remote device supports. This list can be extended by
-	 * creating a new Enum that extends the Platform interface. The names of each enumeration must
-	 * be unique.
-	 */
-	public enum DefaultPlatforms implements Platform {
-		PLATFORM_DEFAULT,
-		PLATFORM_LINUX,
-		PLATFORM_WINDOWS,
-		PLATFORM_ANDROID,
-		PLATFORM_MACINTOSH
-	}
-	
+
 	/**
 	 * List of default services a remote device can support. This list can be extended by
 	 * creating a new Enum that extends the Service interface. The names of each enumeration must
@@ -67,30 +55,7 @@ public class ConnectionMetadata {
 		SERVICE_TEMPERATURE_SESNOR,
 		SERVICE_SPEAKER
 	}	
-	
-	/**
-	 * Default constructor for a ConnectionMetadata object
-	 * @param deviceName the human friendly name of this device
-	 * @param deviceAddress an unique address specifier represented as a String (mac address, IP address, phone number, etc.)
-	 * @param applicationDownloadLink a list of download links mapped to specific platforms
-	 * @param services an arbitrary list of Services this device supports
-	 */
-	public ConnectionMetadata(String deviceName, String deviceAddress, HashMap<String, String> applicationDownloadLink, Service[] services) {
-		this.name = deviceName;
-		this.applicationDownloadLinks = applicationDownloadLink;
 
-		//Add each service to the list of supported services
-		servicesSupported = new HashSet<String>();
-		for(Service service : services){
-			servicesSupported.add(service.name());
-		}
-		
-		servicePin = new HashMap<String, HashSet<Integer>>();
-		
-		//Add download links
-		this.applicationDownloadLinks = applicationDownloadLink;		
-	}
-		
 	/**
 	 * Constructs a ConnectionMetadata object out of a JSON object
 	 * @param deviceInfo JSONObject representation of the ConnectionMetadata
@@ -100,10 +65,15 @@ public class ConnectionMetadata {
         Log.v(getClass().getSimpleName(), "Recieved JSON string: " + deviceInfo.toString());
 		
 		//Get custom name
-		this.name = deviceInfo.optString("name");
+		name = deviceInfo.optString("name", "Unnamed");
+		
+		//Get version
+		deviceVersion = deviceInfo.optString("version", "0.0.0");
+		if(!deviceVersion.equals(Protocol.LIBRARY_VERSION)) 
+			Log.w(getClass().getSimpleName(), "Remote device Firmware (" + deviceVersion + ") is not same version as ComLib (" + Protocol.LIBRARY_VERSION + ")");
 		
 		//Device address
-		this.address = deviceInfo.optString("address");
+		address = deviceInfo.optString("address", "No Address Specified");
 		
 		//Get services supported
 		servicesSupported = new HashSet<String>();
@@ -131,16 +101,16 @@ public class ConnectionMetadata {
 		}
 			
 		//Get download links
-		this.applicationDownloadLinks = new HashMap<String, String>();
+		applicationDownloadLinks = new HashMap<String, String>();
 		JSONArray downloadLinks = deviceInfo.optJSONArray("links");
 		if(downloadLinks != null) {
 			for(int i = 0; i < downloadLinks.length(); i++) {
 				JSONObject pair;
 				try {
 					pair = downloadLinks.getJSONObject(i);
-					String platform = "PLATFORM_" + pair.getString("platform");
+					String name = pair.getString("name");
 					String link = pair.getString("link");
-					applicationDownloadLinks.put(platform, link);
+					applicationDownloadLinks.put(name, link);
 				} catch (JSONException e) {
 					//Failed to get link
 					Log.v(getClass().getName(), "Failed to parse JSON link: " + e.getMessage());
@@ -152,11 +122,14 @@ public class ConnectionMetadata {
 	}
 	
 	/**
-	 * Gets the download link for the application for this device.
-	 * @return URI of the default application
+	 * Retrieves a list of all Applications associated with the remote module.
+	 * You can use getApplicationDownloadLink() to retrieve the download
+	 * link for the specified application.
+	 * @return an array of Strings containing the name of each application
 	 */
-	public String getDefaultApplicationDownloadLink(){
-		return getApplicationDownloadLink(DefaultPlatforms.PLATFORM_DEFAULT);
+	public String[] getApplications() {
+		Collection<String> links = applicationDownloadLinks.keySet();
+		return links.toArray( new String[links.size()] );
 	}
 	
 	/**
@@ -175,8 +148,8 @@ public class ConnectionMetadata {
 	 * @return URI of the application for this device
 	 * @see DefaultPlatforms
 	 */
-	public String getApplicationDownloadLink(Platform platform){
-		return applicationDownloadLinks.get(platform.name());
+	public String getApplicationDownloadLink(String applicationName){
+		return applicationDownloadLinks.get(applicationName);
 	}
 	
 	/**
@@ -212,5 +185,13 @@ public class ConnectionMetadata {
 	 */
 	public String getAddress() {
 		return address;
+	}
+	
+	/**
+	 * Retrieves the device version on the remote device (usually ComLib version of the firmware)
+	 * @return a String representation of the version (example: "2.0.0")
+	 */
+	public String getDeviceVersion() {
+		return deviceVersion;
 	}
 }
