@@ -10,17 +10,17 @@ for the various parts of the project.
 	\hline                        
 	\bf{Requirement} & \bf{Priority} \\
 	\hline
-	F1:  SocialLib					& Very High \\
-	F2:  ComLib						& Very High \\
-	F7:  T-Shirt Prototype			& High \\
-	F3:  oSNAP application			& Medium \\
-	F4:  T-Shirt application		& Medium \\
-	F5:  Facebook application		& Medium \\
-	F6:  Twitter application		& Medium \\
-	F8:  Temperature application 	& Low \\
-	F9:  Temperature Prototype		& Low \\
-	F10: LED matrix application		& Low \\
-	F11: LED matrix Prototype		& Low \\
+	F1:  SocialLib						& Very High \\
+	F2:  ComLib							& Very High \\
+	F7:  Jacket Prototype				& High \\
+	F3:  oSNAP Generic Application		& Medium \\
+	F4:  oSNAP Jacket Applications		& Medium \\
+	F5:  oSNAP Facebook Application		& Medium \\
+	F6:  oSNAP Twitter Application		& Medium \\
+	F8:  oSNAP Temperature Application	& Low \\
+	F9:  Temperature Prototype			& Low \\
+	F10: oSNAP LED matrix Application	& Low \\
+	F11: LED matrix Prototype			& Low \\
 	\hline  
 \end{tabular}
 \end{table}
@@ -48,27 +48,27 @@ for the various parts of the project.
 
 \newpage
 
-\subsection{F3: oSNAP application}
+\subsection{F3: oSNAP Generic Application}
 \begin{description}
 	\item[Libraries:] The application shall use the Communication library
 	to communicate with TUI prototypes.
 \end{description}
 
-\subsection{F4: T-Shirt application}
+\subsection{F4: oSNAP Jacket Application}
 \begin{description}
 	\item[On and Off:] The user shall be able to turn the application On
 	and Off. When the application is not running, no social data will be
-	forwarded to the T-Shirt prototype.
+	forwarded to the Jacket prototype.
 	\item[Libraries:] The application shall use the Communication library to
-	communicate with the T-Shirt prototype and the Social library to
+	communicate with the Jacket prototype and the Social library to
 	receive and send data from/to social services.
 	\item[Rules:] The application shall let the user setup a set of rules
-	to control the behavior of the T-Shirt. Rules can be created and deleted.
+	to control the behavior of the Jacket. Rules can be created and deleted.
 	\item[User interaction:] The application shall continue to work
 	when the mobile itself is idle.
 \end{description}
 
-\subsection{F5: Facebook application}
+\subsection{F5: oSNAP Facebook Application}
 \begin{description}
 	\item[Login (Authentication):] The application shall handle the
 	authentication with Facebook.
@@ -82,19 +82,19 @@ for the various parts of the project.
 	should be required.
 \end{description}
 
-\subsection{F6: Twitter application}
+\subsection{F6: oSNAP Twitter Application}
 \begin{description}
 	\item[Libraries:] The application shall use the Social library to
 	communicate with TUI prototype applications.
 \end{description}
 
-\subsection{F7: T-Shirt prototype}
+\subsection{F7: Jacket prototype}
 \begin{description}
 	\item[Features:] The prototype shall map some social content to various
 	embedded electronic devices.
 	\item[Libraries:] The prototype shall use both the Social and Communication
 	libraries.
-	\item[User input:] Once the rules for the T-Shirt are set, no further user
+	\item[User input:] Once the rules for the Jacket are set, no further user
 	input shall be required.
 \end{description}
 
@@ -114,7 +114,7 @@ for the various parts of the project.
 	\item[Libraries:] The prototype shall use the Communication library.
 \end{description}
 
-\subsection{F10: Temperature application}
+\subsection{F10: oSNAP Temperature Application}
 \begin{description}
 	\item[Mac address:] The user should be able to scan the mac address from a QR code, and/or enter it manually. 
 	\item[Share temperature:] The user should have full control over when and to which social media the temperature data is shared.
@@ -123,7 +123,7 @@ for the various parts of the project.
 	\item[Libraries:] The application shall use the Social and Communication libraries.
 \end{description}
 
-\subsection{F11: BlingLED application}
+\subsection{F11: oSNAP BlingLED Application}
 \begin{description}
 	\item[Connection:] You must be able to establish a wireless connection from the Android to the prototype (F9) through Bluetooth.
 	\item[Lights:] When the appropriate light levels are adjusted on the Android, the prototype (F9) should adjust the LED matrix accordingly.
