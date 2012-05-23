@@ -22,9 +22,9 @@ This illustrates a split in the middle where the developer wants to treat the da
 Both frameworks would need to support Android and development. This is an advantage for us who is going to create the framework, and for those who are going to use it.
 
 The disadvantage is that it will be no direct connection from the Arduino board to a social service.
-I.e, the board can not connect directly through the Internet to Facebook. It needs a middleman, either a Android phone or a laptop.
+I.e, the board can not connect directly through the Internet to Facebook. It needs a middleman, either an Android phone or a laptop.
 
-After some tests, we have figured out that it makes no difference if the Arduino board is connected through a Bluetooth device or trough an USB cable. If it's an USB cable, the board shows up as a COM port. If the board is paired with the computer/mobile using the operating system/Android, it also shows up as a COM port. So the program searches the COM ports and connects to the board anyhow. (It's may not work on all bluetooth chipsets)
+After some tests, we have figured out that it makes no difference if the Arduino board is connected through a Bluetooth device or trough an USB cable. If it's an USB cable, the board shows up as a COM port. If the board is paired with the computer/mobile using the operating system/Android, it also shows up as a COM port. So the program searches the COM ports and connects to the board anyhow. (It may not work on all bluetooth chipsets)
 
 
 The board needs a firmware that is precompiled on a computer.
