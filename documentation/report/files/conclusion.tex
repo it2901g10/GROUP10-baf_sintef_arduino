@@ -2,40 +2,39 @@
 A big part of projects like this is reflecting back and see which mistakes were made throughout
 the project lifetime. We can then learn why these mistakes happened and develop strategies to
 prevent them from happening in future projects. This section describes the various pitfalls and
-mistakes that were made throughout the project and what we learned from these.
+mistakes that were made throughout the project and what we have learned from these.
 
 \subsection{Establishing project requirements}
 A lot of time was lost by prematurely starting the design and planning phase before the
 requirements were properly understood and established. This was also caused by the shifting 
 requirements that the customer had every meeting. We should have properly established a list of
 requirements and agreed with the customer that these were the final requirements. In addition we
-should have not started major planning, setting up resource management before the requirements
+should have not started major planning, like setting up resource management before the requirements
 were properly set after a few meetings with the customer.
 
 \subsection{Hardware problems}
 There were various issues with the hardware for our prototypes. A big one was the large delay
-from when we initially ordered the hardware and until we received them. The two months it took
-for the hardware to arrive meant that in that period we could not do any integration and testing.
+from when we initially ordered the hardware and until we received them. It took just over two months for
+some of the necessary hardware to arrive, resulting in a delay in our integration and testing process.
 This was a major setback to our plans and this time was mostly spent writing documentation, planning
-and testing the libraries for bugs. In addition the hardware we received was either wrong or not
-optimal for our specifications. This was caused by miscommunication within the project group. In
-addition we had not ordered backup or spare parts, so when for example the LCD screen broke,
-we had to find other workarounds to solve this issue. In hindsight we should have made sure that
-the list of hardware orders was correct and ordered additional spare parts in case something broke
-or malfunctioned.
+and testing the libraries for bugs. Due to miscommunication within the project group some of the 
+hardware we received was either wrong or not quite optimal for our specifications. In addition we had 
+not ordered backup or spare parts, so when for example the LCD screen broke, we had to find other 
+workarounds to solve this issue. In hindsight we should have made sure that the list of hardware orders 
+were correct and ordered additional spare parts in case something broke or malfunctioned.
 
 \subsection{Group meetings}
 A chronic problem inside the group was late attendance to internal team meetings. For various reasons members of
-the group would meet hours later than the agreed or planned time. This was somewhat mitigated to having 
+the group would meet hours later than the agreed or planned time. This was somewhat mitigated by having 
 the meetings later in the day and working into the late hours of the night.
 
 \subsection{Limiting project scope}
-Another problem caused by an early design choice was the level of portability. Initially we coded our libraries to support as wide range of platforms as possible (PC, Android, iOS, etc.). This caused various generalizations and concepts that worked not very well with Android. One prevalent example was callbacks and threads inside the Android system. While our library was based on multi-threading and callbacks through an observer pattern, this does not work on Android Java the same way one would expect on a PC. Since every prototype and testing software we coded was based on the Android platform this caused major problems and we had to spend a lot of time rewriting and redesigning libraries. So our choice of portability caused many problems considering the customer explicitly stated that we only needed to support Android. While portability is usually a good thing, the product quality should not suffer if it is not a high priority requirement.
+A problem caused by an early design choice was the level of portability. Initially we coded our libraries to support as a wide range of platforms as possible (PC, Android, iOS, etc.). This caused various generalizations and concepts that didn't work to well with the Android platform. One prevalent example was callbacks and threads inside the Android system. While our library was based on multi-threading and callbacks through an observer pattern, this does not work on Android Java the same way one would expect on a PC. Since every prototype and testing software we coded was based on the Android platform this caused major problems and we had to spend a lot of time rewriting and redesigning libraries. So our choice of portability caused many problems considering the customer explicitly stated that we only needed to support Android. While portability is usually a good thing, the product quality should not suffer if it is not a high priority requirement.
 
 \section{Further Work}
 This section describes ideas, code and features we did not have time or resources to
 finish at the project deadline. The section can also describe various interesting concepts 
-that we visualized that we might have explored given more time.
+that we visualized, which we could have explored given more time.
 
 \subsection{Supporting more communication technologies in ComLib}
 Currently the ComLib only supports Bluetooth connections. Further work would be
@@ -47,17 +46,17 @@ compatible with other versions of the ComLib.
 
 \subsection{Supporting additional Social networks}
 The SocialLib currently supports Twitter and Facebook. Support for additional social
-networks like Google Plus, LinkedIn or MySpace was planned as future work. Also the
-SocialLib has been implemented to accommodate this process as simple as possible
+networks like Google Plus, LinkedIn or MySpace was planned as future work. The
+SocialLib has also been implemented to accommodate this process as simple as possible
 for the developer.
 
 \subsection{Multi-Platform}
-The Bluetooth part of the ComLib has been implemented using Android SDK. This means 
+The Bluetooth part of the ComLib has been implemented using Android SDK. This means that 
 the Bluetooth part of the library will only run on an Android platform. The ComLib protocol
 itself however, has been designed to support any type of platform. This means the ComLib
 could be expanded to support other types of platform such as Bluetooth on iOS. This
-should preferably be implemented as a common interface, so the developer only has to use
-Bluetooth and the ComLib itself figures out if to use the Android version or the iOS version of
+should preferably be implemented as a common interface, so that the developer only has to use
+Bluetooth, and the ComLib itself figures out if it is to use the Android version or the iOS version of
 the Bluetooth Protocol.
 
 \subsection{Security}
@@ -70,9 +69,9 @@ The final scope of the project was much bigger than we originally planned and en
 was mainly caused because of all the different prototypes we had to implement. Originally we had planned
 to implement one prototype with accompanying application, but ended up creating two developer libraries
 along with 3 prototypes and 6 different Android applications in addition to a webpage for distribution of oSNAP
-compatible software. While challenging this was also a lot of fun. We had a lot of freedom in developing
+compatible software. While challenging this was also a lot of fun, since we had a lot of freedom in developing
 these products in the way we liked.
 
 The weekly meetings with the customer proved to be very valuable and
-a good way for the customer to keep track of progress. We showed the fruits of the work from the earlier
-week to the customer and he could steer us in the direction he desired and comment on the results.
+a good way for the customer to keep track of progress. We showed the fruits of our work from the earlier
+week to the customer, and he could steer us in the direction he desired and comment on the results.
