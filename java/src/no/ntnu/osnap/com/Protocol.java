@@ -271,7 +271,13 @@ public abstract class Protocol implements Runnable {
 				waitingForAck = null;
 				throw new TimeoutException("Timeout (remote device used too long time to respond)");
 			}
-			try { Thread.sleep(10); } catch (InterruptedException ex) { /*nothing*/ }
+			try { 
+				Thread.sleep(10); 
+			} 
+			catch (InterruptedException ex) 
+			{ 
+				/*nothing*/ 
+			}
 		}
 
         ackProcessingComplete();

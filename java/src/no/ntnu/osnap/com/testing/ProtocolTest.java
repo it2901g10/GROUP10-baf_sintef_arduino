@@ -16,6 +16,9 @@ public class ProtocolTest {
 		
 		Random rand = new Random();
 		
+		System.out.println("Sensor 0: " + arduino.sensor(0));
+		System.out.println("Sensor 1: " + arduino.sensor(1));
+		
 		arduino.print("WIN! :D", true);
         
         for (long i = 120; i < 1000; ++i){
