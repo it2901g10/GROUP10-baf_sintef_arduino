@@ -112,7 +112,7 @@ The Social library is the link between the Android applications that control the
 behavior of TUI prototypes and social networks. It provides abstractions for
 many common concepts found in different social networks like Facebook, Twitter
 and OpenSocial allowing third-party developers to use these concepts seamlessly
-between different social networks and extend them to possibily support others.
+between different social networks and extend them to possibly support others.
 It also defines and implements a set of classes to allow Android applications
 and services to exchange such data models. This mechanism is based on Android's
 native inter-process communication API (both intents, and message-based \newline
@@ -186,11 +186,10 @@ On the Arduino, all code related to our protocol is abstracted into a ComputerSe
 This library is a very basic state machine which processes single bytes received (see Figure~\ref{fig:arduino_states}).
 The user of this library can register local methods to be called with RPC when the corresponding instruction is called.
 The instructions follow strict rules on how they are constructed (see Table~\ref{tbl:instr_struct} for sizes of the different parts).
-Each instruction has to start with a "start-byte" which is always 0xFF. The next part is the size, which tells the number of bytes
-to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to
+Each instruction has to start with a "start-byte" which is always 0xFF (255 decimal). The next part is the size, which tells the number of bytes to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to
 remember that the content cannot be empty, and has to at least contain 1 byte. This byte however, is not necessarily read or used.
 
-The following figure illustrates the Arduino automata.
+The following figure \ref{fig:arduino_states} illustrates the Arduino state machine:
 
 \begin{figure}[h!]
 	\centering
@@ -461,7 +460,7 @@ As we approached the final sprint, it became apparent that we needed a way to si
 The market does not currently rely on any server side scripting. For the purpose of internal testing, the market (see figure \ref{fig:market-screen}) is currently being hosted at \newline http://folk.ntnu.no/svarvaa/utils/pro2www.
 
 \subsection{Model}
-The model is a simple JSON object with some required data fields. The model, or backend, can be swapped out with anything, as long as it supplies the view with a JSON object following the pattern in the source code exerpt below.
+The model is a simple JSON object with some required data fields. The model, or back-end, can be swapped out with anything, as long as it supplies the view with a JSON object following the pattern in the source code excerpt below.
 \javacode
 \begin{lstlisting}
 var market = {
@@ -492,10 +491,10 @@ var market = {
 \end{lstlisting}
 
 \subsection{Controller}
-The controller recieves an app, and the model from the view. It will then generate HTML for that app, while figuring out it's dependencies.
+The controller receives an app, and the model from the view. It will then generate HTML for that app, while figuring out it's dependencies.
 
 \subsection{View}
-The view loops through every app in the model and generates a view using the controller. The resulting view is then insterted into the appList element's html, which is just an empty ul html element.
+The view loops through every app in the model and generates a view using the controller. The resulting view is then inserted into the appList element's html, which is just an empty UL html element.
 
 \begin{figure}
 	\begin{center}
