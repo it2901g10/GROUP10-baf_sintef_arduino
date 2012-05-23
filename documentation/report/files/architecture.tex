@@ -112,7 +112,7 @@ The Social library is the link between the Android applications that control the
 behavior of TUI prototypes and social networks. It provides abstractions for
 many common concepts found in different social networks like Facebook, Twitter
 and OpenSocial allowing third-party developers to use these concepts seamlessly
-between different social networks and extend them to possibily support others.
+between different social networks and extend them to possibly support others.
 It also defines and implements a set of classes to allow Android applications
 and services to exchange such data models. This mechanism is based on Android's
 native inter-process communication API (both intents, and message-based \newline
@@ -186,11 +186,10 @@ On the Arduino, all code related to our protocol is abstracted into a ComputerSe
 This library is a very basic state machine which processes single bytes received (see Figure~\ref{fig:arduino_states}).
 The user of this library can register local methods to be called with RPC when the corresponding instruction is called.
 The instructions follow strict rules on how they are constructed (see Table~\ref{tbl:instr_struct} for sizes of the different parts).
-Each instruction has to start with a "start-byte" which is always 0xFF. The next part is the size, which tells the number of bytes
-to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to
+Each instruction has to start with a "start-byte" which is always 0xFF (255 decimal). The next part is the size, which tells the number of bytes to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to
 remember that the content cannot be empty, and has to at least contain 1 byte. This byte however, is not necessarily read or used.
 
-The following figure illustrates the Arduino automata.
+The following figure \ref{fig:arduino_states} illustrates the Arduino state machine:
 
 \begin{figure}[h!]
 	\centering
@@ -287,14 +286,37 @@ temperature prototype in section \ref{section:prototype-temp}). This is done by 
  of the remote device. The application can then retrieve temperature updates to display them directly on the Android or automatically 
 upload temperature updates to Facebook through the ComLib. This application is a proof-of-concept that the libraries work independently
  and are not hard-coded for one application. It also shows that the ComLib supports two-way communication.
+In the planning stage of this prototype, a paper prototype (see figure~\ref{fig:prototype2-paper}) was showed to the
+customer. Due to some problems with getting the initial design to work properly, the GUI was revised (see
+figure~\ref{fig:prototype2-gui}) to make it more user friendly and visually appealing.
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=1.0\textwidth]{img/prototype2-paper.png}
+\caption{Paper Prototype for the temperature sensor.}
+\label{fig:prototype2-paper}
+\end{figure}
+
+\begin{figure}[H]
+\centering 
+\includegraphics[width=0.3\textwidth]{img/prototype2-gui.png}
+\caption{Final GUI design for the temperature prototype.}
+\label{fig:prototype2-gui}
+\end{figure}
 
 \subsection{BlingLED Application}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=1]{img/app-led}
 \end{wrapfigure}
-This application uses ComLib to connect ot the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user
-to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated
-into any application.
+This application uses ComLib to connect ot the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated into any application. Figure \ref{fig:design-ledmatrix} shows the Android application used to control the prototype.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[scale=0.35]{img/prototype3rgBling.png}
+	\end{center}
+	\caption{Concept of the Android application BlingLED.}
+	\label{fig:design-ledmatrix}
+\end{figure}
 
 \subsection{Twitter application}
 \begin{wrapfigure}{l}{20mm}
@@ -366,49 +388,29 @@ This prototype will primarily showcase the communication from Arduino to Android
 Figure \ref{fig:design-temperature} shows a visual representation of the entire Temperature Sensor
 prototype with an Android device connected wirelessy through bluetooth to the Arduino board. The 
 Arduino unit can read the ambient temperature and be able to send this info to an Android application,
- either on demand or at a set interval that can be chosen through settings in the application. 
-In the planning stage of this prototype, a paper prototype (see figure~\ref{fig:prototype2-paper}) was showed to the
-customer. Due to some problems with getting the initial design to work properly, the GUI was revised(see
-figure~\ref{fig:prototype2-gui} ) to make it more user friendly and visually appealing.
+ either on demand or at a set interval that can be chosen through settings in the application. Figure \ref{fig:design-temperature-schematic} describes how the hardware in this prototype is connected and which parts are required to build it.
 
-\begin{figure}[H]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.35]{img/design-temperature}
 	\caption{Concept drawing of the temperature application setup.}
 	\label{fig:design-temperature}
 \end{figure}
 
-\begin{figure}[H]
-\centering 
-\includegraphics[width=1.0\textwidth]{img/prototype2-paper.png}
-\caption{Paper Prototype for the temperature sensor.}
-\label{fig:prototype2-paper}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.5]{img/tempapp-schematic}
+	\caption{Schematic for hardware setup in the Temperature prototype}
+	\label{fig:design-temperature-schematic}
 \end{figure}
-
-\begin{figure}[H]
-\centering 
-\includegraphics[width=0.3\textwidth]{img/prototype2-gui.png}
-\caption{Final GUI design for the temperature prototype.}
-\label{fig:prototype2-gui}
-\end{figure}
-
 	
 \subsection{Prototype 3: LED Matrix} \label{section:prototype-led}
 This prototype was first planned to be LED lights (Figure \ref{fig:design-ledmatrix}) showing what mood you had on MySpace.
-Red LED lights would be angry, green would be happy and so on. We discovered that MySpace had removed this feature from their pages,
-even if it was still supported by the API. It would be a fools errand to pursue something you could not test properly
+Red LED lights would be angry, green would be happy and so on. We discovered that MySpace had removed this feature from their pages, even if it was still supported by the API. It would be a fools errand to pursue something you could not test properly
 in a real world situation, so we changed the concept of this prototype. It ended up to be a prototype with LEDs governed by Android.
 You select colors of the 3x3 LEDS in a graphical interface in an Android app. Then you send this information over Bluetooth
 to the Arduino who shows the selected colors on a necklace.
 The purpose of this prototype is to show how easy it is to implement the Communication Library in an Android application and most of the time can be spent on actual development of your own idea rather than understanding specifics of the library. The second purpose is to show the extensibility of using Shift Registers to control multitudes of components. This prototype is using four shift registers to control nine LEDs but it could theoretically be several thousand with more shift registers and chained Arduino boards. An external open-source library was used to control the shift registers. \cite{link:shiftpwm}
-
-\begin{figure}
-	\begin{center}
-	\includegraphics[scale=0.7]{img/prototype3rgBling.png}
-	\end{center}
-	\caption{Concept of the Android application RGBling.}
-	\label{fig:design-ledmatrix}
-\end{figure}
 
 \section{Package Structure}
 The source code of the whole system can be organized in smaller sections.
@@ -461,7 +463,7 @@ As we approached the final sprint, it became apparent that we needed a way to si
 The market does not currently rely on any server side scripting. For the purpose of internal testing, the market (see figure \ref{fig:market-screen}) is currently being hosted at \newline http://folk.ntnu.no/svarvaa/utils/pro2www.
 
 \subsection{Model}
-The model is a simple JSON object with some required data fields. The model, or backend, can be swapped out with anything, as long as it supplies the view with a JSON object following the pattern in the source code exerpt below.
+The model is a simple JSON object with some required data fields. The model, or back-end, can be swapped out with anything, as long as it supplies the view with a JSON object following the pattern in the source code excerpt below.
 \javacode
 \begin{lstlisting}
 var market = {
@@ -492,10 +494,10 @@ var market = {
 \end{lstlisting}
 
 \subsection{Controller}
-The controller recieves an app, and the model from the view. It will then generate HTML for that app, while figuring out it's dependencies.
+The controller receives an app, and the model from the view. It will then generate HTML for that app, while figuring out it's dependencies.
 
 \subsection{View}
-The view loops through every app in the model and generates a view using the controller. The resulting view is then insterted into the appList element's html, which is just an empty ul html element.
+The view loops through every app in the model and generates a view using the controller. The resulting view is then inserted into the appList element's html, which is just an empty UL html element.
 
 \begin{figure}
 	\begin{center}
