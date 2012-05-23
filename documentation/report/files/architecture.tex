@@ -120,7 +120,7 @@ communication). The following figures illustrate the most relevant classes
 of the library.
 
 \begin{figure}[h!]
-	\centering \includegraphics[scale=0.8]{img/architecture-socialclasses.png}
+	\centering \includegraphics[scale=0.7]{img/architecture-socialclasses.png}
 	\caption{Social library core classes}
 	\label{fig:social-classes}
 \end{figure}
@@ -137,7 +137,7 @@ This library consists of a Java library (implemented on Android) and an Arduino 
 both implementing the ComLib protocol. The Java library provides a set of classes that simplify the connection to Arduino
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
 services the remote device supports and any software download links associated with the remote device. A service might
-be a sensor, a lamp, display screen while download links are represented as an URI link. All this meta information is stored
+be a sensor, a lamp, display screen while download links are represented as an URL link. All this meta information is stored
 on in the firmware on the remote device as raw text using the JSON format. This meta-data can also be stored an retrieved
 in a QR code or anything else that can store plain text.
 
@@ -225,7 +225,7 @@ functionality the remote device supports. The user can then test each function w
 and also download the prototype specific application from a link to the oSNAP market.
 The idea is that the user can use this application to scan various oSNAP products and retrieve
 additional information or software for that specific product. This application was initially used to test
-the T.U.I. prototypes that was later converted to a 'real' application by client's request. The startup screen
+the TUI prototypes that was later converted to a 'real' application by client's request. The startup screen
 is display in figure \ref{fig:osnap-generic}.
 
 \begin{figure}[h!]
@@ -239,7 +239,7 @@ is display in figure \ref{fig:osnap-generic}.
 	\centering \includegraphics[scale=1]{img/app-jacket}
 \end{wrapfigure}
 This application was developed to use and test the full functionality of both the ComLib and Social library in combination with the
-Jacket Prototype. It connects to the Jacket via Bluetooth and uses any Social service installed and running on the
+Jacket Prototype. It connects to the Jacket via Bluetooth and uses any Social network services installed and running on the
 Android system. It will retrieve any status updates from these services and can via rules set up by the user output something
 on the Jacket. One example could be a rule to play a sound effect through the Jacket speaker whenever something happens
 on a twitter feed.
@@ -265,7 +265,7 @@ For completeness we present the previous application use case in figure \ref{fig
 	\centering \includegraphics[scale=1]{img/app-fb}
 \end{wrapfigure}
 The Facebook application is an Android application that that replies
-T.U.I. prototype applications' requests by providing a Social library's 'Social service'
+TUI prototype applications' requests by providing a Social library's 'Social service'
 Facebook-specific implementation.
 
 As discussed in chapter \ref{sec:system-design} the Facebook application design had to be reviewed after roughly one month.
@@ -335,10 +335,10 @@ except that it is a Twitter specific implementation that is able to read NTNU's 
 \section{Prototypes}
 \label{sec:prototypes}
 Three different prototypes will be produced for the project. Their purpose is to serve as proof of concept and
-to show that the libraries and can effectively simplify the prototyping of Arduino-based T.U.I.
+to show that the libraries and can effectively simplify the prototyping of Arduino-based TUI
 One of the prototypes, the oSNAP Jacket (formerly the T-Shirt), is significantly bigger and more complex than the other two.
 The oSNAP Jacket is the main prototype of the project; the purpose of the other two
-is just to show that the libraries can be use for other applications and in different contexts.
+is just to show that the libraries can be use for other applications and in different contexts - to showcase the generic nature of our libraries.
 
 \subsection{Prototype 1: The oSNAP Jacket}
 This is our main prototype and will showcase a lot features.
@@ -416,7 +416,7 @@ This prototype was first planned to be LED lights (Figure \ref{fig:design-ledmat
 Red LED lights would be angry, green would be happy and so on. We discovered that MySpace had removed this feature from their pages, even if it was still supported by the API. It would be a fools errand to pursue something you could not test properly
 in a real world situation, so we changed the concept of this prototype. It ended up to be a prototype with LEDs governed by Android.
 You select colors of the 3x3 LEDS in a graphical interface in an Android app. Then you send this information over Bluetooth
-to the Arduino who shows the selected colors on a necklace.
+to the Arduino which shows the selected colors on a necklace.
 The purpose of this prototype is to show how easy it is to implement the Communication Library in an Android application and most of the time can be spent on actual development of your own idea rather than understanding specifics of the library. The second purpose is to show the extensibility of using Shift Registers to control multitudes of components. This prototype is using four shift registers to control nine LEDs but it could theoretically be several thousand with more shift registers and chained Arduino boards. An external open-source library was used to control the shift registers\cite{link:shiftpwm}.  Figure \ref{fig:design-blingled-schematic} describes how the hardware in this prototype is connected and which parts are required to build it.
 
 \begin{figure}[h!]
@@ -441,7 +441,7 @@ Below is a brief description of the most important ones.
 		protocol interface. The actual details of the communication such as Bluetooth, cable, WiFi, stream-based or
 		sockets are hidden away from the user. This is to provide a simple and generic interface to all supported
 		communication methods. The user can easily add new communication types by extending an abstract class.
-		The ComLib additionally defines a standard of storing and retrieving meta-data of services and download URI
+		The ComLib additionally defines a standard of storing and retrieving meta-data of services and download URL
 		links from the remote device using JSON.
 	\item \textbf{no.ntnu.osnap.com.testing}\newline
 		Test units and sample programs for the ComLib. These are simple test applications that are run on
@@ -459,10 +459,10 @@ Below is a brief description of the most important ones.
 		Temperature application classes.
 	\item \textbf{no.ntnu.osnap.led}\newline
 		Led application classes.
-	\item \textbf{no.ntnu.osnap.mockups}  \newline \label{section:mockup}
+	\item \textbf{no.ntnu.osnap.mockups}\newline\label{section:mockup}
 		Stubs and 'driver' applications used for testing purposes.
 		Example applications for third-party developers.
-	\item \textbf{no.ntnu.osnap.app} \newline
+	\item \textbf{no.ntnu.osnap.app}\newline
 		This package contains Android applications (called Activities in the Android terminology) for the three prototypes
 		we have implemented. Activity resources (graphics, sounds and activity manifest) is also included in this package.
 \end{itemize}
