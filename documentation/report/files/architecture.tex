@@ -417,7 +417,15 @@ Red LED lights would be angry, green would be happy and so on. We discovered tha
 in a real world situation, so we changed the concept of this prototype. It ended up to be a prototype with LEDs governed by Android.
 You select colors of the 3x3 LEDS in a graphical interface in an Android app. Then you send this information over Bluetooth
 to the Arduino which shows the selected colors on a necklace.
-The purpose of this prototype is to show how easy it is to implement the Communication Library in an Android application and most of the time can be spent on actual development of your own idea rather than understanding specifics of the library. The second purpose is to show the extensibility of using Shift Registers to control multitudes of components. This prototype is using four shift registers to control nine LEDs but it could theoretically be several thousand with more shift registers and chained Arduino boards. An external open-source library was used to control the shift registers. \cite{link:shiftpwm}
+The purpose of this prototype is to show how easy it is to implement the Communication Library in an Android application and most of the time can be spent on actual development of your own idea rather than understanding specifics of the library. The second purpose is to show the extensibility of using Shift Registers to control multitudes of components. This prototype is using four shift registers to control nine LEDs but it could theoretically be several thousand with more shift registers and chained Arduino boards. An external open-source library was used to control the shift registers\cite{link:shiftpwm}.  Figure \ref{fig:design-blingled-schematic} describes how the hardware in this prototype is connected and which parts are required to build it.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=1.0]{img/blingled-schematic}
+	\caption{Schematic for hardware setup in the BlingLED prototype}
+	\label{fig:design-blingled-schematic}
+\end{figure}
+
 
 \section{Package Structure}
 The source code of the whole system can be organized in smaller sections.
