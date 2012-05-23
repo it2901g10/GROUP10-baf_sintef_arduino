@@ -137,7 +137,7 @@ This library consists of a Java library (implemented on Android) and an Arduino 
 both implementing the ComLib protocol. The Java library provides a set of classes that simplify the connection to Arduino
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
 services the remote device supports and any software download links associated with the remote device. A service might
-be a sensor, a lamp, display screen while download links are represented as an URI link. All this meta information is stored
+be a sensor, a lamp, display screen while download links are represented as an URL link. All this meta information is stored
 on in the firmware on the remote device as raw text using the JSON format. This meta-data can also be stored an retrieved
 in a QR code or anything else that can store plain text.
 
@@ -426,7 +426,7 @@ Below is a brief description of the most important ones.
 		protocol interface. The actual details of the communication such as Bluetooth, cable, WiFi, stream-based or
 		sockets are hidden away from the user. This is to provide a simple and generic interface to all supported
 		communication methods. The user can easily add new communication types by extending an abstract class.
-		The ComLib additionally defines a standard of storing and retrieving meta-data of services and download URI
+		The ComLib additionally defines a standard of storing and retrieving meta-data of services and download URL
 		links from the remote device using JSON.
 	\item \textbf{no.ntnu.osnap.com.testing}\newline
 		Test units and sample programs for the ComLib. These are simple test applications that are run on
