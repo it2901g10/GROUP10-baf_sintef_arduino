@@ -1,0 +1,38 @@
+\subsection{Participants}
+
+ Everyone except Jonas
+
+\subsection{Agenda}
+Presenting the social Lib and its functions, discuss on further work and figure out should be the next step.
+
+Show temperature prototype working with communication library
+
+\subsection{Additional Information}
+Group still waiting for the hardware that was ordered.
+
+Agreement on backwards compatibility of the social library. So that when new social networks comes out, it should be possible to add abstractions specific to a given network without destroying the already existing functionality of the social library. This shouldn't affect the end user of a product, neither the developer. 
+
+We should make the API as simple and user-friendly as possible for the developer. So the developer don't have to use a long time getting into using and understanding the API.
+
+Go with a middle way of how the API is working, don't try to support everything, just the common things that most social networks share. Ie: the concept of user, post(message), stream.
+This can include some specific functionality to a given social network. 
+
+Use for example annotations for specifying which social network a given functionality belongs to: FP.post(facebook) / TW.post(twitter). Give the developer possibility to define own annotations as well as using the predefined ones.
+
+\subsection{To do}
+
+\begin{itemize}
+\item  Make a target API version 1, make it as simple as possible.
+\item Implement classes with simple ideas, that we are sure won't change.
+\item Get feedback on the API.
+\item Look into using the remoteMethodHandler for Android.
+\end{itemize}
+
+
+
+\subsection{To do for next meeting with the customer}
+
+\begin{itemize}
+\item Use QR code for setting the bluetooth MAC address on the temperature prototype.
+\item Get a working prototype to work end to end.
+\end{itemize}
