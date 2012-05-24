@@ -1,6 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package no.ntnu.osnap.social.twitter;
 
@@ -27,8 +36,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- *
- * @author lemrey
+ * A minimal SocialService implementation for Twitter.
+ * It only reads the last tweet on NTNU's public twitter page.
+ * @author Emanuele 'lemrey' Di Santo
  */
 public class TwitterService extends SocialService {
 
@@ -49,8 +59,10 @@ public class TwitterService extends SocialService {
 
 		switch (request.getRequestCode()) {
 			case MESSAGE_STREAM: {
+				// get the last tweed
 				buf = readTwitterFeed();
 				try {
+					// parse the JSON string and build a Message from it
 					JSONArray array = new JSONArray(buf);
 					JSONObject json = array.getJSONObject(0);
 					post = new Message();
@@ -71,6 +83,9 @@ public class TwitterService extends SocialService {
 		return response;
 	}
 
+	/**
+	 * Read the latest tweet on NTNU's public profile.
+	 */
 	public String readTwitterFeed() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();

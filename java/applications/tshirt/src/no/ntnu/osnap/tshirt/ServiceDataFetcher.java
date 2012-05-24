@@ -1,4 +1,3 @@
-package no.ntnu.osnap.tshirt;
 /*
 * Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn
 * Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
@@ -15,6 +14,8 @@ package no.ntnu.osnap.tshirt;
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+package no.ntnu.osnap.tshirt;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;

@@ -24,6 +24,12 @@ import android.widget.TextView;
 import no.ntnu.osnap.social.facebook.SessionEvents.AuthListener;
 import no.ntnu.osnap.social.facebook.SessionEvents.LogoutListener;
 
+/**
+ * Handles Facebook authentication and starts/stops the Facebook
+ * social service implementation.
+ * @author Emanuele 'lemrey' Di Santo
+ */
+
 public class FacebookActivity extends Activity {
 
 	private final String TAG = "Facebook-Activity";

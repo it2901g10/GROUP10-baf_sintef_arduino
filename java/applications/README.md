@@ -1,11 +1,16 @@
 
 ## Contents ##
 
-facebook/:	Facebook social service implementation
+generic:	Generic oSNAP application
 
-twitter/:	Twitter social service implementation
+facebook:	Facebook social service implementation
 
-tshirt/:	Tshirt Android-Arduino application
+twitter:	Twitter social service implementation
 
-temp/:		Temperature Android-Arduino application
+tshirt:		T-shirt prototype application
+
+temp:		Temperature prototype application
+
+blingled:	PixelLeds prototype application
+
 

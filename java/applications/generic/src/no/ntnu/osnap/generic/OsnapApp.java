@@ -1,11 +1,24 @@
-package no.ntnu.osnap.app;
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package no.ntnu.osnap.generic;
 
 /*con = new BluetoothConnection("00:06:66:42:9B:C1", this, listener);		//the red bluetooth thingy
 //con = new BluetoothConnection("00:10:06:29:00:48", this, listener);
 //con = new BluetoothConnection("00:12:02:10:44:77", this, listener);			//anders sin module
 //con = new BluetoothConnection("00:12:02:09:03:72", this, listener);			//anders sin module nr 2
 */
-
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;

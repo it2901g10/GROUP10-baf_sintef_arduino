@@ -1,4 +1,3 @@
-package no.ntnu.osnap.tshirt.helperClass;
 /*
 * Copyright 2012 Anders Eie, Henrik Goldsack, Johan Jansen, Asbjørn
 * Lucassen, Emanuele Di Santo, Jonas Svarvaa, Bjørnar Håkenstad Wold
@@ -15,6 +14,8 @@ package no.ntnu.osnap.tshirt.helperClass;
 *   See the License for the specific language governing permissions and
 *   limitations under the License.
 */
+package no.ntnu.osnap.tshirt.helperClass;
+
 import android.content.Context;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.social.Request;
