@@ -6,8 +6,8 @@ mistakes that were made throughout the project and what we have learned from the
 
 \subsection{Establishing project requirements}
 A lot of time was lost by prematurely starting the design and planning phase before the
-requirements were properly understood and established. This was also caused by the shifting 
-requirements that the customer had every meeting. We should have properly established a list of
+requirements were properly understood and established. This was also caused by the evolving
+requirements of the project. We should have properly established a list of
 requirements and agreed with the customer that these were the final requirements. In addition we
 should have not started major planning, like setting up resource management before the requirements
 were properly set after a few meetings with the customer.
@@ -17,8 +17,8 @@ There were various issues with the hardware for our prototypes. A big one was th
 from when we initially ordered the hardware and until we received them. It took just over two months for
 some of the necessary hardware to arrive, resulting in a delay in our integration and testing process.
 This was a major setback to our plans and this time was mostly spent writing documentation, planning
-and testing the libraries for bugs. Due to miscommunication within the project group some of the 
-hardware we received was either wrong or not quite optimal for our specifications. In addition we had 
+and testing the libraries for bugs. Due to misunderstandings within the group some of the
+hardware we received was either wrong or not really suited to our needs. In addition we had
 not ordered backup or spare parts, so when for example the LCD screen broke, we had to find other 
 workarounds to solve this issue. In hindsight we should have made sure that the list of hardware orders 
 were correct and ordered additional spare parts in case something broke or malfunctioned.
@@ -29,7 +29,17 @@ the group would meet hours later than the agreed or planned time. This was somew
 the meetings later in the day and working into the late hours of the night.
 
 \subsection{Limiting project scope}
-A problem caused by an early design choice was the level of portability. Initially we coded our libraries to support as a wide range of platforms as possible (PC, Android, iOS, etc.). This caused various generalizations and concepts that didn't work to well with the Android platform. One prevalent example was callbacks and threads inside the Android system. While our library was based on multi-threading and callbacks through an observer pattern, this does not work on Android Java the same way one would expect on a PC. Since every prototype and testing software we coded was based on the Android platform this caused major problems and we had to spend a lot of time rewriting and redesigning libraries. So our choice of portability caused many problems considering the customer explicitly stated that we only needed to support Android. While portability is usually a good thing, the product quality should not suffer if it is not a high priority requirement.
+A problem caused by an early design choice was the level of portability.
+Initially we coded the ComLib to support as a wide range of platforms as possible (PC, Android, iOS, etc.).
+This caused various generalizations and concepts that didn't work to well with the Android platform.
+One prevalent example was callbacks and threads inside the Android system.
+While our library was based on multi-threading and callbacks through an observer pattern,
+this does not work on Android Java the same way one would expect on a PC.
+Since every prototype and testing software we coded was based on the Android platform
+this caused major problems and we had to spend a lot of time fixing the library.
+So our choice of portability caused many problems considering the customer explicitly
+stated that we only needed to support Android. While portability is usually a good thing,
+the product quality should not suffer if it is not a high priority requirement.
 
 \section{Further Work}
 This section describes ideas, code and features we did not have time or resources to
@@ -45,10 +55,13 @@ output communication and the implementation should be fully forward and backward
 compatible with other versions of the ComLib.
 
 \subsection{Supporting additional Social networks}
-The SocialLib currently supports Twitter and Facebook. Support for additional social
-networks like Google Plus, LinkedIn or MySpace was planned as future work. The
-SocialLib has also been implemented to accommodate this process as simple as possible
-for the developer.
+The project includes social services for Twitter and Facebook. Initially we planned
+to support OpenSocial also, but considering that the standard is not being used by the two
+most popular social networks (FB and Twitter) and that the degree to which its features
+are implemented by social networks that actually support is very different it,
+led to an implementation of an OpenSocial social service to be discarded.
+The Social library though was, developed to simplify the process of implementing
+new social services among the many out there.
 
 \subsection{Multi-Platform}
 The Bluetooth part of the ComLib has been implemented using Android SDK. This means that 
@@ -63,6 +76,8 @@ the Bluetooth Protocol.
 Currently the ComLib offers no level of security. Anyone with the mac address can connect
 and have access to the full functionality of each prototype device. A future possibility could
 be to define a security standard in the ComLib protocol like authentication with a password.
+Also the Social library disregarded any security measures except those provided by
+the social networks themselves.
 
 \subsection{ComLib's size parameter}
 The ComLib was altered the last week before a presentation to support larger packages, by increasing the size parameter to 2 bytes instead of 1 byte. This was to properly

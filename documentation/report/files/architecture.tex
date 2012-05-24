@@ -70,9 +70,9 @@ This new scenario made clear that the jacket and social applications had to be r
 \begin{description}
 
 	\item [Jacket application:] A user interface, implemented as an Android application,
-	that the user would configure to setup the rules for the jacket. The application also needed a
-	background component (such as an Android service or Thread) that would 'ask' the required information
-	to the social service.
+	that the user would use to setup the rules for the jacket. The application also needed a
+	background component (such as an Android service or Thread) that would 'ask' the required
+	information to the social service.
 
 	\item [Social application:] An Android service that would run in the background, without user interaction,
 	to fetch data from the social networks and return it to the T-shirt application.
@@ -82,8 +82,8 @@ This new scenario made clear that the jacket and social applications had to be r
 \end{description}
 
 It also implied that a mechanism to request and exchange social content, as well as the necessary
-data models abstractions had to be provided by the Social library. The figure \ref{fig:design-reqresp}
-illustrates the communication between the services and the applications.
+data models abstractions, had to be provided by the Social library. The figure \ref{fig:design-reqresp}
+illustrates the communication between the services and the appconfigurelications.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.35]{img/design-reqresp.png}
@@ -91,7 +91,7 @@ illustrates the communication between the services and the applications.
 	\label{fig:design-reqresp}
 \end{figure}
 
-The Jakcet service is now 'asking' the social application for a specific content.
+The Jacket application is now 'asking' the social application for a specific content.
 This happens in the background, without user interaction.
 
 \subsubsection{Sequence diagram}
@@ -212,21 +212,20 @@ The following figure \ref{fig:arduino_states} illustrates the Arduino state mach
 
 
 \section{Applications}
-The oSNAP project consists of two libraries (ComLib and Social library) and
-various Android applications. This section describes the Android software in detail.
+This section describes the various Android applications developed in detail.
 
 \subsection{oSNAP Generic Application} \label{section:app-generic}
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=0.25]{img/app-generic}
 \end{wrapfigure}
-This application allows the user to scan a QR code and connect via Bluetooth to a remote device (Arduino).
+This application allows the user to scan a QR code and connect via Bluetooth to a remote TUI prototype.
 It will then retrieve additional metadata from the remote device and use it to present a list of all the
-functionality the remote device supports. The user can then test each function with the click of a button,
-and also download the prototype specific application from a link to the oSNAP market.
+functionality supported. The user can then test each feature with the click of a button,
+and download the prototype specific application from a link to the oSNAP market.
 The idea is that the user can use this application to scan various oSNAP products and retrieve
 additional information or software for that specific product. This application was initially used to test
-the TUI prototypes that was later converted to a 'real' application by client's request. The startup screen
-is display in figure \ref{fig:osnap-generic}.
+the TUI prototypes but was later converted to a 'real' application as the client request.
+The application startup screen is showed in figure \ref{fig:osnap-generic}.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.4]{img/osnap-generic}
@@ -238,10 +237,12 @@ is display in figure \ref{fig:osnap-generic}.
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=0.25]{img/app-jacket}
 \end{wrapfigure}
-This application was developed to use and test the full functionality of both the ComLib and Social library in combination with the
-Jacket Prototype (shown in figure \ref{fig:jacketapp-overview}). It connects to the Jacket via Bluetooth and uses any Social network services installed and running on the
-Android system. It will retrieve any status updates from these services and can via rules relay the user output to the Jacket. 
-One example could be a rule to play a sound effect through the Jacket speaker whenever something happens on a twitter feed.
+This application controls the behavior of the Jacket prototype (\ref{fig:jacketapp-overview},
+using both the Social and Comm. libraries. It allows the user to setup rules
+which control the various devices embedded in the Jacket based on data retrieved
+from social networks. One example could be a rule to play a sound effect through
+the Jacket speaker whenever a notification from a certain user is received on
+Facebook.
 
 \begin{figure}[H]
 	\centering \includegraphics[scale=0.35]{img/jacketapp-overview}
@@ -295,9 +296,9 @@ For completeness we present the previous application use case in figure \ref{fig
 \end{wrapfigure}
 This application allows the user to connect to an Arduino thermometer device wirelessly through Bluetooth (read more about the 
 temperature prototype in section \ref{section:prototype-temp}). This is done by scanning a QR code to retrieve the mac address
- of the remote device. The application can then retrieve temperature updates to display them directly on the Android or automatically 
-upload temperature updates to Facebook through the ComLib. This application is a proof-of-concept that the libraries work independently
- and are not hard-coded for one application. It also shows that the ComLib supports two-way communication.
+of the remote device. The application can then retrieve temperature updates to display them directly on the Android or automatically 
+upload temperature updates to Facebook. This application demonstrates that the libraries work independently
+and are not hard-coded for one application. It also shows that the ComLib supports two-way communication.
 In the planning stage of this prototype, a paper prototype (see figure~\ref{fig:prototype2-paper}) was showed to the
 customer. Due to some problems to get the initial design to work properly, the GUI was revised (see
 figure~\ref{fig:prototype2-gui}) to make it more user friendly and visually appealing.
@@ -320,7 +321,10 @@ figure~\ref{fig:prototype2-gui}) to make it more user friendly and visually appe
 \begin{wrapfigure}{l}{20mm}
 	\centering \includegraphics[scale=0.25]{img/app-led}
 \end{wrapfigure}
-This application uses ComLib to connect to the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated into any application. Figure \ref{fig:design-ledmatrix} shows the Android application used to control the prototype.
+This application uses ComLib to connect to the third prototype, the LED Matrix (see section \ref{section:prototype-led}).
+It allows the user to control the color of each LED in the matrix wirelessly through Bluetooth.
+This is yet another showcase for how the ComLib can be integrated into any application.
+Figure \ref{fig:design-ledmatrix} shows the Android application used to control the prototype.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -462,9 +466,11 @@ Below is a brief description of the most important ones.
 	\item \textbf{no.ntnu.osnap.mockups}\newline\label{section:mockup}
 		Sample and 'driver' applications used for testing purposes.
 		Also includes example applications for third-party developers.
-	\item \textbf{no.ntnu.osnap.applications}\newline
+	\item \textbf{no.ntnu.osnap.tshirt, no.ntnu.osnap.temp, no.ntnu.osnap.pixelleds}\newline
 		These packages contain Android applications (called Activities in the Android terminology) for the three prototypes
 		we have implemented. Activity resources (graphics, sounds and activity manifest) are also included in these packages.
+	\item \textbf{no.ntnu.osnap.facebook, no.ntnu.osnap.twitter}
+		These packages contain the Facebook and Twitter social services.
 \end{itemize}
 
 \subsection{Arduino C code}
