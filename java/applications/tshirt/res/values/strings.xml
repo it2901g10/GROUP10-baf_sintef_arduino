@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TshirtApp</string>
+
+
+    <string name="getSender">getSender</string>
+    <string name="getLoggedInUser">getLoggedInUser</string>
+    <string name="getMessage">getMessage</string>
+    <string name="getName">getName</string>
+    <string name="getID">getID</string>
+    <string name="getLink">getLink</string>
+    <string name="getLatestMessage">getLatestMessage</string>
+    <string name="getLatestNotification">getLatestNotification</string>
+
+
+    <string name="outputDISPLAY">outputDisplay</string>
+    <string name="outputLED">outputLED</string>
+    <string name="outputVIBRATOR">outputVibrator</string>
+    <string name="outputSPEAKER">outputSpeaker</string>
+    
+    <string name="operatorEqual">=</string>
+    <string name="operatorNotEqual">!</string>
+    <string name="operatorContains">contains</string>
+
+
+
+
+
+</resources>

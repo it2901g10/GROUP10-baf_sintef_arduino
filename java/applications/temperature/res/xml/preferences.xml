@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:key="first_preferences" >
+    <CheckBoxPreference android:title="Tap to refresh"
+                          android:key="@string/pref_tap"
+                          android:summary="Enable to save battery"
+                          android:defaultValue="true"
+                          android:persistent="true"
+                          android:disableDependentsState="true" />
+	
+    <ListPreference   android:title="Refresh Interval"
+                          android:key="@string/pref_time"
+                          android:summary="Set the desired refresh interval"
+                          android:persistent="true"
+                          android:dependency="@string/pref_tap"
+                          android:entries="@array/time_array"
+                          android:entryValues="@array/time_entry" />
+     <PreferenceCategory android:title="Arduino settings" >   
+            <EditTextPreference android:title="Mac address"
+                                    android:key="@string/pref_mac"
+                                    android:summary=""
+                                    android:persistent="true" />
+            <Preference android:title="Scan Mac Address"
+                            android:key="@string/scan_mac" 
+                            android:summary="@string/sum_scan" />
+            <Preference android:key="@string/mac_set"
+                                android:persistent="true"
+                                android:defaultValue="false"
+                                android:selectable="false"
+                                android:shouldDisableView="true" />
+      </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/sw_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+    <TableLayout
+            android:id="@+id/sw_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+
+            >
+        <TextView
+                android:text="SocialServices"
+                android:id="@+id/sw_labelSocialServices"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:textSize="16sp"/>
+        <TextView
+                android:text="Social Services found:"
+                android:id="@+id/sw_labelFoundService"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/sw_labelServiceSelect"
+                android:padding="5dp"
+                android:text="None"
+                android:typeface="sans"
+                android:textStyle="bold"/>
+        <RadioGroup
+                android:id="@+id/sw_radioGroupService"
+                android:orientation="vertical"/>
+        <Button
+                android:id="@+id/sw_buttonSearchSocialServices"
+                android:layout_marginBottom="5dp"
+                android:text="Search Social Services"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"/>
+        <TextView
+                android:id="@+id/sw_labelSetRules"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Rules"
+                android:layout_marginBottom="5dp"
+                android:textSize="16sp"/>
+        <Button
+                android:id="@+id/sw_buttonSetRules"
+                android:text="Set Rules"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/button_shape"/>
+        <TextView
+                android:id="@+id/sw_labelOption"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Activate"
+                android:layout_marginBottom="5dp"
+                android:textSize="16sp"/>
+        <TextView
+                android:text="Enable jacketapp service to read rules and send specified output to Ardunio on a timed interval."
+                android:id="@+id/sw_labelFoundService"
+                android:padding="5dp"/>
+        <ToggleButton
+                android:id="@+id/sw_toggleButtonActiveService"
+                android:textOn="Service Enabled"
+                android:textOff="Service Disabled"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/toggle_shape"/>
+
+        <TextView
+                android:id="@+id/sw_labelConnection"
+                android:background="@color/dark_gray"
+                android:padding="5dp"
+                android:text="Arduino Connection"
+                android:textSize="16sp"
+                />
+        <TextView
+                android:text="Not connected to Arduino"
+                android:id="@+id/sw_labelConnectionStatus"
+                android:padding="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:gravity="center"/>
+        <Button
+                android:text="Connect to Arduino"
+                android:id="@+id/sw_buttonConnection"
+                android:layout_marginBottom="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"
+                />
+        <Button
+                android:text="Disconnect"
+                android:id="@+id/sw_buttonDisconnection"
+                android:layout_marginBottom="5dp"
+                android:typeface="sans"
+                android:textStyle="bold"
+                android:background="@drawable/button_shape"
+                />
+    </TableLayout>
+</ScrollView>

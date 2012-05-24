@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/re_scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
+<TableLayout
+        android:id="@+id/re_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+            android:id="@+id/re_labelRuleName"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Rule Name"
+            android:textSize="16sp" />
+    <EditText
+            android:id="@+id/re_editRuleName"
+            android:padding="5dp"
+            android:text="RuleName"
+            android:textSize="18sp" />
+
+    <TextView
+            android:id="@+id/re_labelOutput"
+            android:background="@color/dark_gray"
+            android:padding="8dp"
+            android:text="Rule Output"
+            android:textSize="16sp" />
+    <TextView
+            android:id="@+id/re_labelSetOutput"
+            android:padding="5dp"
+            android:text="No output set"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+    <Button
+            android:id="@+id/re_buttonSetOutput"
+            android:text="Set Output Settings"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:background="@drawable/button_shape"/>
+    <TextView
+            android:id="@+id/re_labelFilters"
+            android:background="@color/dark_gray"
+            android:padding="5dp"
+            android:text="Filters"
+            android:textSize="16sp"
+            />
+    <ListView
+            android:id="@android:id/list"
+            android:padding="5dp"/>
+
+    <TextView
+            android:id="@android:id/empty"
+            android:padding="5dp"
+            android:text="No filters added"/>
+    <Button
+            android:id="@+id/re_buttonAddFilter"
+            android:text="Add Filter"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:background="@drawable/button_shape"/>
+    <Button
+            android:id="@+id/re_buttonSaveRule"
+            android:text="Save Rule"
+            android:textSize="16sp"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:background="@drawable/button_shape"/>
+
+</TableLayout>
+    </ScrollView>
