@@ -50,6 +50,15 @@ for the various parts of the project.
 
 \subsection{F3: oSNAP Generic Application}
 \begin{description}
+	\item[Scan QR Code:] The application shall be able to scan a QR tag to
+	retrieve a mac-address for the Arduino bluetooth module. Then it will proceeed and
+	establish connection to the remote device.
+	\item[Retrieve meta-data:] The application shall be able to retrieve the
+	meta-data through the established connection. The meta-data contains all
+	services the remote device supports.
+	\item[Test remote device:] Every service the remote device supports can be
+	tested by pressing a button on the application after meta-data has been
+	retrieved.
 	\item[Libraries:] The application shall use the Communication library
 	to communicate with TUI prototypes.
 \end{description}
@@ -84,6 +93,11 @@ for the various parts of the project.
 
 \subsection{F6: oSNAP Twitter Application}
 \begin{description}
+	\item[On/Off:] The user shall be able to turn the application On and Off.
+	While the application is Off it will not forward any data to the TUI
+	prototype applications.
+	\item[Read tweets:] The application shall retrieve the last tweet of a
+	public Twitter page.
 	\item[Libraries:] The application shall use the Social library to
 	communicate with TUI prototype applications.
 \end{description}
@@ -98,23 +112,7 @@ for the various parts of the project.
 	input shall be required.
 \end{description}
 
-\subsection{F8: Temperature prototype}
-\begin{description}
-	\item[Features:] The prototype shall read the temperature using an Arduino
-	sensor and send it to Facebook.
-	\item[Libraries:] The prototype shall use both the Social and Communication
-	libraries.
-\end{description}
-	
-\subsection{F9: LED matrix prototype}
-\begin{description}
-	\item[Features:] The prototype consists of a matrix of LEDs controlled by an application on 
-	an Android smart phone.
-	\item[LED Matrix:] The prototype should have a matrix of 3x3 RGB LEDS. Each of the LEDs should be able to display different RGB colour.
-	\item[Libraries:] The prototype shall use the Communication library.
-\end{description}
-
-\subsection{F10: oSNAP Temperature Application}
+\subsection{F8: oSNAP Temperature Application}
 \begin{description}
 	\item[Mac address:] The user should be able to scan the mac address from a QR code, and/or enter it manually. 
 	\item[Share temperature:] The user should have full control over when and to which social media the temperature data is shared.
@@ -122,11 +120,27 @@ for the various parts of the project.
 	\item[Libraries:] The application shall use the Social and Communication libraries.
 \end{description}
 
-\subsection{F11: oSNAP BlingLED Application}
+\subsection{F9: Temperature prototype}
+\begin{description}
+	\item[Features:] The prototype shall read the temperature using an Arduino
+	sensor and send it to Facebook.
+	\item[Libraries:] The prototype shall use both the Social and Communication
+	libraries.
+\end{description}
+
+\subsection{F10: oSNAP BlingLED Application}
 \begin{description}
 	\item[Connection:] You must be able to establish a wireless connection from the Android to the prototype F9 through Bluetooth.
 	\item[Lights:] When the appropriate light levels are adjusted on the Android, the prototype should adjust the LED matrix accordingly.
 	\item[Libraries:] The application shall use the Communication library.
+\end{description}
+
+\subsection{F11: LED matrix prototype}
+\begin{description}
+	\item[Features:] The prototype consists of a matrix of LEDs controlled by an application on 
+	an Android smart phone.
+	\item[LED Matrix:] The prototype should have a matrix of 3x3 RGB LEDS. Each of the LEDs should be able to display different RGB colour.
+	\item[Libraries:] The prototype shall use the Communication library.
 \end{description}
 
 \newpage

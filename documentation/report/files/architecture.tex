@@ -116,8 +116,8 @@ between different social networks and extend them to possibly support others.
 It also defines and implements a set of classes to allow Android applications
 and services to exchange such data models. This mechanism is based on Android's
 native inter-process communication API (both intents, and message-based \newline
-communication). The following figures illustrate the most relevant classes
-of the library.
+communication). The figures \ref{fig:social-classes} and \ref{fig:model-classes}
+illustrate the most relevant classes of the library.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.7]{img/architecture-socialclasses.png}
@@ -462,9 +462,9 @@ Below is a brief description of the most important ones.
 	\item \textbf{no.ntnu.osnap.mockups}\newline\label{section:mockup}
 		Sample and 'driver' applications used for testing purposes.
 		Also includes example applications for third-party developers.
-	\item \textbf{no.ntnu.osnap.app}\newline
-		This package contains Android applications (called Activities in the Android terminology) for the three prototypes
-		we have implemented. Activity resources (graphics, sounds and activity manifest) are also included in this package.
+	\item \textbf{no.ntnu.osnap.applications}\newline
+		These packages contain Android applications (called Activities in the Android terminology) for the three prototypes
+		we have implemented. Activity resources (graphics, sounds and activity manifest) are also included in these packages.
 \end{itemize}
 
 \subsection{Arduino C code}
@@ -499,7 +499,7 @@ var market = {
         "title": "JacketApp",
         "icon": "icon/jacket/icon128.png",
         "url": "apk/Tshirt.apk",
-        "about": "This is our main prototype and will showcase a lot features...",
+        "about": "This is our main prototypes and will showcase a lot features...",
         "deps": [0, 4, 5]
     },
         ...

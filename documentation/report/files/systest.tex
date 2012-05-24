@@ -164,7 +164,7 @@ Actual Result:
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F11] LED matrix. \\
+\hline Test ID: &		[F11] LED matrix prototype. \\
 \hline Purpose: &		Test LED matrix prototype functionality \\
 \hline Precondition: &	The Arduino is connected to a PC via USB, and turned on;
 						the LED matrix is connected to the Arduino. \\
@@ -186,7 +186,7 @@ Actual Result:
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F11] LED matrix prototype / [F10] LED matrix app. /
+\hline Test ID: &		[F11] LED matrix prototype / [F10] oSNAP BlingLED app. /
 						[F2] Comm. library \\
 \hline Purpose: &		Testing the LED matrix prototype and application \\
 \hline Precondition: &	LED matrix applications is installed on the mobile and
@@ -194,12 +194,12 @@ Actual Result:
 \hline
 Steps:
  & 1: Pair cell phone with Arduino board using Android OS \\
- & 2: Start LED matrix application \\
+ & 2: Start BlingLED application \\
  & 3: Select light in the matrix to adjust\\
  & 4: Change colour for the specified LED \\
 \hline
 Expected result:
- & 1: Correct LED is lighted up with the correct colour\\
+ & 1: Correct LED is lit up with the correct colour\\
 \hline
 Actual Result: &  Passed \\
 \hline
@@ -240,14 +240,14 @@ Actual Result:
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F3] oSNAP app. / [F2] Comm. lib \\
+\hline Test ID: &		[F3] Generic oSNAP app. / [F2] Comm. lib \\
 \hline Purpose: &		Test connecting to the T-shirt TUI prototype using the
 						Comm. lib and oSNAP application \\
 \hline Precondition: &	The oSNAP app is installed on an Android phone; the
 						Arduino board is installed in the T-shirt and powered. \\
 \hline
 Steps:
- & 1: Start oSNAP application \\
+ & 1: Start Generic oSNAP application \\
  & 2: Press 'Scan QR code' button \\
  & 3: Scan QR code on the T-Shirt \\
  & 4: Press 'Toggle LED' button (turn on) \\
@@ -273,23 +273,23 @@ Actual Result:
 
 \begin{table}[h!]
 \begin{tabular}{|l|p{10cm}|}
-\hline Test ID: &		[F1] Social lib. / [F2] Comm. lib. / [F4] T-shirt app. /
-						[F5] Facebook App / [F7] T-shirt TUI prototype \\
+\hline Test ID: &		[F1] Social lib. / [F2] Comm. lib. / [F4] oSNAP Jacket app. /
+						[F5] Facebook App / [F7] Jacket TUI prototype \\
 \hline Purpose: &		Test T-shirt prototype functionality \\
-\hline Precondition: &	The two applications are installed and the T-shirt TUI.
+\hline Precondition: &	The two applications are installed and the Jacket prototype.
 						is on and paired with cell phone \\
 \hline
 Steps:
   & 1: Start Facebook application \\
   & 2: Press 'Log in' button \\
   & 3: Exit the Facebook application \\
-  & 4: Start T-shirt app \\
+  & 4: Start oSNAP Jacket app \\
   & 5: Press 'Discover services' button \\
   & 6: Select 'Facebook' from the list of available social services \\
-  & 7: Set up rules to define the behavior of the tshirt \\
+  & 7: Set up rules to define the behavior of the jacket \\
   & 8: Press 'Connect to Arduino' button \\
   & 9: Press 'Enable service' button \\
-  &10: Exit the T-shirt application \\
+  &10: Exit the jacket application \\
 \hline
 Expected result:
    & Depending on the rules that have been set, the correct text is displayed,
