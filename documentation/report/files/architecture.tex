@@ -7,8 +7,8 @@ and documents the various approaches taken into consideration.
 The system consists of:
 \begin{description}
 	\item[Libraries:] Social library, Communication library
-	\item[Applications:] T-shirt application, other applications
-	\item[(U.I.) Prototypes:] T-shirt prototype, other prototypes
+	\item[Applications:] Jacket application, other applications
+	\item[(U.I.) Prototypes:] Jacket prototype, other prototypes
 \end{description}
 
 The figure \ref{fig:design-toplevel} illustrates the overall system architecture.
@@ -24,15 +24,15 @@ The figure \ref{fig:design-toplevel} illustrates the overall system architecture
 \label{sec:system-design}
 As the requirements for the product were not set early on by the customer, a lot of effort
 was put into producing working prototypes to show during the meetings in order to receive
-as much feedback as possible and identify the ideas the customer had in mind; these would provide
+as much feedback as possible and identify the ideas the customer had in mind. This would provide information on
 what was needed to proceed with system design. At some point, after roughly one month,
 we understood that we were going in the wrong direction, and that our design wouldn't satisfy
 the requirements the customer had mentioned. The design of some parts of the system had to be revised.
 
 \subsection{First design}
-Our first system design was based on the scenario where the user would download the T-shirt
+Our first system design was based on the scenario where the user would download the Jacket
 and the social applications, browse for some content from within the social application
-and actively send it to the tangible user interface (the T-shirt) by pressing a 'share' button.
+and actively send it to the tangible user interface (the jacket) by pressing a 'share' button.
 This scenario is illustrated in figure \ref{fig:design-usecase1}.
 
 \begin{figure}[h!]
@@ -42,7 +42,7 @@ This scenario is illustrated in figure \ref{fig:design-usecase1}.
 \end{figure}
 
 Please note that in this scenario the user is required to actively send data from
-the social application (which acts as a Facebook client) to the T-shirt application,
+the social application (which acts as a Facebook client) to the jacket application,
 which is merely capable of receiving. Also, both are implemented as Android applications.
 
 The figure \ref{fig:design-resp} illustrates the communication between the applications.
@@ -56,8 +56,8 @@ The figure \ref{fig:design-resp} illustrates the communication between the appli
 
 \subsection{Second design}
 It turned out that the user was not supposed to browse for social content and actively send it 
-to the T-shirt application. Instead, after downloading the software, he would just setup a set of rules
-specifying the behavior of the T-shirt. This scenario is illustrated in figure \ref{fig:design-usecase2}
+to the jacket application. Instead, after downloading the software, he would just setup a set of rules
+specifying the behavior of the Jacket. This scenario is illustrated in figure \ref{fig:design-usecase2}
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.35]{img/design-usecase2}
@@ -65,12 +65,12 @@ specifying the behavior of the T-shirt. This scenario is illustrated in figure \
 	\label{fig:design-usecase2}
 \end{figure}
 
-This new scenario made clear that the T-shirt and social applications had to be re-designed so:
+This new scenario made clear that the jacket and social applications had to be re-designed to support new requirements.
 
 \begin{description}
 
-	\item [T-shirt application:] A user interface, implemented as an Android application,
-	that the user would to setup the rules for the T-shirt. The application needed also a
+	\item [Jacket application:] A user interface, implemented as an Android application,
+	that the user would configure to setup the rules for the jacket. The application also needed a
 	background component (such as an Android service or Thread) that would 'ask' the required information
 	to the social service.
 
@@ -91,12 +91,12 @@ illustrates the communication between the services and the applications.
 	\label{fig:design-reqresp}
 \end{figure}
 
-The T-shirt service is now 'asking' the social service for a specific content.
+The Jakcet service is now 'asking' the social application for a specific content.
 This happens in the background, without user interaction.
 
 \subsubsection{Sequence diagram}
-This sequence diagram shown in figure \ref{fig:design-sequence} shows a sample communication between the social and T-shirt applications.
-The T-shirt application requests the list of friends from Facebook whose age is the same as 'Anna'.
+This sequence diagram shown in figure \ref{fig:design-sequence} shows a sample communication between a social app and the jacket application.
+The jacket application requests the list of friends from Facebook whose age is the same as 'Anna'.
 
 \begin{figure}[h!]
 	\centering \includegraphics[width=1.0\textwidth]{img/design-sequence.png}
@@ -111,7 +111,7 @@ The T-shirt application requests the list of friends from Facebook whose age is 
 The Social library is the link between the Android applications that control the
 behavior of TUI prototypes and social networks. It provides abstractions for
 many common concepts found in different social networks like Facebook, Twitter
-and OpenSocial allowing third-party developers to use these concepts seamlessly
+and OpenSocial. This allows third-party developers to use these models seamlessly
 between different social networks and extend them to possibly support others.
 It also defines and implements a set of classes to allow Android applications
 and services to exchange such data models. This mechanism is based on Android's
@@ -136,10 +136,10 @@ of the library.
 This library consists of a Java library (implemented on Android) and an Arduino firmware (figure \ref{fig:comlib-diagram}),
 both implementing the ComLib protocol. The Java library provides a set of classes that simplify the connection to Arduino
 devices that run the Communication library Arduino firmware. The library also implements a mechanism to request a list of 
-services the remote device supports and any software download links associated with the remote device. A service might
-be a sensor, a lamp, display screen while download links are represented as an URL link. All this meta information is stored
-on in the firmware on the remote device as raw text using the JSON format. This meta-data can also be stored an retrieved
-in a QR code or anything else that can store plain text.
+services (components) the remote device supports and any software download links associated with the remote device. A service might
+be a sensor, a lamp, display screen, etc, while download links are represented as an URL link. All this meta information is stored
+on in the firmware on the remote device as raw text using the JSON format. This meta-data can also be stored and retrieved
+in a QR code or other plain text formats.
 
 \begin{figure}[h!]
 	\centering \includegraphics[scale=0.4]{img/comlib-diagram.png}
@@ -187,7 +187,7 @@ This library is a very basic state machine which processes single bytes received
 The user of this library can register local methods to be called with RPC when the corresponding instruction is called.
 The instructions follow strict rules on how they are constructed (see Table~\ref{tbl:instr_struct} for sizes of the different parts).
 Each instruction has to start with a "start-byte" which is always 0xFF (255 decimal). The next part is the size, which tells the number of bytes to come for this instruction (including the size byte itself). The rest is defined from which instruction is sent, but it is important to
-remember that the content cannot be empty, and has to at least contain 1 byte. This byte however, is not necessarily read or used.
+remember that the content cannot be empty, and has to at least contain one byte. This byte however, is not necessarily read or used.
 
 The following figure \ref{fig:arduino_states} illustrates the Arduino state machine:
 
@@ -217,7 +217,7 @@ various Android applications. This section describes the Android software in det
 
 \subsection{oSNAP Generic Application} \label{section:app-generic}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-generic}
+	\centering \includegraphics[scale=0.25]{img/app-generic}
 \end{wrapfigure}
 This application allows the user to scan a QR code and connect via Bluetooth to a remote device (Arduino).
 It will then retrieve additional metadata from the remote device and use it to present a list of all the
@@ -236,13 +236,12 @@ is display in figure \ref{fig:osnap-generic}.
 
 \subsection{oSNAP Jacket Application} \label{section:app-jacket}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-jacket}
+	\centering \includegraphics[scale=0.25]{img/app-jacket}
 \end{wrapfigure}
 This application was developed to use and test the full functionality of both the ComLib and Social library in combination with the
 Jacket Prototype (shown in figure \ref{fig:jacketapp-overview}). It connects to the Jacket via Bluetooth and uses any Social network services installed and running on the
-Android system. It will retrieve any status updates from these services and can via rules set up by the user output something
-on the Jacket. One example could be a rule to play a sound effect through the Jacket speaker whenever something happens
-on a twitter feed.
+Android system. It will retrieve any status updates from these services and can via rules relay the user output to the Jacket. 
+One example could be a rule to play a sound effect through the Jacket speaker whenever something happens on a twitter feed.
 
 \begin{figure}[H]
 	\centering \includegraphics[scale=0.35]{img/jacketapp-overview}
@@ -268,7 +267,7 @@ For completeness we present the previous application use case in figure \ref{fig
 
 \subsection{oSNAP Facebook application} \label{section:service-fb}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-fb}
+	\centering \includegraphics[scale=0.25]{img/app-fb}
 \end{wrapfigure}
 The Facebook application is an Android application that that replies
 TUI prototype applications' requests by providing a Social library's 'Social service'
@@ -292,7 +291,7 @@ For completeness we present the previous application use case in figure \ref{fig
 
 \subsection{oSNAP Temperature Application}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-temp}
+	\centering \includegraphics[scale=0.25]{img/app-temp}
 \end{wrapfigure}
 This application allows the user to connect to an Arduino thermometer device wirelessly through Bluetooth (read more about the 
 temperature prototype in section \ref{section:prototype-temp}). This is done by scanning a QR code to retrieve the mac address
@@ -300,7 +299,7 @@ temperature prototype in section \ref{section:prototype-temp}). This is done by 
 upload temperature updates to Facebook through the ComLib. This application is a proof-of-concept that the libraries work independently
  and are not hard-coded for one application. It also shows that the ComLib supports two-way communication.
 In the planning stage of this prototype, a paper prototype (see figure~\ref{fig:prototype2-paper}) was showed to the
-customer. Due to some problems with getting the initial design to work properly, the GUI was revised (see
+customer. Due to some problems to get the initial design to work properly, the GUI was revised (see
 figure~\ref{fig:prototype2-gui}) to make it more user friendly and visually appealing.
 
 \begin{figure}[H]
@@ -319,9 +318,9 @@ figure~\ref{fig:prototype2-gui}) to make it more user friendly and visually appe
 
 \subsection{oSNAP BlingLED Application}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-led}
+	\centering \includegraphics[scale=0.25]{img/app-led}
 \end{wrapfigure}
-This application uses ComLib to connect ot the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated into any application. Figure \ref{fig:design-ledmatrix} shows the Android application used to control the prototype.
+This application uses ComLib to connect to the third prototype, the LED Matrix (see section \ref{section:prototype-led}). It allows the user to control the color of each LED in the matrix wirelessly through Bluetooth. This is yet another showcase for how the ComLib can be integrated into any application. Figure \ref{fig:design-ledmatrix} shows the Android application used to control the prototype.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -333,15 +332,14 @@ This application uses ComLib to connect ot the third prototype, the LED Matrix (
 
 \subsection{oSNAP Twitter application}
 \begin{wrapfigure}{l}{20mm}
-	\centering \includegraphics[scale=1]{img/app-twitter}
+	\centering \includegraphics[scale=0.25]{img/app-twitter}
 \end{wrapfigure}
 Similar to the Facebook application (see section \ref{section:service-fb}),
 except that it is a Twitter specific implementation that is able to read NTNU's public Twitter page.
 
 \section{Prototypes}
 \label{sec:prototypes}
-Three different prototypes will be produced for the project. Their purpose is to serve as proof of concept and
-to show that the libraries and can effectively simplify the prototyping of Arduino-based TUI
+Three different prototypes will be produced for the project. Their purpose is to show that the libraries can effectively simplify the prototyping of Arduino-based TUI.
 One of the prototypes, the oSNAP Jacket (formerly the T-Shirt), is significantly bigger and more complex than the other two.
 The oSNAP Jacket is the main prototype of the project; the purpose of the other two
 is just to show that the libraries can be use for other applications and in different contexts - to showcase the generic nature of our libraries.
@@ -372,7 +370,7 @@ Arduino Fio offered additional advantages such as connector for a battery pack, 
 \end{figure}
 
 The application of this prototype will feature several displays and indicators which will receive social data through an Android phone.
-The shirt features different tangible interfaces (see figure \ref{fig:design-TShirt}):
+The jacket features different tangible interfaces (see figure \ref{fig:design-TShirt}):
 	
 \begin{itemize}
 	\item LEDs
