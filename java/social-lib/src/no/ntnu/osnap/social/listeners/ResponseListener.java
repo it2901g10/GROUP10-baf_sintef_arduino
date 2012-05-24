@@ -21,5 +21,9 @@ import no.ntnu.osnap.social.Response;
  * @author Emanuele 'lemrey' Di Santo
  */
 public interface ResponseListener {
+	/**
+	 * Social service response callback function.
+	 * @param response the response object returned by the social service
+	 */
 	void onComplete(Response response);
 }
