@@ -65,7 +65,7 @@ and have access to the full functionality of each prototype device. A future pos
 be to define a security standard in the ComLib protocol like authentication with a password.
 
 \subsection{ComLib's size parameter}
-The ComLib was altered the last week before a presentation to support larger packages. This was to properly
+The ComLib was altered the last week before a presentation to support larger packages, by increasing the size parameter to 2 bytes instead of 1 byte. This was to properly
 be able to retrieve all metadata from the Arduino. A suggested solution was to ask for the metadata
 in several packages, and then merge those packages to get all the metadata. We did not revert the changes
 as this was not prioritized in the small amount of time we had left in the project.
