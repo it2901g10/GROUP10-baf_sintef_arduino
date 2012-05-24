@@ -21,13 +21,13 @@ package no.ntnu.osnap.social.listeners;
 public interface ConnectionListener {
 	
 	/**
-	 * 
-	 * @param name 
+	 * Called upon social service discovery.
+	 * @param name the name of the social service discovered
 	 */
 	public void onConnected(String name);
 	
 	/**
-	 * 
+	 * Called after 3000ms if no social services answered the discovery message.
 	 */
 	public void onConnectionFailed();
 }
