@@ -1,4 +1,4 @@
-package no.ntnu.osnap.com.deprecated;
+package no.ntnu.osnap.com.testing;
 
 
 import gnu.io.CommPortIdentifier;
