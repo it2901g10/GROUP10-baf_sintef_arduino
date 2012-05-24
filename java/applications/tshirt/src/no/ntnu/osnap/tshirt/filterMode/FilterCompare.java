@@ -60,7 +60,7 @@ public class FilterCompare extends Activity implements View.OnClickListener {
         finalFilter += ":" + editText.getText().toString();
         i.putExtra(ChangeMode.FINAL_FILTER, finalFilter);
         setResult(RESULT_OK, i);
-        L.i("Return from FilterCompare with filter " + finalFilter);
+        L.d("Return from FilterCompare with filter " + finalFilter);
         finish();
     }
 

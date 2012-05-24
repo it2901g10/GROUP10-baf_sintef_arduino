@@ -27,7 +27,6 @@ import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.R;
 
 import java.util.LinkedList;
-import java.util.concurrent.CountDownLatch;
 
 /** 
  * Transmits Data to arduino if Rule is satisfied.
@@ -176,12 +175,12 @@ import java.util.concurrent.CountDownLatch;
         //If there is no longer
         if(linkedList.size() == 0){
             resultToOutput = result;
-            L.i("Rule Passed: got output " + resultToOutput + " and sent to " + rule.getOutputDevice());
+            L.d("Rule Passed: got output " + resultToOutput + " and sent to " + rule.getOutputDevice());
             if(singleton.isConnected()){
                 singleton.sendToArduino(resultToOutput, rule.getOutputDevice());
             }
             else{
-                L.i("App is not connected to arduino");
+                L.d("App is not connected to arduino");
             }
             return;
 
@@ -189,7 +188,7 @@ import java.util.concurrent.CountDownLatch;
 
         Filter f = linkedList.poll();
         if(!f.isFilterValid(result)){
-            L.i("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() +  " " + f);
+            L.d("Rule " + rule.getName() + " was not satisfied with filter " + result + " " + f.getOperator() + " " + f);
             return;
         }
 
@@ -213,7 +212,7 @@ import java.util.concurrent.CountDownLatch;
                         return;
                     }
 
-                    L.i(response.toString());
+                    L.d(response.toString());
                     if(response.getModel() != null){
                         recursiveFiltering(decrList, response.getModel());
                     }

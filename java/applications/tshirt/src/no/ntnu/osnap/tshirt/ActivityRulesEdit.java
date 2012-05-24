@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
-import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
 import no.ntnu.osnap.tshirt.filterMode.FilterStart;
 import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
@@ -84,7 +83,7 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode != RESULT_OK){
-            L.i("ActivityFilterEdit was returned " + resultCode + " and not the int for RESULT_OK");
+            L.d("ActivityFilterEdit was returned " + resultCode + " and not the int for RESULT_OK");
             return;
         }
 
@@ -135,12 +134,12 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
         switch (view.getId()){
 
             case R.id.re_buttonSetOutput:
-                L.i("Send intent to start ActivityOutput");
+                L.d("Send intent to start ActivityOutput");
                 i = new Intent(ActivityRulesEdit.this, ActivityOutput.class);
                 startActivityForResult(i, ACTIVITY_OUTPUT);
                 break;
             case R.id.re_buttonAddFilter:
-                L.i("Send intent to start FilterSelection");
+                L.d("Send intent to start FilterSelection");
                 i = new Intent(ActivityRulesEdit.this, FilterStart.class);
                 startActivityForResult(i, ACTIVITY_FILTER);
                 break;
@@ -180,7 +179,7 @@ public class ActivityRulesEdit extends ListActivity implements View.OnClickListe
         Intent i = new Intent();
         i.putExtra(RULE, new Rule(ruleName, outputFilter, outputDevice, filterArray, ruleID));
         setResult(RESULT_OK, i);
-        L.i("Returned from ActivityRulesEdit with " + outputFilter + " to " + outputDevice + " and with " + list.size() + " filter(s)");
+        L.d("Returned from ActivityRulesEdit with " + outputFilter + " to " + outputDevice + " and with " + list.size() + " filter(s)");
         finish();
     }
 }

@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import no.ntnu.osnap.tshirt.helperClass.*;
 
 
@@ -61,7 +60,7 @@ public class ActivityRulesList extends ListActivity implements AdapterView.OnIte
         addRule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                L.i("Send intent to start ActivityOutput");
+                L.d("Send intent to start ActivityOutput");
                 Intent i = new Intent(ActivityRulesList.this, ActivityRulesEdit.class);
                 startActivityForResult(i, ACTIVITY_NEW_RULE);
             }
@@ -70,7 +69,7 @@ public class ActivityRulesList extends ListActivity implements AdapterView.OnIte
         clearDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                L.i("Cleared Database");
+                L.d("Cleared Database");
                 singleton.database.clearDatabase();
                 layoutRulesList();
             }
@@ -83,21 +82,21 @@ public class ActivityRulesList extends ListActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
         
         if(resultCode != RESULT_OK){
-            L.i("ActivityRulesList was returned " + resultCode + " and not the int for RESULT_OK");
+            L.d("ActivityRulesList was returned " + resultCode + " and not the int for RESULT_OK");
             return;    
         }
         if(requestCode == ACTIVITY_NEW_RULE){
             Rule rule = (Rule)data.getParcelableExtra(ActivityRulesEdit.RULE);
             singleton.database.addNewRule(rule);
             layoutRulesList();
-            L.i("Received new rule: " + rule);
+            L.d("Received new rule: " + rule);
         }
         if(requestCode == ACTIVITY_EDIT_RULE){
             //TODO
             Rule rule = (Rule)data.getParcelableExtra(ActivityRulesEdit.RULE);
             singleton.database.updateRule(rule);
             layoutRulesList();
-            L.i("Updated rule: " + rule);
+            L.d("Updated rule: " + rule);
         }
     }
 
@@ -105,7 +104,7 @@ public class ActivityRulesList extends ListActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
      Rule rule = (Rule)(adapterView.getAdapter().getItem(i));
-     L.i("Send intent to start ActivityOutput to edit Rule");
+     L.d("Send intent to start ActivityOutput to edit Rule");
      Intent intent = new Intent(ActivityRulesList.this, ActivityRulesEdit.class);
      intent.putExtra(ActivityRulesEdit.RULE, rule);
      startActivityForResult(intent, ACTIVITY_EDIT_RULE);

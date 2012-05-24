@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
 import no.ntnu.osnap.tshirt.filterMode.ChangeMode;
-import no.ntnu.osnap.tshirt.filterMode.FilterMessage;
 import no.ntnu.osnap.tshirt.filterMode.FilterStart;
 import no.ntnu.osnap.tshirt.helperClass.L;
 
@@ -69,7 +68,7 @@ public class ActivityOutput extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.os_buttonSetFilter:
-                L.i("Send intent to start FilterSelection");
+                L.d("Send intent to start FilterSelection");
                 Intent i = new Intent(this, FilterStart.class);
                 i.putExtra(ChangeMode.NO_COMPARE, true);
                 startActivityForResult(i, 0);
@@ -115,7 +114,7 @@ public class ActivityOutput extends Activity implements View.OnClickListener {
         i.putExtra(FILTER, currentFilter);
         i.putExtra(OUTPUT, outputDevice);
         setResult(RESULT_OK, i);
-        L.i("Returned from ActivityOutput with " + currentFilter + " and " + rButtonOutput.getText());
+        L.d("Returned from ActivityOutput with " + currentFilter + " and " + rButtonOutput.getText());
         finish();
     }
 }

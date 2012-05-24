@@ -15,8 +15,6 @@ package no.ntnu.osnap.tshirt.helperClass;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 import android.widget.Toast;
 import no.ntnu.osnap.com.BluetoothConnection;
 import no.ntnu.osnap.com.ComLibException;
@@ -24,8 +22,6 @@ import no.ntnu.osnap.com.ConnectionListener;
 import no.ntnu.osnap.social.Prototype;
 import no.ntnu.osnap.tshirt.R;
 
-import java.io.IOException;
-import java.util.Timer;
 import java.util.concurrent.TimeoutException;
 
 public class TshirtSingleton {
@@ -82,7 +78,7 @@ public class TshirtSingleton {
 
     /** Get social service name to retrieve data from */
     public String getServiceName() {
-        L.i("getName |" + serviceName + "|");
+        L.d("getName |" + serviceName + "|");
         return serviceName;
     }
 
@@ -93,7 +89,7 @@ public class TshirtSingleton {
 
     public void sendToArduino(String output, String device) {
 
-        L.i("Sending data " + output + " to " + device + " on Arduino");
+        L.d("Sending data " + output + " to " + device + " on Arduino");
 
         if (device.equals(context.getString(R.string.outputDISPLAY))) {
             sendToLCDArduino(output);
@@ -157,17 +153,17 @@ public class TshirtSingleton {
         return new ConnectionListener() {
             public void onConnect(BluetoothConnection bluetoothConnection) {
                 quickToast("Connected");
-                L.i("Connected! (" + con.toString() + ")");
+                L.d("Connected! (" + con.toString() + ")");
             }
 
             public void onConnecting(BluetoothConnection bluetoothConnection) {
                 quickToast("Connecting");
-                L.i("Connecting");
+                L.d("Connecting");
             }
 
             public void onDisconnect(BluetoothConnection bluetoothConnection) {
                 quickToast("Disconnected");
-                L.i("Disconnected");
+                L.d("Disconnected");
             }
             private void quickToast(final String message){
                 activity.runOnUiThread(new Runnable() {
@@ -184,7 +180,7 @@ public class TshirtSingleton {
            con.disconnect();
         }
         else{
-            L.i("Unable to disconnect");
+            L.d("Unable to disconnect");
         }
     }
 

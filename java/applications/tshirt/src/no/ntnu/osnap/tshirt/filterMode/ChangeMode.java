@@ -41,7 +41,7 @@ public class ChangeMode {
             Intent i = new Intent();
             i.putExtra(ChangeMode.FINAL_FILTER, currentFilter);
             parent.setResult(parent.RESULT_OK, i);
-            L.i("Return with filter " + currentFilter);
+            L.d("Return with filter " + currentFilter);
             parent.finish();
             return;
         }

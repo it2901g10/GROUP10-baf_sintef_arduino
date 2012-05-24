@@ -171,12 +171,12 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
 
                 if(singleton.serviceActivated){
                     stopService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
-                    L.i("Disabled Service");
+                    L.d("Disabled Service");
                     singleton.serviceActivated = false;
                 }
                 else{
                     startService(new Intent(ActivityStartWindow.this, ServiceDataFetcher.class));
-                    L.i("Activated Service");
+                    L.d("Activated Service");
                     singleton.serviceActivated = true;
                 }
 
@@ -188,14 +188,14 @@ public class ActivityStartWindow extends Activity implements View.OnClickListene
                 ConnectionListener listener = new ConnectionListener() {
                     @Override
                     public void onConnected(String name) {
-                        L.i("Activity Start window got " + name);
+                        L.d("Activity Start window got " + name);
                         socialServiceList.add(name);
                         updateServiceListView();
                     }
 
                     @Override
                     public void onConnectionFailed() {
-                        L.i("Activity found no service");
+                        L.d("Activity found no service");
 
                     }
                 };

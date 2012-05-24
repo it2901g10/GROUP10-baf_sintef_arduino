@@ -235,7 +235,7 @@ public class RulesDB {
             initialValues.put(KEY_CONNECTION, rowId);
             mDb.insert(DATABASE_TABLE_FILTERS, null, initialValues);
         }
-        L.i("Inserted new rule (" + rule + ") in database");
+        L.d("Inserted new rule (" + rule + ") in database");
         return rowId;
 
     }

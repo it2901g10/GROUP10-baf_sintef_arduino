@@ -19,20 +19,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import no.ntnu.osnap.social.Prototype;
-import no.ntnu.osnap.social.Request;
-import no.ntnu.osnap.social.Response;
-import no.ntnu.osnap.social.SocialService;
-import no.ntnu.osnap.social.listeners.ConnectionListener;
-import no.ntnu.osnap.social.listeners.ResponseListener;
-import no.ntnu.osnap.social.models.Message;
-import no.ntnu.osnap.social.models.Model;
-import no.ntnu.osnap.social.models.Person;
 import no.ntnu.osnap.tshirt.helperClass.L;
 import no.ntnu.osnap.tshirt.helperClass.Rule;
 import no.ntnu.osnap.tshirt.helperClass.RuleArduinoTransfer;
 import no.ntnu.osnap.tshirt.helperClass.TshirtSingleton;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,14 +58,14 @@ public class ServiceDataFetcher extends Service {
 
         //Dummy listener
         prototype.discoverServices(null);
-        L.i("ServiceTshirtApp started");
+        L.d("ServiceTshirtApp started");
         singleton.connect();
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 if(isClearToGo()){
-                    L.i("Timer initiates to fetch data from social service");
+                    L.d("Timer initiates to fetch data from social service");
                     iterateRulesAndCallSocialService();
                 }
             }
@@ -94,7 +85,7 @@ public class ServiceDataFetcher extends Service {
             return true;
         }
         
-        L.i("No selected service to connect to");
+        L.d("No selected service to connect to");
         return false;
     }
 
@@ -103,7 +94,7 @@ public class ServiceDataFetcher extends Service {
 
         Rule[] rules = singleton.database.getRules();
         if(rules.length == 0){
-            L.i("There are no rules in database to check");
+            L.d("There are no rules in database to check");
             return;
         }
         for (int i = 0; i < rules.length; i++) {
