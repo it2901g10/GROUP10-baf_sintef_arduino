@@ -65,6 +65,12 @@ Currently the ComLib offers no level of security. Anyone with the mac address ca
 and have access to the full functionality of each prototype device. A future possibility could
 be to define a security standard in the ComLib protocol like authentication with a password.
 
+\subsection{ComLib's size parameter}
+The ComLib was altered the last week before a presentation to support larger packages. This was to properly
+be able to retrieve all metadata from the arduino. This was suggested to be done by asking for the metadata
+in several packages, and then merging those packages to get all the metadata. We did not revert the changes
+as this was not prioritized in the small amount of time we had left in the project
+
 \section{Conclusion}
 The final scope of the project was much bigger than we originally planned and envisioned. This large scope
 was mainly caused because of all the different prototypes we had to implement. Originally we had planned
