@@ -2,7 +2,7 @@ package no.ntnu.osnap.com.testing;
 
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
-import no.ntnu.osnap.com.deprecated.ComLayer;
+import no.ntnu.osnap.com.testing.ComLayer;
 
 public class ProtocolTest {
     public static void main(String[] args) throws TimeoutException, InterruptedException {
